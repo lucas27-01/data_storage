@@ -66,17 +66,32 @@ class _SettingsState extends State<SettingsPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(" Theme color:"),
-                      PopupMenuButton<Color>(
-                        onSelected: (color) => context.read<Settings>().setColorTheme(color: color),
+                      const Text("Theme color:"),
+                      Row(
+                        children: [
+                          Text(
+                            colorNames[context.watch<Settings>().colorTheme]!,
+                            style: TextStyle(
+                                color: context.watch<Settings>().colorTheme),
+                          ),
+                          PopupMenuButton<Color>(
+                        onSelected: (color) => context
+                            .read<Settings>()
+                            .setColorTheme(color: color),
                         itemBuilder: (context) => <PopupMenuEntry<Color>>[
                           for (var entry in colorNames.entries)
                             PopupMenuItem(
                               value: entry.key,
-                              child: Text(entry.value, style: TextStyle(color: entry.key),),
+                              child: Text(
+                                entry.value,
+                                style: TextStyle(color: entry.key),
+                              ),
                             )
                         ],
-                      )
+                      ),
+                        ],
+                      ),
+                      
                     ],
                   )
                 ],
