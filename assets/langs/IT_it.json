@@ -1,0 +1,28 @@
+{
+    "appName": "Data Storage",
+    "settingsPageName": "Impostazioni",
+    "aboutPageName": "Informazioni",
+    "funNotImplemented": "Funzione non implementata, per ora",
+    "ok": "OK",
+    "theme": "Tema",
+    "darkModeWithColon": "Modalità scura:",
+    "themeColorWithColon": "Colore del tema:",
+    "lang": "Lingua",
+    "langWithColon": "Lingua:",
+    "colorNames": {
+        "amber": "Ambra",
+        "blue": "Blu",
+        "red": "Rosso",
+        "cyan": "Ciano",
+        "green": "Verde",
+        "yellow": "Giallo",
+        "orange": "Arancione",
+        "blueGrey": "Grigio-blu",
+        "purple": "Viola",
+        "indigo": "Indaco",
+        "lime": "Lime",
+        "pink": "Rosa",
+        "teal": "Turchese"
+    }
+
+}

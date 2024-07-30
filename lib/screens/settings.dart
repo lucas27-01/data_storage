@@ -1,31 +1,18 @@
+import 'package:data_storage/models/theme_settings.dart';
+import 'package:data_storage/models/user_settings.dart';
 import 'package:data_storage/providers/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, required this.language});
+  final Map<String, dynamic> language;
 
   @override
   State<SettingsPage> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<SettingsPage> {
-  final Map<Color, String> colorNames = {
-    Colors.amber: 'Amber',
-    Colors.blue: 'Blue',
-    Colors.red: 'Red',
-    Colors.cyan: 'Cyan',
-    Colors.green: 'Green',
-    Colors.yellow: 'Yellow',
-    Colors.orange: 'Orange',
-    Colors.blueGrey: 'Blue Grey',
-    Colors.deepPurple: 'Purple',
-    Colors.indigo: 'Indigo',
-    Colors.lime: 'Lime',
-    Colors.pink: 'Pink',
-    Colors.teal: 'Teal',
-  };
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,63 +25,72 @@ class _SettingsState extends State<SettingsPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            const Row(
-              children: [
-                Text("Theme",
-                    style:
-                        TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
-              ],
-            ),
+            Text(widget.language["theme"],
+                style: const TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
             Card(
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(" Dark mode:"),
-                      Switch(
-                        value: context.watch<Settings>().brightnessTheme ==
-                            Brightness.dark,
-                        onChanged: (_) {
-                          context.read<Settings>().reverseBrightnessTheme();
-                        },
-                      )
-                    ],
+                  ListTile(
+                    leading: Icon(context.watch<Settings>().brightnessTheme ==
+                            Brightness.dark
+                        ? Icons.dark_mode_rounded
+                        : Icons.light_mode_rounded),
+                    title: Text(widget.language["darkModeWithColon"]),
+                    trailing: Switch(
+                      value: context.watch<Settings>().brightnessTheme ==
+                          Brightness.dark,
+                      onChanged: (_) {
+                        context.read<Settings>().reverseBrightnessTheme();
+                      },
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Theme color:"),
-                      Row(
-                        children: [
-                          Text(
-                            colorNames[context.watch<Settings>().colorTheme]!,
-                            style: TextStyle(
-                                color: context.watch<Settings>().colorTheme),
-                          ),
-                          PopupMenuButton<Color>(
-                        onSelected: (color) => context
-                            .read<Settings>()
-                            .setColorTheme(color: color),
-                        itemBuilder: (context) => <PopupMenuEntry<Color>>[
-                          for (var entry in colorNames.entries)
-                            PopupMenuItem(
+                  ListTile(
+                    title: Text(widget.language["themeColorWithColon"]),
+                    leading: Icon(
+                      Icons.color_lens,
+                      color: context.watch<Settings>().colorTheme,
+                    ),
+                    trailing: DropdownButton<Color>(
+                      value: context.watch<Settings>().colorTheme,
+                      menuMaxHeight: 350,
+                      onChanged: (value) {
+                        context.read<Settings>().setColorTheme(color: value!);
+                      },
+                      items: [
+                        for (var entry in ThemeSettings.colorNames.entries)
+                          DropdownMenuItem<Color>(
                               value: entry.key,
-                              child: Text(
-                                entry.value,
-                                style: TextStyle(color: entry.key),
-                              ),
-                            )
-                        ],
-                      ),
-                        ],
-                      ),
-                      
-                    ],
-                  )
+                              child: Text(entry.value,
+                                  style: TextStyle(color: entry.key)))
+                      ],
+                    ),
+                  ),
                 ],
+              ),
+            ),
+            Text(widget.language["lang"],
+                style: const TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
+            Card(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: ListTile(
+                leading: const Icon(Icons.language_rounded),
+                title: Text(widget.language["langWithColon"]),
+                trailing: DropdownButton<Locales>(
+                  value: context.watch<Settings>().locale,
+                  menuMaxHeight: 350,
+                  onChanged: (value) =>
+                      context.read<Settings>().setLocale(locale: value!),
+                  items: [
+                    for (var entry in UserSettings.languagePerLocale.entries)
+                      DropdownMenuItem(
+                        value: entry.key,
+                        child: Text(entry.value),
+                      )
+                  ],
+                ),
               ),
             )
           ],

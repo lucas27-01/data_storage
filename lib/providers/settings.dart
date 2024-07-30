@@ -1,30 +1,49 @@
+import 'package:data_storage/models/user_settings.dart';
 import 'package:flutter/material.dart';
+import '../models/theme_settings.dart';
 
 class Settings with ChangeNotifier {
-  Brightness _brightnessTheme = Brightness.dark;
-  Color _colorTheme = Colors.indigo;
+  final ThemeSettings _themeSettings = ThemeSettings();
+  final UserSettings _userSettings = UserSettings();
 
-  Brightness get brightnessTheme => _brightnessTheme;
+  Brightness get brightnessTheme => _themeSettings.brightnessTheme;
+  Color get colorTheme => _themeSettings.colorTheme;
+  String? get colorThemeName => _themeSettings.colorThemeName;
+  Locales get locale => _userSettings.locale;
 
-  Color get colorTheme => _colorTheme;
+  //void _writeSettingsFile(){
+  //  FileManager.saveSettings()
+  //}
 
   void enableDarkTheme() {
-    _brightnessTheme = Brightness.dark;
+    _themeSettings.enableDarkTheme();
     notifyListeners();
   }
 
   void disableDarkTheme() {
-    _brightnessTheme = Brightness.light;
+    _themeSettings.disableDarkTheme();
     notifyListeners();
   }
 
   void reverseBrightnessTheme() {
-    _brightnessTheme = _brightnessTheme == Brightness.dark ? Brightness.light : Brightness.dark;
+    _themeSettings.reverseBrightnessTheme();
     notifyListeners();
   }
 
-  void setColorTheme({required Color color}){
-    _colorTheme = color;
+  void setColorTheme({required Color color}) {
+    _themeSettings.setColorTheme(color: color);
     notifyListeners();
+  }
+
+  void setLocale({required Locales locale}) {
+    _userSettings.setLocale(locale: locale);
+    notifyListeners();
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "theme": _themeSettings.toJson(),
+      "user": _userSettings.toJson(),
+    };
   }
 }
