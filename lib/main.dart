@@ -3,20 +3,47 @@ import 'dart:convert';
 import 'package:data_storage/models/user_settings.dart';
 import 'package:data_storage/providers/settings.dart';
 import 'package:data_storage/screens/route_generator.dart';
+import 'package:data_storage/utils/file_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => Settings())],
-    child: const MyApp(),
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   // This widget is the root of your application.
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: FileManager.getSettings(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                    create: (_) =>
+                        Settings.fromJson(jsonDecode(snapshot.data!)))
+              ],
+              child: const DataStorage(),
+            );
+          } else if (snapshot.hasError) {
+            throw Exception("Error Occurred");
+          } else {
+            return const Center(
+                child: CircularProgressIndicator(color: Colors.teal));
+          }
+        });
+  }
+}
+
+class DataStorage extends StatelessWidget {
+  const DataStorage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ListTile(
                       leading: const Icon(Icons.settings_rounded),
                       title: Text(snapshot.data!["settingsPageName"]),
-                      onTap: () => Navigator.pushNamed(context, '/settings', arguments: snapshot.data),
+                      onTap: () => Navigator.pushNamed(context, '/settings',
+                          arguments: snapshot.data),
                     ),
                     ListTile(
                       leading: const Icon(Icons.info_outline_rounded),
@@ -120,7 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ],
                               ),
                               onTap: () {
-                                Navigator.pushNamed(context, '/settings', arguments: snapshot.data);
+                                Navigator.pushNamed(context, '/settings',
+                                    arguments: snapshot.data);
                               },
                             ),
                             PopupMenuItem(
@@ -173,15 +202,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () =>
-                    print(jsonEncode(context.read<Settings>().toJson())),
+                    FileManager.getSettings().then((value) => print(value)),
                 tooltip: 'Increment',
-                child: const Icon(Icons.add),
+                child: const Icon(Icons.print_rounded),
               ), // This trailing comma makes auto-formatting nicer for build methods.
             );
           } else if (snapshot.hasError) {
             return const Text("Error occurred");
           } else {
-            return const CircularProgressIndicator();
+            return const Center(
+                child: CircularProgressIndicator(color: Colors.teal));
           }
         });
   }

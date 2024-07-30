@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
 
 class ThemeSettings {
-  ThemeSettings();
+  ThemeSettings.standard() {
+    _brightnessTheme = Brightness.dark;
+    _colorTheme = Colors.indigo;
+  }
+
+  ThemeSettings({required Brightness brightness, required Color color}) {
+    _brightnessTheme = brightness;
+    _colorTheme = color;
+  }
+
+  factory ThemeSettings.fromJson(Map<String, dynamic> json) {
+    return ThemeSettings(
+        brightness:
+            Brightness.values.firstWhere((e) => e.name == json["brightness"]),
+        color: colorNames.entries
+            .firstWhere((entry) => entry.value == json["color"])
+            .key);
+  }
 
   static final Map<Color, String> colorNames = {
     Colors.amber: 'Amber',
@@ -19,8 +36,8 @@ class ThemeSettings {
     Colors.teal: 'Teal',
   };
 
-  Brightness _brightnessTheme = Brightness.dark;
-  Color _colorTheme = Colors.indigo;
+  late Brightness _brightnessTheme;
+  late Color _colorTheme;
 
   Brightness get brightnessTheme => _brightnessTheme;
   Color get colorTheme => _colorTheme;

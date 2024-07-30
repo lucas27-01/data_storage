@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:data_storage/providers/settings.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -34,7 +36,7 @@ class FileManager {
       final file = await _settingsFile;
       return await file.readAsString();
     } on FileSystemException {
-      await saveSettings('');
+      await saveSettings(jsonEncode(Settings.standard().toJson()));
       return '';
     }
   }
@@ -44,7 +46,7 @@ class FileManager {
       final file = await _userDataFile;
       return await file.readAsString();
     } on FileSystemException {
-      await saveUserData('');
+      await saveUserData("[]");
       return '';
     }
   }
