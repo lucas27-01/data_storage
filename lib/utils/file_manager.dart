@@ -37,7 +37,7 @@ class FileManager {
       return await file.readAsString();
     } on FileSystemException {
       await saveSettings(jsonEncode(Settings.standard().toJson()));
-      return '';
+      return jsonEncode(Settings.standard().toJson());
     }
   }
 

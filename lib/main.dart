@@ -6,6 +6,7 @@ import 'package:data_storage/screens/route_generator.dart';
 import 'package:data_storage/utils/file_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -90,6 +91,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return jsonResponse;
   }
 
+  void _showSnackBar(BuildContext context, Widget child,
+      [SnackBarAction? action]) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: child,
+      action: action,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -161,27 +170,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   Text(snapshot.data!["aboutPageName"]),
                                 ],
                               ),
-                              onTap: () {
-                                final notImplementedSnackBar = SnackBar(
-                                  content: Text(
-                                    snapshot.data!["funNotImplemented"],
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error),
-                                  ),
-                                  action: SnackBarAction(
-                                    label: snapshot.data!["ok"],
-                                    onPressed: () {},
-                                  ),
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .errorContainer,
-                                );
-
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(notImplementedSnackBar);
-                              },
+                              onTap: () => _showSnackBar(
+                                  context,
+                                  Text(snapshot.data!["funNotImplemented"]),
+                                  SnackBarAction(
+                                      label: snapshot.data!["ok"],
+                                      onPressed: () {})),
                             )
                           ])
                 ],
@@ -200,11 +194,51 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () =>
-                    FileManager.getSettings().then((value) => print(value)),
-                tooltip: 'Increment',
-                child: const Icon(Icons.print_rounded),
+              floatingActionButton: SpeedDial(
+                animatedIcon: AnimatedIcons.menu_close,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                children: [
+                  SpeedDialChild(
+                    child: Icon(
+                      Icons.add_rounded,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    onTap: () => _showSnackBar(
+                        context,
+                        Text(snapshot.data!['funNotImplemented']),
+                        SnackBarAction(
+                            label: snapshot.data!['ok'], onPressed: () {})),
+                    label: "Add Storage",
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
+                    labelBackgroundColor: Theme.of(context).colorScheme.surface,
+                  ),
+                  SpeedDialChild(
+                    child: Icon(
+                      Icons.create_rounded,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    label: "Add Storage from Template",
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
+                    labelBackgroundColor: Theme.of(context).colorScheme.surface,
+                  ),
+                  SpeedDialChild(
+                    child: Icon(
+                      Icons.print_rounded,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    label: "Print debug",
+                    onTap: () {
+                      print("Settings from provider: ${context.read<Settings>().toJson()}");
+                      FileManager.getSettings().then((value) => print("Settings from file: $value"));
+                    },
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
+                    labelBackgroundColor: Theme.of(context).colorScheme.surface,
+                  ),
+                ],
               ), // This trailing comma makes auto-formatting nicer for build methods.
             );
           } else if (snapshot.hasError) {
