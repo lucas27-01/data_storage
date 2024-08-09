@@ -21,19 +21,19 @@ class ThemeSettings {
   }
 
   static final Map<Color, String> colorNames = {
-    Colors.amber: 'Amber',
-    Colors.blue: 'Blue',
-    Colors.red: 'Red',
-    Colors.cyan: 'Cyan',
-    Colors.green: 'Green',
-    Colors.yellow: 'Yellow',
-    Colors.orange: 'Orange',
-    Colors.blueGrey: 'Blue Grey',
-    Colors.deepPurple: 'Purple',
-    Colors.indigo: 'Indigo',
-    Colors.lime: 'Lime',
-    Colors.pink: 'Pink',
-    Colors.teal: 'Teal',
+    Colors.amber: 'amber',
+    Colors.blue: 'blue',
+    Colors.red: 'red',
+    Colors.cyan: 'cyan',
+    Colors.green: 'green',
+    Colors.yellow: 'yellow',
+    Colors.orange: 'orange',
+    Colors.blueGrey: 'blueGrey',
+    Colors.deepPurple: 'purple',
+    Colors.indigo: 'indigo',
+    Colors.lime: 'lime',
+    Colors.pink: 'pink',
+    Colors.teal: 'teal',
   };
 
   late Brightness _brightnessTheme;

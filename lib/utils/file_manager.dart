@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -37,7 +38,7 @@ class FileManager {
       return await file.readAsString();
     } on FileSystemException {
       await saveSettings(jsonEncode(Settings.standard().toJson()));
-      return jsonEncode(Settings.standard().toJson());
+      return jsonEncode(Settings.standard());
     }
   }
 
@@ -47,7 +48,7 @@ class FileManager {
       return await file.readAsString();
     } on FileSystemException {
       await saveUserData("[]");
-      return '';
+      return "[]";
     }
   }
 }

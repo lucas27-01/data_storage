@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:data_storage/models/user_settings.dart';
 import 'package:data_storage/utils/file_manager.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/theme_settings.dart';
 
@@ -10,7 +9,7 @@ class Settings with ChangeNotifier {
   Settings(
       {required Color colorTheme,
       required Brightness brightnessTheme,
-      required Locales locale}) {
+      required Locale? locale}) {
     _themeSettings =
         ThemeSettings(brightness: brightnessTheme, color: colorTheme);
     _userSettings = UserSettings(locale: locale);
@@ -23,7 +22,7 @@ class Settings with ChangeNotifier {
     _userSettings = userSettings;
   }
 
-  void createFromJson(Map<String, dynamic> json){
+  void createFromJson(Map<String, dynamic> json) {
     var newSettings = Settings.fromJson(json);
     _themeSettings = newSettings._themeSettings;
     _userSettings = newSettings._userSettings;
@@ -46,9 +45,9 @@ class Settings with ChangeNotifier {
   Brightness get brightnessTheme => _themeSettings.brightnessTheme;
   Color get colorTheme => _themeSettings.colorTheme;
   String? get colorThemeName => _themeSettings.colorThemeName;
-  Locales get locale => _userSettings.locale;
+  Locale? get locale => _userSettings.locale;
 
-  void _writeSettingsFile(){
+  void _writeSettingsFile() {
     FileManager.saveSettings(jsonEncode(toJson()));
   }
 
@@ -76,7 +75,7 @@ class Settings with ChangeNotifier {
     notifyListeners();
   }
 
-  void setLocale({required Locales locale}) {
+  void setLocale({required Locale? locale}) {
     _userSettings.setLocale(locale: locale);
     _writeSettingsFile();
     notifyListeners();

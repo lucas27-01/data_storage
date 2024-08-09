@@ -3,10 +3,10 @@ import 'package:data_storage/models/user_settings.dart';
 import 'package:data_storage/providers/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key, required this.language});
-  final Map<String, dynamic> language;
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsState();
@@ -17,7 +17,7 @@ class _SettingsState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.language["settingsPageName"]),
+        title: Text(AppLocalizations.of(context)!.settingsPageName),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         //leading: Icon(Icons.settings),
       ),
@@ -25,8 +25,9 @@ class _SettingsState extends State<SettingsPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Text(widget.language["theme"],
-                style: const TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.theme,
+                style:
+                    const TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
             Card(
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -37,7 +38,7 @@ class _SettingsState extends State<SettingsPage> {
                             Brightness.dark
                         ? Icons.dark_mode_rounded
                         : Icons.light_mode_rounded),
-                    title: Text(widget.language["darkModeWithColon"]),
+                    title: Text(AppLocalizations.of(context)!.darkModeWithColon),
                     trailing: Switch(
                       value: context.watch<Settings>().brightnessTheme ==
                           Brightness.dark,
@@ -47,7 +48,7 @@ class _SettingsState extends State<SettingsPage> {
                     ),
                   ),
                   ListTile(
-                    title: Text(widget.language["themeColorWithColon"]),
+                    title: Text(AppLocalizations.of(context)!.themeColorWithColon),
                     leading: Icon(
                       Icons.color_lens,
                       color: context.watch<Settings>().colorTheme,
@@ -62,7 +63,7 @@ class _SettingsState extends State<SettingsPage> {
                         for (var entry in ThemeSettings.colorNames.entries)
                           DropdownMenuItem<Color>(
                               value: entry.key,
-                              child: Text(entry.value,
+                              child: Text(AppLocalizations.of(context)!.color(entry.value),
                                   style: TextStyle(color: entry.key)))
                       ],
                     ),
@@ -70,15 +71,16 @@ class _SettingsState extends State<SettingsPage> {
                 ],
               ),
             ),
-            Text(widget.language["lang"],
-                style: const TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.lang,
+                style:
+                    const TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
             Card(
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: ListTile(
                 leading: const Icon(Icons.language_rounded),
-                title: Text(widget.language["langWithColon"]),
-                trailing: DropdownButton<Locales>(
+                title: Text(AppLocalizations.of(context)!.langWithColon),
+                trailing: DropdownButton(
                   value: context.watch<Settings>().locale,
                   menuMaxHeight: 350,
                   onChanged: (value) =>

@@ -1,36 +1,34 @@
+import 'package:flutter/material.dart';
+
 class UserSettings {
-  UserSettings({required Locales locale}) {
+  UserSettings({required Locale? locale}) {
     _locale = locale;
   }
 
   UserSettings.standard() {
-    _locale = Locales.GB_en;
+    _locale = const Locale('en');
   }
 
   factory UserSettings.fromJson(Map<String, dynamic> json) {
-    return UserSettings(
-        locale: Locales.values.firstWhere((e) => e.name == json["locale"]));
+    return UserSettings(locale: Locale(json['locale']));
   }
 
-  late Locales _locale;
+  late Locale? _locale;
 
-  static final Map<Locales, String> languagePerLocale = {
-    Locales.GB_en: "English (UK)",
-    Locales.IT_it: "Italiano (Italia)",
+  static final Map<Locale, String> languagePerLocale = {
+    const Locale('en'): "English",
+    const Locale('it'): "Italiano",
   };
 
-  Locales get locale => _locale;
+  Locale? get locale => _locale;
 
-  void setLocale({required Locales locale}) {
+  void setLocale({required Locale? locale}) {
     _locale = locale;
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "locale": _locale.name,
+      "locale": _locale?.languageCode,
     };
   }
 }
-
-// ignore: constant_identifier_names
-enum Locales { GB_en, IT_it }

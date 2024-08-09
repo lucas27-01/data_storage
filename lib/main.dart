@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-import 'package:data_storage/models/user_settings.dart';
+import 'package:data_storage/models/data_storage.dart';
 import 'package:data_storage/providers/settings.dart';
 import 'package:data_storage/screens/route_generator.dart';
 import 'package:data_storage/utils/file_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
                     create: (_) =>
                         Settings.fromJson(jsonDecode(snapshot.data!)))
               ],
-              child: const DataStorage(),
+              child: const DataStorageApp(),
             );
           } else if (snapshot.hasError) {
             throw Exception("Error Occurred");
@@ -41,14 +43,23 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class DataStorage extends StatelessWidget {
-  const DataStorage({
+class DataStorageApp extends StatelessWidget {
+  const DataStorageApp({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: context.watch<Settings>().locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        FormBuilderLocalizations.delegate,
+      ],
       title: 'Data Storage',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -75,20 +86,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState();
 
-  int _counter = 0;
-  late Map<String, String> language;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  Future<Map<String, dynamic>> loadLanguage(Locales locale) async {
-    String jsonString =
-        await rootBundle.loadString('assets/langs/${locale.name}.json');
-    final jsonResponse = json.decode(jsonString);
-    return jsonResponse;
+  Future<List<dynamic>?> getUserData() async {
+    return jsonDecode(await FileManager.getUserData())
+        .map((el) => DataStorage.fromJson(el))
+        .toList();
   }
 
   void _showSnackBar(BuildContext context, Widget child,
@@ -101,152 +102,175 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: loadLanguage(context.watch<Settings>().locale),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Scaffold(
-              drawer: Drawer(
-                child: ListView(
-                  children: [
-                    Container(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        snapshot.data!["appName"],
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              alignment: Alignment.center,
+              child: Text(
+                AppLocalizations.of(context)!.appName,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Image.asset(
+              'assets/images/data-storage-no-background.png',
+              height: 250,
+            ),
+            ListTile(
+                leading: const Icon(Icons.settings_rounded),
+                title: Text(AppLocalizations.of(context)!.settingsPageName),
+                onTap: () => Navigator.pushNamed(
+                      context,
+                      '/settings',
+                    )),
+            ListTile(
+              leading: const Icon(Icons.info_outline_rounded),
+              title: Text(AppLocalizations.of(context)!.aboutPageName),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(AppLocalizations.of(context)!.appName),
+        actions: <Widget>[
+          PopupMenuButton(
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Icon(Icons.settings_rounded),
+                          Text(AppLocalizations.of(context)!.settingsPageName),
+                        ],
+                      ),
+                      onTap: () => Navigator.pushNamed(context, '/settings'),
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Icon(Icons.info_outline_rounded),
+                          Text(AppLocalizations.of(context)!.aboutPageName),
+                        ],
+                      ),
+                      onTap: () => _showSnackBar(
+                          context,
+                          Text(AppLocalizations.of(context)!.funNotImplemented),
+                          SnackBarAction(
+                              label: AppLocalizations.of(context)!.ok,
+                              onPressed: () {})),
+                    )
+                  ])
+        ],
+      ),
+      body: FutureBuilder(
+        future: getUserData(),
+        builder: (context, snapshotUserData) {
+          if (snapshotUserData.hasError) {
+            throw snapshotUserData.error!;
+          } else if (snapshotUserData.hasData) {
+            var userData = snapshotUserData.data!;
+            return ListView.builder(
+                itemCount: userData.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () => Navigator.pushNamed(
+                        context, '/dataStorageViewer',
+                        arguments: userData[index]),
+                    child: Hero(
+                      tag: userData[index].id,
+                      child: Card(
+                        child: ListTile(
+                          leading: userData[index].iconWidget,
+                          title: Text(userData[index].name),
+                          subtitle: userData[index].description !=null? Text(userData[index].description):null,
                         ),
                       ),
                     ),
-                    Image.asset(
-                      'assets/images/data-storage-no-background.png',
-                      height: 250,
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.settings_rounded),
-                      title: Text(snapshot.data!["settingsPageName"]),
-                      onTap: () => Navigator.pushNamed(context, '/settings',
-                          arguments: snapshot.data),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.info_outline_rounded),
-                      title: Text(snapshot.data!["aboutPageName"]),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              appBar: AppBar(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                title: Text(snapshot.data!["appName"]),
-                actions: <Widget>[
-                  PopupMenuButton(
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<String>>[
-                            PopupMenuItem(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  const Icon(Icons.settings_rounded),
-                                  Text(snapshot.data!["settingsPageName"]),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, '/settings',
-                                    arguments: snapshot.data);
-                              },
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  const Icon(Icons.info_outline_rounded),
-                                  Text(snapshot.data!["aboutPageName"]),
-                                ],
-                              ),
-                              onTap: () => _showSnackBar(
-                                  context,
-                                  Text(snapshot.data!["funNotImplemented"]),
-                                  SnackBarAction(
-                                      label: snapshot.data!["ok"],
-                                      onPressed: () {})),
-                            )
-                          ])
-                ],
-              ),
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      'You have pushed the button this many times:',
-                    ),
-                    Text(
-                      '$_counter',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ],
-                ),
-              ),
-              floatingActionButton: SpeedDial(
-                animatedIcon: AnimatedIcons.menu_close,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15))),
-                children: [
-                  SpeedDialChild(
-                    child: Icon(
-                      Icons.add_rounded,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    onTap: () => _showSnackBar(
-                        context,
-                        Text(snapshot.data!['funNotImplemented']),
-                        SnackBarAction(
-                            label: snapshot.data!['ok'], onPressed: () {})),
-                    label: "Add Storage",
-                    backgroundColor:
-                        Theme.of(context).colorScheme.secondaryContainer,
-                    labelBackgroundColor: Theme.of(context).colorScheme.surface,
-                  ),
-                  SpeedDialChild(
-                    child: Icon(
-                      Icons.create_rounded,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    label: "Add Storage from Template",
-                    backgroundColor:
-                        Theme.of(context).colorScheme.secondaryContainer,
-                    labelBackgroundColor: Theme.of(context).colorScheme.surface,
-                  ),
-                  SpeedDialChild(
-                    child: Icon(
-                      Icons.print_rounded,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    label: "Print debug",
-                    onTap: () {
-                      print("Settings from provider: ${context.read<Settings>().toJson()}");
-                      FileManager.getSettings().then((value) => print("Settings from file: $value"));
-                    },
-                    backgroundColor:
-                        Theme.of(context).colorScheme.secondaryContainer,
-                    labelBackgroundColor: Theme.of(context).colorScheme.surface,
-                  ),
-                ],
-              ), // This trailing comma makes auto-formatting nicer for build methods.
-            );
-          } else if (snapshot.hasError) {
-            return const Text("Error occurred");
+                  );
+                });
           } else {
-            return const Center(
-                child: CircularProgressIndicator(color: Colors.teal));
+            return const Center(child: CircularProgressIndicator());
           }
-        });
+        },
+      ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+        children: [
+          SpeedDialChild(
+            child: Icon(
+              Icons.add_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            onTap: () => Navigator.pushNamed(
+              context,
+              '/dataStorageCreator',
+            ),
+            label: AppLocalizations.of(context)!.addStorage,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.surface,
+          ),
+          SpeedDialChild(
+            child: Icon(
+              Icons.create_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            label: AppLocalizations.of(context)!.addStorageFromTemplate,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.surface,
+          ),
+          SpeedDialChild(
+            child: Icon(
+              Icons.print_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            label: "Print Settings debug",
+            onTap: () {
+              print(
+                  "Settings from provider: ${context.read<Settings>().toJson()}");
+              FileManager.getSettings()
+                  .then((value) => print("Settings from file: $value"));
+            },
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.surface,
+          ),
+          SpeedDialChild(
+            child: Icon(
+              Icons.print_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            label: "Print Data Storage debug",
+            onTap: () {
+              FileManager.getUserData().then((source) {
+                print(source);
+              });
+            },
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.surface,
+          ),
+          SpeedDialChild(
+            child: Icon(
+              Icons.print_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            label: "Reset User data",
+            onTap: () => FileManager.saveUserData(
+                jsonEncode([DataStorage(name: "Void", data: [], description: "I want this empty", icon: Icons.lock_clock_rounded).toJson()])),
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.surface,
+          ),
+        ],
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
 }
