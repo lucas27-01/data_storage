@@ -62,5 +62,17 @@
     "maxLength": "Lunghezza Massima",
     "dataMaxLength": "Lunghezza Massima del Dato",
     "onlyAlphabetical": "Solo Alfabetico",
-    "subtitleOnlyAphabetical": "Nessun numero, carattere speciale, ecc..."
+    "subtitleOnlyAphabetical": "Nessun numero, carattere speciale, ecc...",
+    "questionDeleteAddingDecimalType": "Vuoi veramente cancellaree l'aggiunta di un Dato di tipo Decimale alla tua Raccolta Dati?",
+    "decimalDataAdding": "Aggiunta Dato Decimale",
+    "representableType": "{type, select, other{tipo {type}} integer{Intero} decimal{Decimale} string{Stringa}}",
+    "@representableType": {
+        "description": "representableType",
+        "placeholders": {
+            "type": {
+              "type":"String",
+              "example":"1" 
+            }
+        }
+    }
 }

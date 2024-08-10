@@ -1,13 +1,11 @@
 class DecimalConstraints {
   DecimalConstraints.standard() {
-    minValue = maxValue = multipleOf = minDecimalPlaces = maxDecimalPlaces = null;
+    minValue = maxValue = multipleOf = null;
   }
 
   DecimalConstraints({
     this.maxValue,
     this.minValue,
-    this.maxDecimalPlaces,
-    this.minDecimalPlaces,
     this.multipleOf,
   });
 
@@ -15,23 +13,17 @@ class DecimalConstraints {
     return DecimalConstraints(
         maxValue: json["maxValue"],
         minValue: json["minValue"],
-        minDecimalPlaces: json["minDecimalPlaces"],
-        maxDecimalPlaces: json["maxDecimalPlaces"],
         multipleOf: json["multipleOf"]);
   }
 
-  late double? minValue;
-  late double? maxValue;
-  late double? multipleOf;
-  late int? minDecimalPlaces;
-  late int? maxDecimalPlaces;
+  late num? minValue;
+  late num? maxValue;
+  late num? multipleOf;
 
   Map<String, dynamic> toJson() {
     return {
       "maxValue": maxValue,
       "minValue": minValue,
-      "minDecimalPlaces": minDecimalPlaces,
-      "maxDecimalPlaces": maxDecimalPlaces,
       "multipleOf": multipleOf
     };
   }

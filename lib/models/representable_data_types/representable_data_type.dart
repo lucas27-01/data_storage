@@ -1,3 +1,4 @@
+import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
 import 'package:data_storage/models/representable_data_types/representable_string.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ abstract class RepresentableDataType {
         return RepresentableInteger.fromJson(json);
       case "RepresentableString":
         return RepresentableString.fromJson(json);
+      case "RepresentableDecimal":
+        return RepresentableDecimal.fromJson(json);
       default:
         throw Exception("Unknown type ${json["_type"]}");
     }
@@ -19,11 +22,13 @@ abstract class RepresentableDataType {
   static final representableDataTypes = {
     RepresentableInteger.standard(): "integer",
     RepresentableString.standard(): "string",
+    RepresentableDecimal.standard(): "decimal",
   };
 
   static final representableDataTypeAsIcon = {
     RepresentableInteger: Icons.numbers_rounded,
     RepresentableString: Icons.abc_rounded,
+    RepresentableDecimal: Icons.calculate_rounded,
   };
 
   get constraints => throw Exception("This should not be seen");

@@ -196,7 +196,7 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
                                         .representableDataTypes.entries)
                                       DropdownMenuItem(
                                         value: entry.key,
-                                        child: Text(entry.value),
+                                        child: Text(AppLocalizations.of(context)!.representableType(entry.value)),
                                       )
                                   ],
                                 ),

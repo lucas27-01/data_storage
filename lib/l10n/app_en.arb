@@ -55,7 +55,6 @@
     "multipleOf": "Multiple of",
     "valueMultipleOf": "Value Multiple of",
     "saveAndAdd": "Save and Add",
-
     "questionDeleteAddingStringType": "Do you really want to delete the creation of a string data at your Data Storage?",
     "stringDataAdding": "String Data Adding",
     "minLength": "Min Length",
@@ -63,5 +62,17 @@
     "maxLength": "Max Length",
     "dataMaxLength": "Data Max Length",
     "onlyAlphabetical": "Only Alphabetical",
-    "subtitleOnlyAphabetical": "No numbers, special chars, etc..."
+    "subtitleOnlyAphabetical": "No numbers, special chars, etc...",
+    "questionDeleteAddingDecimalType": "Do you really want to delete the creation of a decimal data at your Data Storage?",
+    "decimalDataAdding": "Decimal Data Adding",
+    "representableType": "{type, select, other{type {type}} integer{Integer} decimal{Decimal} string{String}}",
+    "@representableType": {
+        "description": "representableType",
+        "placeholders": {
+            "type": {
+              "type":"String",
+              "example":"1" 
+            }
+        }
+    }
 }
