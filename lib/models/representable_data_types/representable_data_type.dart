@@ -9,6 +9,8 @@ abstract class RepresentableDataType {
     switch (json["_type"]) {
       case "RepresentableInteger":
         return RepresentableInteger.fromJson(json);
+      case "RepresentableString":
+        return RepresentableString.fromJson(json);
       default:
         throw Exception("Unknown type ${json["_type"]}");
     }

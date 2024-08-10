@@ -236,9 +236,11 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
                           },
                         );
 
-                        setState(() {
-                          newDataStorage.data.add(newData!);
-                        });
+                        if (newData != null) {
+                          setState(
+                            () => newDataStorage.data.add(newData),
+                          );
+                        }
                       },
                       label: Text(AppLocalizations.of(context)!.addData),
                       icon: const Icon(Icons.add_rounded),
@@ -273,9 +275,11 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
           onTap: (value) => setState(() => _selectedTabIndex = value),
           items: [
             BottomNavigationBarItem(
-                icon: const Icon(Icons.info_rounded), label: AppLocalizations.of(context)!.generic),
+                icon: const Icon(Icons.info_rounded),
+                label: AppLocalizations.of(context)!.generic),
             BottomNavigationBarItem(
-                icon: const Icon(Icons.data_array_rounded), label: AppLocalizations.of(context)!.data),
+                icon: const Icon(Icons.data_array_rounded),
+                label: AppLocalizations.of(context)!.data),
           ],
         ),
       ),

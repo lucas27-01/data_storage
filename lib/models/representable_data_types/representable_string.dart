@@ -1,46 +1,47 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:data_storage/models/data.dart';
-import 'package:data_storage/models/data_constraints/integer_constraints.dart';
+import 'package:data_storage/models/data_constraints/string_constraints.dart';
 import 'package:data_storage/models/representable_data_types/representable_data_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class RepresentableInteger extends RepresentableDataType {
-  RepresentableInteger.standard() : super.standard() {
+class RepresentableString extends RepresentableDataType {
+  RepresentableString.standard() : super.standard() {
     values = {};
     defaultValue = null;
-    constraints = IntegerConstraints.standard();
+    constraints = StringConstraints.standard();
   }
 
-  RepresentableInteger({
+  RepresentableString({
     required this.values,
     this.defaultValue,
-    IntegerConstraints? constraints,
+    StringConstraints? constraints,
   }) : super.standard() {
-    this.constraints = constraints ?? IntegerConstraints.standard();
+    this.constraints = constraints ?? StringConstraints.standard();
   }
 
-  factory RepresentableInteger.fromJson(Map<String, dynamic> json) {
-    return RepresentableInteger(
+  factory RepresentableString.fromJson(Map<String, dynamic> json) {
+    return RepresentableString(
       values: json["values"],
       defaultValue: json["defaultValue"],
-      constraints: IntegerConstraints.fromJson(json["constraints"]),
+      constraints: StringConstraints.fromJson(json["constraints"]),
     );
   }
 
-  late Map<String, int> values;
+  late Map<String, String>
+      values; // Secs from Unix Epoch that represents value added and the value
   @override
-  late int? defaultValue;
+  late String? defaultValue;
   @override
-  late IntegerConstraints constraints;
+  late StringConstraints constraints;
 
-  Widget get builderWidget => const RepresentableIntegerAdder();
+  Widget get builderWidget => const RepresentableStringAdder();
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      "_type": "RepresentableInteger",
+      "_type": "RepresentableString",
       "values": values,
       "defaultValue": defaultValue,
       "constraints": constraints.toJson(),
@@ -48,18 +49,20 @@ class RepresentableInteger extends RepresentableDataType {
   }
 }
 
-class RepresentableIntegerAdder extends StatefulWidget {
-  const RepresentableIntegerAdder({super.key});
+class RepresentableStringAdder extends StatefulWidget {
+  const RepresentableStringAdder({super.key});
 
   @override
-  State<RepresentableIntegerAdder> createState() =>
-      _RepresentableIntegerAdderState();
+  State<RepresentableStringAdder> createState() =>
+      _RepresentableStringAdderState();
 }
 
-class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
+class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
   final _formKey = GlobalKey<FormBuilderState>();
-  final _newData = Data(name: "", type: RepresentableInteger.standard());
-  int? defaultValue, maxValue, minValue, multipleOf;
+  final _newData = Data(name: "", type: RepresentableString.standard());
+  String? defaultValue;
+  int? minLength, maxLength, maxWordsCount, minWordsCount;
+  bool onlyAlphabetical = false;
 
   @override
   Widget build(BuildContext context) {
@@ -87,14 +90,14 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                   ],
                   content: SingleChildScrollView(
                     child: Text(AppLocalizations.of(context)!
-                        .questionDeleteAddingIntegerType),
+                        .questionDeleteAddingStringType),
                   ),
                 );
               },
             ),
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(AppLocalizations.of(context)!.integerDataAdding),
+          title: Text(AppLocalizations.of(context)!.stringDataAdding),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -145,34 +148,36 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                     ),
                     validator: FormBuilderValidators.compose(
                       [
-                        FormBuilderValidators.integer(checkNullOrEmpty: false),
-                        if (maxValue != null)
-                          FormBuilderValidators.max(maxValue!,
+                        if (onlyAlphabetical)
+                          FormBuilderValidators.alphabetical(
                               checkNullOrEmpty: false),
-                        if (minValue != null)
-                          FormBuilderValidators.min(minValue!,
+                        if (maxLength != null)
+                          FormBuilderValidators.max(maxLength!,
+                              checkNullOrEmpty: false),
+                        if (minLength != null)
+                          FormBuilderValidators.min(minLength!,
                               checkNullOrEmpty: false),
                       ],
                     ),
                   ),
-                   Text(
+                  Text(
                     AppLocalizations.of(context)!.constraintsSettings,
                     style: const TextStyle(fontSize: 24),
                   ),
                   FormBuilderTextField(
                     initialValue:
-                        (_newData.type?.constraints.minValue ?? "").toString(),
-                    name: 'minValue',
+                        (_newData.type?.constraints.minLength ?? "").toString(),
+                    name: 'minLength',
                     decoration: InputDecoration(
-                      label: Text(AppLocalizations.of(context)!.minValue),
-                      hintText: AppLocalizations.of(context)!.dataDefaultValue,
+                      label: Text(AppLocalizations.of(context)!.minLength),
+                      hintText: AppLocalizations.of(context)!.dataMaxLength,
                     ),
                     validator: FormBuilderValidators.compose(
                       [
                         FormBuilderValidators.integer(checkNullOrEmpty: false),
-                        if (maxValue != null)
+                        if (maxLength != null)
                           FormBuilderValidators.max(
-                            maxValue!,
+                            maxLength!,
                             checkNullOrEmpty: false,
                           )
                       ],
@@ -180,34 +185,29 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                   ),
                   FormBuilderTextField(
                     initialValue:
-                        (_newData.type?.constraints.maxValue ?? "").toString(),
-                    name: 'maxValue',
+                        (_newData.type?.constraints.maxLength ?? "").toString(),
+                    name: 'maxLength',
                     decoration: InputDecoration(
-                      label: Text(AppLocalizations.of(context)!.maxValue),
-                      hintText: AppLocalizations.of(context)!.dataMaxValue,
+                      label: Text(AppLocalizations.of(context)!.maxLength),
+                      hintText: AppLocalizations.of(context)!.dataMaxLength,
                     ),
                     validator: FormBuilderValidators.compose(
                       [
                         FormBuilderValidators.integer(checkNullOrEmpty: false),
-                        if (minValue != null)
+                        if (minLength != null)
                           FormBuilderValidators.min(
-                            minValue!,
+                            minLength!,
                             checkNullOrEmpty: false,
                           )
                       ],
                     ),
                   ),
-                  FormBuilderTextField(
-                    initialValue: (_newData.type?.constraints.multipleOf ?? "")
-                        .toString(),
-                    name: "multipleOf",
-                    decoration: InputDecoration(
-                      label: Text(AppLocalizations.of(context)!.multipleOf),
-                      hintText: AppLocalizations.of(context)!.valueMultipleOf,
-                    ),
-                    validator: FormBuilderValidators.compose(
-                      [FormBuilderValidators.integer(checkNullOrEmpty: false)],
-                    ),
+                  FormBuilderCheckbox(
+                    title: Text(AppLocalizations.of(context)!.onlyAlphabetical),
+                    subtitle: Text(
+                        AppLocalizations.of(context)!.subtitleOnlyAphabetical),
+                    initialValue: _newData.type?.constraints.onlyAlphabetical,
+                    name: "onlyAlphabetical",
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
@@ -220,42 +220,38 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                           _formKey.currentState?.value["description"];
 
                       try {
-                        defaultValue = int.parse(
-                            _formKey.currentState?.value["deafultValue"]);
+                        defaultValue =
+                            _formKey.currentState?.value["deafultValue"];
                       } catch (_) {
                         defaultValue = null;
                       }
 
                       try {
-                        maxValue =
-                            int.parse(_formKey.currentState?.value["maxValue"]);
+                        maxLength = int.parse(
+                            _formKey.currentState?.value["maxLength"]);
                       } catch (_) {
-                        maxValue = null;
+                        maxLength = null;
                       }
 
                       try {
-                        minValue =
-                            int.parse(_formKey.currentState?.value["minValue"]);
+                        minLength = int.parse(
+                            _formKey.currentState?.value["minLength"]);
                       } catch (_) {
-                        minValue = null;
+                        minLength = null;
                       }
 
-                      try {
-                        multipleOf = int.parse(
-                            _formKey.currentState?.value["multipleOf"]);
-                      } catch (e) {
-                        multipleOf = null;
-                      }
+                      onlyAlphabetical =
+                          _formKey.currentState?.value["onlyAlphabetical"];
 
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
-                        _newData.type = RepresentableInteger(
+                        _newData.type = RepresentableString(
                           values: {},
                           defaultValue: defaultValue,
-                          constraints: IntegerConstraints(
-                            maxValue: maxValue,
-                            minValue: minValue,
-                            multipleOf: multipleOf,
+                          constraints: StringConstraints(
+                            maxLength: maxLength,
+                            minLength: minLength,
+                            onlyAlphabetical: onlyAlphabetical,
                           ),
                         );
                         Navigator.pop(context, _newData);

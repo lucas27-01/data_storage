@@ -54,5 +54,13 @@
     "dataMinValue": "Valore Minimo del Dato",
     "multipleOf": "Multiplo di",
     "valueMultipleOf": "Valore Multiplo di",
-    "saveAndAdd": "Salva e Aggiungi"
+    "saveAndAdd": "Salva e Aggiungi",
+    "questionDeleteAddingStringType": "Vuoi veramente cancellaree l'aggiunta di un Dato di tipo Stringa alla tua Raccolta Dati?",
+    "stringDataAdding": "Aggiunta Dato tipo Stringa",
+    "minLength": "Lunghezza Minima",
+    "dataMinLength": "Lunghezza Minima del Dato",
+    "maxLength": "Lunghezza Massima",
+    "dataMaxLength": "Lunghezza Massima del Dato",
+    "onlyAlphabetical": "Solo Alfabetico",
+    "subtitleOnlyAphabetical": "Nessun numero, carattere speciale, ecc..."
 }

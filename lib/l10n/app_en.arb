@@ -40,7 +40,7 @@
     "addData": "Add Data",
     "generic": "Generic",
     "data": "Data",
-    "questionDeleteAddingIntegerType": "Do you really want to delete the creation of an integer at your Data Storage?",
+    "questionDeleteAddingIntegerType": "Do you really want to delete the creation of an integer data at your Data Storage?",
     "integerDataAdding": "Integer Data Adding",
     "dataSettings": "Data Settings",
     "dataName": "Data Name",
@@ -54,5 +54,14 @@
     "dataMinValue": "Data Min Value",
     "multipleOf": "Multiple of",
     "valueMultipleOf": "Value Multiple of",
-    "saveAndAdd": "Save and Add"
+    "saveAndAdd": "Save and Add",
+
+    "questionDeleteAddingStringType": "Do you really want to delete the creation of a string data at your Data Storage?",
+    "stringDataAdding": "String Data Adding",
+    "minLength": "Min Length",
+    "dataMinLength": "Data Min Length",
+    "maxLength": "Max Length",
+    "dataMaxLength": "Data Max Length",
+    "onlyAlphabetical": "Only Alphabetical",
+    "subtitleOnlyAphabetical": "No numbers, special chars, etc..."
 }
