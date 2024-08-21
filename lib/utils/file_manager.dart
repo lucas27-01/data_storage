@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:data_storage/models/data_storage.dart';
 import 'package:data_storage/providers/settings.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:watcher/watcher.dart';
 
 class FileManager {
   static Future<String> get _localPath async {
@@ -19,7 +21,11 @@ class FileManager {
 
   static Future<File> get _userDataFile async {
     final path = await _localPath;
-    return File(join(path, "user_data.json"));
+    File dataStorageFile = File(join(path, "user_data.json"));
+    if (!await dataStorageFile.exists()) {
+      dataStorageFile.writeAsString('[]');
+    }
+    return dataStorageFile;
   }
 
   static Future<void> saveSettings(String data) async {
@@ -50,5 +56,53 @@ class FileManager {
       await saveUserData("[]");
       return "[]";
     }
+  }
+
+  static Future<List<DataStorage>> getDataStorage() async {
+    var tmpDS = jsonDecode(await FileManager.getUserData())
+        .map((el) => DataStorage.fromJson(el))
+        .toList();
+    List<DataStorage> listDataStorage = [];
+    for (var ds in tmpDS) {
+      if (ds is DataStorage) {
+        listDataStorage.add(ds);
+      }
+    }
+    return listDataStorage;
+  }
+
+  static Stream<List<DataStorage>> getDataStorageStream() async* {
+    var dsFile = await _userDataFile;
+
+    final fileWatcher = FileWatcher(dsFile.path);
+    final controller = StreamController<List<DataStorage>>();
+
+    fileWatcher.events.listen((event) {
+      if (event.type == ChangeType.MODIFY) {
+        try {
+          final content = dsFile.readAsStringSync();
+          var tmpDS = jsonDecode(content)
+              .map((el) => DataStorage.fromJson(el))
+              .toList();
+          List<DataStorage> listDataStorage = [];
+          for (var ds in tmpDS) {
+            if (ds is DataStorage) {
+              listDataStorage.add(ds);
+            }
+          }
+          controller.add(listDataStorage);
+        } catch (e) {
+          controller.addError(e);
+        }
+      }
+    });
+
+    try {
+      controller.add(await getDataStorage());
+    } catch (e) {
+      controller.addError("Initial Reading Error $e");
+    }
+
+    yield* controller.stream;
   }
 }

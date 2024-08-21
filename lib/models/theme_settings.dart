@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ThemeSettings {
   ThemeSettings.standard() {
     _brightnessTheme = Brightness.dark;
-    _colorTheme = Colors.indigo;
+    _colorTheme = Colors.teal;
   }
 
   ThemeSettings({required Brightness brightness, required Color color}) {

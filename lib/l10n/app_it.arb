@@ -26,6 +26,7 @@
     "yesIWant": "Sì, lo voglio",
     "noStay": "No, rimani",
     "questionDeleteCreationDS": "Vuoi veramente cancellare la creazione della Raccolta Dati?",
+    "questionDeleteDataStorage": "Vuoi veramente eliminare la Raccolta Dati?",
     "genericCreateInfo": "Questa è una sezione generica: qua puoi modificare proprietà dell'intera raccolta dati e non di un singolo dato. Se vuoi modificare e/o aggiungere Dati devi andare nella sezione \"Dati\".",
     "name": "Nome",
     "dataStorageName": "Nome della Raccolta Dati",
@@ -37,7 +38,7 @@
     "selType": "Seleziona un Tipo",
     "cancel": "Annulla",
     "continuing": "Continua",
-    "addData": "Aggiungi un Dato",
+    "addData": "Aggiungi Dato",
     "generic": "Generali",
     "data": "Dati",
     "questionDeleteAddingIntegerType": "Vuoi veramente cancellare l'aggiunta di un dato di tipo Intero alla tua raccolta dati?",
@@ -70,9 +71,97 @@
         "description": "representableType",
         "placeholders": {
             "type": {
-              "type":"String",
-              "example":"1" 
+                "type": "String",
+                "example": "1"
             }
         }
-    }
+    },
+    "historic": "Storico",
+    "historicOf": "Storico di",
+    "questionDataStorageCreationComplete": "Sei sicuro di aver completato la creazione della tua Raccolta Dati?\nMolte proprietà e preference non potranno più essere modificate.",
+    "delete": "Delete",
+    "confirmDeleteData": "Vuoi veramente rimuovere il Dato {dataName} (descrizione: {dataDescription})?",
+    "@confirmDeleteData": {
+        "description": "confirmDeleteData",
+        "placeholders": {
+            "dataName": {
+                "type": "String"
+            },
+            "dataDescription": {
+                "type": "String"
+            }
+        }
+    },
+    "statsToSeeInHistoric": "Statisiche da vedere nella pagina Storico",
+    "questionStatsToSee": "Statistiche?",
+    "explainIntegerStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tLa \"Media\" è la media di tutti i valori di questo dato (quando aggiunti);\n\t\tLa \"Mediana\" è il valore al centro quando la lista dei valori è ordinata;\n\t\tLa \"Moda\" è il numero che appare più frequentemente tra i valori;\n\t\tIl \"Valore Minimo\" e il \"Valore Massimo\" sono appunto il valore minimo e massimo tra i valori;\n\t\tLa \"Deviazione Standard\" indica quanto i valori si discostano mediamente dalla media dei valori;\n\t\tIl \"Range\" è la differenza tra il valore massimo e il valore minimo della lista di valori.",
+    "explainStringStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tLa \"Moda\" è la Stringa che appare più frequentemente tra i valori;\n\t\tLa \"Lunghezza Media\" è la media delle lunghezze di ogni stringa;\"\n\t\tLa \"Stringa Più Corta\" e la \"Stringa Più Lunga\" sono appunto la più corta e la più lunga tra le stringhe.",
+    "statTerms": "{term, select, other{{term}} mean{Media} median{Mediana} mode{Moda} maxValue{Valore Massimo} minValue{Valore Minimo} standardDeviation{Deviazione Standard} range{Range} meanLenght{Lunghezza Media} longerValue{Stringa Più Lunga} shorterValue{Striga Più Corta}}",
+    "@statTerms": {
+        "description": "statTerms",
+        "placeholders": {
+            "term": {
+                "type": "String"
+            }
+        }
+    },
+    "edit": "Modifica",
+    "type": "Tipo",
+    "viewerOf": "Visualizzatore di {name}",
+    "@viewerOf": {
+        "description": "Print [name] viewer",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "noData": "Nessun Dato",
+    "modeWithOccurrences": "{mode} con {occurrences} occorrenze",
+    "@modeWithOccurrences": {
+        "description": "Print the mode (stats) with occurrences",
+        "placeholders": {
+            "mode": {
+                "type": "String"
+            },
+            "occurrences": {
+                "type": "int"
+            }
+        }
+    },
+    "integerValue": "Valore Intero",
+    "multipleOfNum": "Il valore deve essere multiplo di {multiple}",
+    "@multipleOfNum": {
+        "description": "Print \"The value has to be multiple of [multiple]}",
+        "placeholders": {
+            "multiple": {
+                "type": "num"
+            }
+        }
+    },
+    "decimalValue": "Valore Decimale",
+    "stringWithChars": "{numberOfChars, plural, other{{string} con {numberOfChars} caratteri} =0{{string} senza caratteri} =1{{string} con 1 carattere}}",
+    "@stringWithChars": {
+        "description": "Print the provided string wih the provided characters",
+        "placeholders": {
+            "string": {
+                "type": "String"
+            },
+            "numberOfChars": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "numberOfCharacters": "{chars, plural, other{{chars} caratteri} =0{senza caratteri} =1{1 carattere} }",
+    "@numberOfCharacters": {
+        "description": "Return the [numOfChars] characters",
+        "placeholders": {
+            "chars": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "stringValue": "Valore di tipo Stringa"
 }

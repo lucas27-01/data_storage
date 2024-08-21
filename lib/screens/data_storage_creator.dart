@@ -1,13 +1,15 @@
 import 'package:data_storage/models/data.dart';
 import 'package:data_storage/models/data_storage.dart';
 import 'package:data_storage/models/representable_data_types/representable_data_type.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DataStorageCreator extends StatefulWidget {
-  const DataStorageCreator({super.key});
+  const DataStorageCreator({super.key, this.dataStorageToEdit});
+  final DataStorage? dataStorageToEdit;
 
   @override
   State<DataStorageCreator> createState() => _DataStorageCreatorState();
@@ -16,7 +18,15 @@ class DataStorageCreator extends StatefulWidget {
 class _DataStorageCreatorState extends State<DataStorageCreator> {
   int _selectedTabIndex = 0;
   final _genericFormKey = GlobalKey<FormBuilderState>();
-  DataStorage newDataStorage = DataStorage.standard();
+  late DataStorage newDataStorage;
+  bool _isGenericDataStorageInfoValid = false;
+
+  @override
+  void initState() {
+    newDataStorage = widget.dataStorageToEdit ?? DataStorage.standard();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,125 +62,79 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(AppLocalizations.of(context)!.createDataStorage),
         ),
-        body: _selectedTabIndex == 0
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FormBuilder(
-                  key: _genericFormKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Text(AppLocalizations.of(context)!.genericCreateInfo),
-                        FormBuilderTextField(
-                          initialValue: newDataStorage.id.toString(),
-                          enabled: false,
-                          decoration: const InputDecoration(label: Text('id')),
-                          name: 'id',
-                        ),
-                        FormBuilderTextField(
-                          initialValue: newDataStorage.name,
-                          maxLength: 27,
-                          name: "name",
-                          decoration: InputDecoration(
-                            label: Text(AppLocalizations.of(context)!.name),
-                            hintText:
-                                AppLocalizations.of(context)!.dataStorageName,
-                          ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                            FormBuilderValidators.maxLength(27),
-                            FormBuilderValidators.minLength(3)
-                          ]),
-                        ),
-                        FormBuilderTextField(
-                          initialValue: newDataStorage.description,
-                          maxLength: 500,
-                          name: "description",
-                          decoration: InputDecoration(
-                            label:
-                                Text(AppLocalizations.of(context)!.description),
-                            hintText: AppLocalizations.of(context)!
-                                .dataStorageDescription,
-                          ),
-                          validator: FormBuilderValidators.maxLength(
-                            500,
-                            checkNullOrEmpty: false,
-                          ),
-                        ),
-                        ListTile(
-                          title: Text(AppLocalizations.of(context)!.icon),
-                          trailing: TextButton.icon(
-                            onPressed: () => showDialog(
-                              context: context,
-                              builder: (BuildContext content) {
-                                return AlertDialog.adaptive(
-                                  title: Text(
-                                      AppLocalizations.of(context)!.selIcon),
-                                  content: GridView.builder(
-                                    gridDelegate:
-                                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 25,
-                                      childAspectRatio: 1,
-                                      crossAxisSpacing: 10,
-                                      mainAxisSpacing: 10,
-                                    ),
-                                    itemCount: DataStorage.iconNames.length,
-                                    itemBuilder: (content, index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() =>
-                                              newDataStorage.iconCodePoint =
-                                                  DataStorage.iconNames[index]);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Icon(
-                                          IconData(
-                                            DataStorage.iconNames[index],
-                                            fontFamily: 'MaterialIcons',
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                            label: Text(
-                              newDataStorage.iconCodePoint?.toString() ??
-                                  AppLocalizations.of(context)!.selIcon,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                            icon: Icon(newDataStorage.icon ?? Icons.ads_click),
-                            iconAlignment: IconAlignment.end,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            if (_genericFormKey.currentState
-                                    ?.saveAndValidate() ??
-                                false) {
-                              newDataStorage.name =
-                                  _genericFormKey.currentState!.value['name'];
-                              newDataStorage.description = _genericFormKey
-                                  .currentState?.value["description"];
-                              setState(() => _selectedTabIndex = 1);
-                            }
-                          },
-                          label: Text(
-                              AppLocalizations.of(context)!.saveAndContinue),
-                          icon: const Icon(Icons.check),
-                        )
-                      ],
+        body: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FormBuilder(
+              key: _genericFormKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text(AppLocalizations.of(context)!.genericCreateInfo),
+                    FormBuilderTextField(
+                      initialValue: newDataStorage.id.toString(),
+                      enabled: false,
+                      decoration: const InputDecoration(label: Text('id')),
+                      name: 'id',
                     ),
-                  ),
+                    FormBuilderTextField(
+                      initialValue: newDataStorage.name,
+                      maxLength: 20,
+                      name: "name",
+                      decoration: InputDecoration(
+                        label: Text(AppLocalizations.of(context)!.name),
+                        hintText: AppLocalizations.of(context)!.dataStorageName,
+                      ),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.maxLength(20),
+                        FormBuilderValidators.minLength(3)
+                      ]),
+                    ),
+                    FormBuilderTextField(
+                      initialValue: newDataStorage.description,
+                      maxLength: 500,
+                      name: "description",
+                      decoration: InputDecoration(
+                        label: Text(AppLocalizations.of(context)!.description),
+                        hintText: AppLocalizations.of(context)!
+                            .dataStorageDescription,
+                      ),
+                      validator: FormBuilderValidators.maxLength(
+                        500,
+                        checkNullOrEmpty: false,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        if (_genericFormKey.currentState?.saveAndValidate() ??
+                            false) {
+                          newDataStorage.name =
+                              _genericFormKey.currentState!.value['name'];
+                          newDataStorage.description = _genericFormKey
+                              .currentState?.value["description"];
+                          _isGenericDataStorageInfoValid = true;
+                          setState(() => _selectedTabIndex = 1);
+                        }
+                      },
+                      label:
+                          Text(AppLocalizations.of(context)!.saveAndContinue),
+                      icon: const Icon(Icons.check),
+                    )
+                  ],
                 ),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView(
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     FilledButton.icon(
                       onPressed: () async {
@@ -196,7 +160,9 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
                                         .representableDataTypes.entries)
                                       DropdownMenuItem(
                                         value: entry.key,
-                                        child: Text(AppLocalizations.of(context)!.representableType(entry.value)),
+                                        child: Text(AppLocalizations.of(
+                                                context)!
+                                            .representableType(entry.value)),
                                       )
                                   ],
                                 ),
@@ -218,9 +184,8 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (_) => typeFormKey
-                                                .currentState!
-                                                .value["type"]
-                                                .builderWidget,
+                                                .currentState!.value["type"]
+                                                .builderWidget(),
                                           ),
                                         ).then((value) {
                                           if (context.mounted) {
@@ -245,29 +210,128 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
                       label: Text(AppLocalizations.of(context)!.addData),
                       icon: const Icon(Icons.add_rounded),
                     ),
-                    const Divider(),
-                    for (int index = 0;
-                        index < (newDataStorage.data.length);
-                        index++)
-                      Hero(
-                        tag: index,
-                        child: ListTile(
-                          leading: Icon(
-                              RepresentableDataType.representableDataTypeAsIcon[
-                                  newDataStorage.data[index].type.runtimeType]),
-                          title: Text(
-                            newDataStorage.data[index].name,
-                          ),
-                          subtitle:
-                              newDataStorage.data[index].description != null
-                                  ? Text(
-                                      newDataStorage.data[index].description!,
+                    FilledButton.icon(
+                      onPressed: newDataStorage.data.isEmpty ||
+                              !_isGenericDataStorageInfoValid
+                          ? null
+                          : () => showAdaptiveDialog(
+                                context: context,
+                                builder: (context) => AlertDialog.adaptive(
+                                  title: Text(
+                                      AppLocalizations.of(context)!.attenction),
+                                  content: SingleChildScrollView(
+                                    child: Text(AppLocalizations.of(context)!
+                                        .questionDataStorageCreationComplete),
+                                  ),
+                                  actions: [
+                                    OutlinedButton.icon(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context)
+                                            .pop(newDataStorage);
+                                      },
+                                      label: Text(AppLocalizations.of(context)!
+                                          .yesIWant),
+                                      icon: const Icon(Icons.add_rounded),
+                                    ),
+                                    FilledButton.icon(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      label: Text(
+                                          AppLocalizations.of(context)!.noStay),
+                                      icon: const Icon(Icons.cancel_rounded),
                                     )
-                                  : null,
-                        ),
-                      ),
+                                  ],
+                                ),
+                              ),
+                      label: Text(AppLocalizations.of(context)!.saveAndAdd),
+                      icon: const Icon(Icons.check_rounded),
+                    )
                   ],
-                )),
+                ),
+                const Divider(),
+                for (int index = 0;
+                    index < (newDataStorage.data.length);
+                    index++)
+                  ListTile(
+                    leading: Icon(
+                      RepresentableDataType.representableDataTypeAsIcon[
+                          newDataStorage.data[index].type.runtimeType],
+                    ),
+                    title: Text(
+                      newDataStorage.data[index].name,
+                    ),
+                    subtitle: newDataStorage.data[index].description != null
+                        ? Text(
+                            newDataStorage.data[index].description!,
+                          )
+                        : null,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            var newData = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => newDataStorage
+                                    .data[index].type!
+                                    .builderWidget(
+                                        dataToEdit: newDataStorage.data[index]),
+                              ),
+                            );
+                            if (newData != null) {
+                              setState(
+                                  () => newDataStorage.data[index] = newData);
+                            }
+                          },
+                          icon: const Icon(Icons.edit_rounded),
+                        ),
+                        IconButton(
+                          onPressed: () => showAdaptiveDialog(
+                            context: context,
+                            builder: (context) => AlertDialog.adaptive(
+                              title: Text(
+                                AppLocalizations.of(context)!.attenction,
+                              ),
+                              content: SingleChildScrollView(
+                                child: Text(AppLocalizations.of(context)!
+                                    .confirmDeleteData(
+                                        newDataStorage.data[index].name,
+                                        newDataStorage
+                                                .data[index].description ??
+                                            "")),
+                              ),
+                              actions: [
+                                OutlinedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(
+                                      () => newDataStorage.data.removeAt(index),
+                                    );
+                                  },
+                                  label: Text(
+                                      AppLocalizations.of(context)!.delete),
+                                  icon: const Icon(Icons.warning_rounded),
+                                ),
+                                FilledButton.icon(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  label: Text(
+                                      AppLocalizations.of(context)!.cancel),
+                                  icon: const Icon(Icons.cancel_rounded),
+                                ),
+                              ],
+                            ),
+                          ),
+                          icon: const Icon(CupertinoIcons.trash_fill),
+                        )
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          )
+        ][_selectedTabIndex],
         bottomNavigationBar: BottomNavigationBar(
           elevation: 27,
           selectedIconTheme: const IconThemeData(size: 30),
@@ -275,11 +339,13 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
           onTap: (value) => setState(() => _selectedTabIndex = value),
           items: [
             BottomNavigationBarItem(
-                icon: const Icon(Icons.info_rounded),
-                label: AppLocalizations.of(context)!.generic),
+              icon: const Icon(Icons.info_rounded),
+              label: AppLocalizations.of(context)!.generic,
+            ),
             BottomNavigationBarItem(
-                icon: const Icon(Icons.data_array_rounded),
-                label: AppLocalizations.of(context)!.data),
+              icon: const Icon(Icons.data_array_rounded),
+              label: AppLocalizations.of(context)!.data,
+            ),
           ],
         ),
       ),

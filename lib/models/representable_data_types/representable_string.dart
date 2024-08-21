@@ -1,3 +1,5 @@
+import 'package:data_storage/extensions/date_extensions.dart';
+import 'package:data_storage/widgets/expandable_section.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:data_storage/models/data.dart';
 import 'package:data_storage/models/data_constraints/string_constraints.dart';
@@ -11,10 +13,12 @@ class RepresentableString extends RepresentableDataType {
     values = {};
     defaultValue = null;
     constraints = StringConstraints.standard();
+    statsToSee = VisibleStringInfo.values.toSet();
   }
 
   RepresentableString({
     required this.values,
+    required this.statsToSee,
     this.defaultValue,
     StringConstraints? constraints,
   }) : super.standard() {
@@ -23,34 +27,117 @@ class RepresentableString extends RepresentableDataType {
 
   factory RepresentableString.fromJson(Map<String, dynamic> json) {
     return RepresentableString(
-      values: json["values"],
+      values: {
+        for (var entry in json["values"].entries) entry.key: entry.value
+      },
+      statsToSee: {
+        for (var stat in json["statsToSee"]
+            .map((name) =>
+                VisibleStringInfo.values.firstWhere((el) => el.name == name))
+            .toSet())
+          stat
+      },
       defaultValue: json["defaultValue"],
       constraints: StringConstraints.fromJson(json["constraints"]),
     );
   }
 
+  @override
   late Map<String, String>
       values; // Secs from Unix Epoch that represents value added and the value
   @override
   late String? defaultValue;
   @override
   late StringConstraints constraints;
+  @override
+  late Set<VisibleStringInfo> statsToSee = {};
 
-  Widget get builderWidget => const RepresentableStringAdder();
+  @override
+  Widget builderWidget({Data? dataToEdit}) {
+    return RepresentableStringAdder(
+      dataToEdit: dataToEdit,
+    );
+  }
+
+  @override
+  Type get wantedType => String;
+
+  @override
+  String getStat({required BuildContext context, required dynamic stat}) {
+    if (stat is VisibleStringInfo) {
+      switch (stat) {
+        case VisibleStringInfo.mode:
+          if (values.isNotEmpty) {
+            Map<String, int> counter = {};
+            for (var string in values.values) {
+              counter[string] = (counter[string] ?? 0) + 1;
+            }
+            int maxOccurrences = counter.values.reduce((a, b) => a > b ? a : b);
+
+            String mode = "";
+            counter.forEach((string, occurrences) {
+              if (occurrences == maxOccurrences) {
+                mode += "$string, ";
+              }
+            });
+            return AppLocalizations.of(context)!.modeWithOccurrences(
+                mode.substring(0, mode.length - 2), maxOccurrences);
+          } else {
+            return AppLocalizations.of(context)!.noData;
+          }
+        case VisibleStringInfo.shorterValue:
+          if (values.isNotEmpty) {
+            String shorterString =
+                values.values.reduce((a, b) => a.length < b.length ? a : b);
+            return AppLocalizations.of(context)!
+                .stringWithChars(shorterString, shorterString.length);
+          } else {
+            return AppLocalizations.of(context)!.noData;
+          }
+        case VisibleStringInfo.longerValue:
+          if (values.isNotEmpty) {
+            String longerString =
+                values.values.reduce((a, b) => a.length > b.length ? a : b);
+            return AppLocalizations.of(context)!
+                .stringWithChars(longerString, longerString.length);
+          } else {
+            return AppLocalizations.of(context)!.noData;
+          }
+        case VisibleStringInfo.meanLenght:
+          if (values.isNotEmpty) {
+            return AppLocalizations.of(context)!.numberOfCharacters(
+                values.values.reduce((a, b) => a + b).length);
+          } else {
+            return AppLocalizations.of(context)!.noData;
+          }
+      }
+    } else {
+      throw Exception("Type Error: ${stat.runtimeType} Unknown Type");
+    }
+  }
 
   @override
   Map<String, dynamic> toJson() {
     return {
       "_type": "RepresentableString",
       "values": values,
+      "statsToSee": statsToSee.map((el) => el.name).toList(),
       "defaultValue": defaultValue,
       "constraints": constraints.toJson(),
     };
   }
 }
 
+enum VisibleStringInfo {
+  mode, // The most commonly string in the list
+  meanLenght, // The mean of every value lenght
+  longerValue, // The longer value (string)
+  shorterValue, // The shorter value (string)
+}
+
 class RepresentableStringAdder extends StatefulWidget {
-  const RepresentableStringAdder({super.key});
+  const RepresentableStringAdder({super.key, this.dataToEdit});
+  final Data? dataToEdit;
 
   @override
   State<RepresentableStringAdder> createState() =>
@@ -59,10 +146,19 @@ class RepresentableStringAdder extends StatefulWidget {
 
 class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
   final _formKey = GlobalKey<FormBuilderState>();
-  final _newData = Data(name: "", type: RepresentableString.standard());
+  late final Data _newData;
   String? defaultValue;
   int? minLength, maxLength, maxWordsCount, minWordsCount;
   bool onlyAlphabetical = false;
+  Set<VisibleStringInfo> statsToSee = {};
+
+  @override
+  void initState() {
+    _newData = widget.dataToEdit ??
+        Data(name: "", type: RepresentableString.standard());
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +256,35 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
                       ],
                     ),
                   ),
+                  FormBuilderCheckboxGroup<VisibleStringInfo>(
+                    name: 'statsToSee',
+                    initialValue: _newData.type?.statsToSee.toList(),
+                    options: [
+                      for (var info in VisibleStringInfo.values)
+                        FormBuilderFieldOption(
+                          value: info,
+                          child: Text(
+                            AppLocalizations.of(context)!.statTerms(info.name),
+                          ),
+                        )
+                    ],
+                    decoration: InputDecoration(
+                        label: Text(
+                            AppLocalizations.of(context)!.statsToSeeInHistoric),
+                        helper: IconButton(
+                            onPressed: () => showAdaptiveDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog.adaptive(
+                                    title: Text(AppLocalizations.of(context)!
+                                        .questionStatsToSee),
+                                    content: SingleChildScrollView(
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .explainStringStatsToSee)),
+                                  ),
+                                ),
+                            icon: const Icon(Icons.help_outline_rounded))),
+                  ),
                   Text(
                     AppLocalizations.of(context)!.constraintsSettings,
                     style: const TextStyle(fontSize: 24),
@@ -221,9 +346,16 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
 
                       try {
                         defaultValue =
-                            _formKey.currentState?.value["deafultValue"];
+                            _formKey.currentState?.value["defaultValue"];
                       } catch (_) {
                         defaultValue = null;
+                      }
+
+                      try {
+                        statsToSee =
+                            _formKey.currentState?.value["statsToSee"].toSet();
+                      } catch (_) {
+                        statsToSee = {};
                       }
 
                       try {
@@ -247,6 +379,7 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableString(
                           values: {},
+                          statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: StringConstraints(
                             maxLength: maxLength,
@@ -266,6 +399,88 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class StringHistoric extends StatelessWidget {
+  const StringHistoric({super.key, required this.data});
+  final Data data;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpandableSection(
+      title: Text(
+        "${AppLocalizations.of(context)!.historicOf} ${data.name}",
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      content: Column(
+        children: [
+          for (var entry in data.type!.values.entries)
+            ListTile(
+              title: Text(
+                entry.value,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(entry.key) * 1000)
+                  .formatDateTimeLocalized(context)),
+            ),
+          const Divider(),
+        ],
+      ),
+    );
+  }
+}
+
+class StringValueAdder extends StatelessWidget {
+  const StringValueAdder({super.key, required this.data});
+  final Data data;
+
+  @override
+  Widget build(BuildContext context) {
+    print(data.type?.constraints.runtimeType);
+    return FormBuilderTextField(
+      name: data.name,
+      initialValue: data.type?.defaultValue,
+      autovalidateMode: AutovalidateMode.onUnfocus,
+      decoration: InputDecoration(
+        label: Text("${AppLocalizations.of(context)!.stringValue}*"),
+        hintText: AppLocalizations.of(context)!.stringValue,
+      ),
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(),
+        if (data.type?.constraints.minLength != null)
+          FormBuilderValidators.minLength(data.type!.constraints.minLength),
+        if (data.type?.constraints.maxLength != null)
+          FormBuilderValidators.maxLength(data.type!.constraints.maxLength),
+        if (data.type?.constraints.onlyAlphabetical ?? false)
+          FormBuilderValidators.alphabetical()
+      ]),
+    );
+  }
+}
+
+class StringViewer extends StatelessWidget {
+  const StringViewer({super.key, required this.data});
+  final Data data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (data.description != null)
+          Text(
+              "${AppLocalizations.of(context)!.description}: ${data.description!}"),
+        if (data.description != null) const Divider(),
+        for (VisibleStringInfo stat in data.type?.statsToSee)
+          Text(
+            "${AppLocalizations.of(context)!.statTerms(stat.name)}: ${data.type?.getStat(context: context, stat: stat)}",
+          ),
+        data.getHistoric(),
+      ],
     );
   }
 }

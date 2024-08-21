@@ -11,9 +11,10 @@ class IntegerConstraints {
 
   factory IntegerConstraints.fromJson(Map<String, dynamic> json) {
     return IntegerConstraints(
-        maxValue: json["maxValue"],
-        minValue: json["minValue"],
-        multipleOf: json["multipleOf"]);
+      maxValue: json["maxValue"],
+      minValue: json["minValue"],
+      multipleOf: json["multipleOf"],
+    );
   }
 
   late int? minValue;

@@ -12,8 +12,8 @@ class StringConstraints {
 
   factory StringConstraints.fromJson(Map<String, dynamic> json) {
     return StringConstraints(
-      maxLength: json["maxLenght"],
-      minLength: json["minLenght"],
+      maxLength: json["maxLength"],
+      minLength: json["minLength"],
       onlyAlphabetical: json["onlyAlphabetical"],
     );
   }
@@ -24,8 +24,8 @@ class StringConstraints {
 
   Map<String, dynamic> toJson() {
     return {
-      "maxLenght": maxLength,
-      "minLenght": minLength,
+      "maxLength": maxLength,
+      "minLength": minLength,
       "onlyAlphabetical": onlyAlphabetical,
     };
   }

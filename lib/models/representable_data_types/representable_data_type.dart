@@ -1,3 +1,4 @@
+import 'package:data_storage/models/data.dart';
 import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
 import 'package:data_storage/models/representable_data_types/representable_string.dart';
@@ -15,7 +16,8 @@ abstract class RepresentableDataType {
       case "RepresentableDecimal":
         return RepresentableDecimal.fromJson(json);
       default:
-        throw Exception("Unknown type ${json["_type"]}");
+        throw Exception(
+            "Type Error: Unknown type ${json["_type"]} for factory RepresentableDataType.fromJson");
     }
   }
 
@@ -31,16 +33,29 @@ abstract class RepresentableDataType {
     RepresentableDecimal: Icons.calculate_rounded,
   };
 
-  get constraints => throw Exception("This should not be seen");
+  get constraints =>
+      throw Exception("RepresentableDataType called an invalid getter");
 
-  get defaultValue => throw Exception("This should not be seen");
+  get defaultValue =>
+      throw Exception("RepresentableDataType called an invalid getter");
 
-  Widget getCreatorWidget() {
-    return const Text(
-        "You should not see this... This is an error, warn the developer!");
-  }
+  get statsToSee =>
+      throw Exception("RepresentableDataType called an invalid getter");
+
+  Map<String, dynamic> get values =>
+      throw Exception("RepresentableDataType called an invalid getter");
 
   Map<String, dynamic> toJson() {
     return {};
   }
+
+  Widget builderWidget({Data? dataToEdit}) {
+    throw Exception("RepresentableDataType called an invalid method");
+  }
+
+  Type get wantedType =>
+      throw Exception("RepresentableDataType called an invalid getter");
+
+  String getStat({required BuildContext context, required dynamic stat}) =>
+      throw Exception("RepresentableDataType called an invalid method");
 }

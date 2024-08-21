@@ -26,6 +26,7 @@
     "yesIWant": "Yes, I want",
     "noStay": "No, stay",
     "questionDeleteCreationDS": "Do you really want to delete the creation of the data collection?",
+    "questionDeleteDataStorage": "Do you really want to delete the data collection?",
     "genericCreateInfo": "This is a generic section: here you can edit the entire Data Storage properties and not a single Data. If you want to edit and/or add Data(s) you should go to the Data section.",
     "name": "Name",
     "dataStorageName": "Data Storage Name",
@@ -70,9 +71,97 @@
         "description": "representableType",
         "placeholders": {
             "type": {
-              "type":"String",
-              "example":"1" 
+                "type": "String",
+                "example": "1"
             }
         }
-    }
+    },
+    "historic": "Historic",
+    "historicOf": "Historic of",
+    "questionDataStorageCreationComplete": "Are you really sure you have completed the Data Storage creation?\nSeveral properties and preferencies will no longer be changed.",
+    "delete": "Elimina",
+    "confirmDeleteData": "Do you really want to delete the Data {dataName} (description: {dataDescription})?",
+    "@confirmDeleteData": {
+        "description": "confirmDeleteData",
+        "placeholders": {
+            "dataName": {
+                "type": "String"
+            },
+            "dataDescription": {
+                "type": "String"
+            }
+        }
+    },
+    "statsToSeeInHistoric": "Stats to see in Historic Page",
+    "questionStatsToSee": "Stats to See?",
+    "explainIntegerStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Mean\" is the mean (or average) of Data Storage values (when added);\n\t\tThe \"Median\" is the value that is in the value list center when the list is sorted;\n\t\tThe \"Mode\" is the number that most often appear;\n\t\tThe \"Min Value\" and the \"Max Value\" are the min and the max values in the list;\n\t\tThe \"Standard Deviation\" mean how far they are on average from the value mean;\n\t\tThe \"Range\" is the difference between the max and the min value.",
+    "explainStringStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Mode\" is the most frequent string of Data Storage values (when added);\n\t\tThe \"Mean Lenght\" is the average of every string lenght;\n\t\tThe \"Shorter String\" and the \"Longer String\" are the shorter and the longer string.",
+    "statTerms": "{term, select, other{{term}} mean{Mean} median{Median} mode{Mode} maxValue{Max Value} minValue{Min Value} standardDeviation{Standard Deviation} range{Range} meanLenght{Mean Lenght} longerValue{Longer String} shorterValue{Shorter String}}",
+    "@statTerms": {
+        "description": "statTerms",
+        "placeholders": {
+            "term": {
+                "type": "String"
+            }
+        }
+    },
+    "edit": "Edit",
+    "type": "Type",
+    "viewerOf": "{name} viewer",
+    "@viewerOf": {
+        "description": "Print [name] viewer",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "noData": "No Data",
+    "modeWithOccurrences": "{mode} with {occurrences} occurrences",
+    "@modeWithOccurrences": {
+        "description": "Print the mode (stats) with occurrences",
+        "placeholders": {
+            "mode": {
+                "type": "String"
+            },
+            "occurrences": {
+                "type": "int"
+            }
+        }
+    },
+    "integerValue": "Integer Value",
+    "multipleOfNum": "The value has to be multiple of {multiple}",
+    "@multipleOfNum": {
+        "description": "multipleOfNum",
+        "placeholders": {
+            "multiple": {
+                "type": "num"
+            }
+        }
+    },
+    "decimalValue": "Decimal Value",
+    "stringWithChars": "{numberOfChars, plural, other{{string} with {numberOfChars} characters} =0{{string} with no characters} =1{{string} with 1 character}}",
+    "@stringWithChars": {
+        "description": "Print the provided string wih the provided characters",
+        "placeholders": {
+            "string": {
+                "type": "String"
+            },
+            "numberOfChars": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "numberOfCharacters": "{chars, plural, other{{chars} characters} =0{no chars} =1{1 character} }",
+    "@numberOfCharacters": {
+        "description": "Return the [numOfChars] characters",
+        "placeholders": {
+            "chars": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "stringValue": "String Value"
 }
