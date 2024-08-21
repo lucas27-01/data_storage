@@ -440,7 +440,6 @@ class StringValueAdder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(data.type?.constraints.runtimeType);
     return FormBuilderTextField(
       name: data.name,
       initialValue: data.type?.defaultValue,

@@ -7,6 +7,7 @@ import 'package:data_storage/providers/settings.dart';
 import 'package:data_storage/screens/route_generator.dart';
 import 'package:data_storage/utils/file_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
@@ -230,7 +231,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                     var oldDSs =
                                         await FileManager.getDataStorage();
                                     oldDSs[index] = newDataStorage;
-                                    print(jsonEncode(oldDSs));
+                                    if (kDebugMode) {
+                                      print(jsonEncode(oldDSs));
+                                    }
                                     FileManager.saveUserData(
                                         jsonEncode(oldDSs));
                                   }
@@ -391,6 +394,7 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             labelBackgroundColor: Theme.of(context).colorScheme.surface,
           ),
+          if (kDebugMode)
           SpeedDialChild(
             child: Icon(
               Icons.print_rounded,
@@ -398,14 +402,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             label: "Print Settings debug",
             onTap: () {
+              // ignore: avoid_print
               print(
                   "Settings from provider: ${context.read<Settings>().toJson()}");
               FileManager.getSettings()
+                  // ignore: avoid_print
                   .then((value) => print("Settings from file: $value"));
             },
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             labelBackgroundColor: Theme.of(context).colorScheme.surface,
           ),
+          if (kDebugMode)
           SpeedDialChild(
             child: Icon(
               Icons.print_rounded,
@@ -414,6 +421,7 @@ class _MyHomePageState extends State<MyHomePage> {
             label: "Print Data Storage debug",
             onTap: () {
               FileManager.getUserData().then((source) {
+                // ignore: avoid_print
                 print(source);
               });
             },
