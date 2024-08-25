@@ -1,4 +1,4 @@
-package com.example.data_storage
+package eu.luigicapp.data_storage
 
 import io.flutter.embedding.android.FlutterActivity
 

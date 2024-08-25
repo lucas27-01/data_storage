@@ -186,8 +186,8 @@ class _SettingsState extends State<SettingsPage> {
                                           .path,
                                       'Android',
                                       'media',
-                                      'com.example.data_storage',
-                                    )); // To acces at /storage/emulated/0/Android/media/com.example.data_storage
+                                      'eu.luigicapp.data_storage',
+                                    )); // To acces at /storage/emulated/0/Android/media/eu.luigicapp.data_storage
 
                                     directory
                                         .create(); // Only if dir doesn't exist
