@@ -520,6 +520,12 @@ class DecimalValueAdder extends StatelessWidget {
                 data.type?.defaultValue ?? data.type!.constraints.minValue,
             min: data.type!.constraints.minValue.toDouble(),
             max: data.type!.constraints.maxValue.toDouble(),
+            divisions: data.type?.constraints.multipleOf != null
+                ? ((data.type?.constraints.maxValue -
+                            data.type?.constraints.minValue) /
+                        data.type?.constraints.multipleOf)
+                    .round()
+                : null,
             decoration: InputDecoration(
                 label: Text("${AppLocalizations.of(context)!.decimalValue}*")),
             autovalidateMode: AutovalidateMode.always,
