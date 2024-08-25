@@ -28,6 +28,8 @@ A Flutter project that collects data in several types and allow the user to see 
   - [ ] (_soon_) Date&Time: both date and time together;
   - [ ] (_soon_) Picker: preselected values (only one at a time);
   - [ ] (_soon_) Multipicker: preselected values with one or more possibility.
+  - [ ] (_soon_) List: long list of another type.
+  - [ ] (_soon_) Accumulator: An accumulator of another type that is more efficient in memory (e.g. in an integer it would increase of the given amount (or decrease if provided a negative number) without store a genuine historic).
   - If you want more types you can just tell me on issue page on GitHub.
 - (_soon_, _very soon_) Support for adding charts for each value
 - (_soon_) Support for adding charts for more value.
