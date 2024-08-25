@@ -46,6 +46,13 @@ class Settings with ChangeNotifier {
   Color get colorTheme => _themeSettings.colorTheme;
   String? get colorThemeName => _themeSettings.colorThemeName;
   Locale? get locale => _userSettings.locale;
+  Locale? get dateFormat => _userSettings.dateFormat;
+  bool get use24H => _userSettings.use24H;
+
+  set use24H(bool use24H) {
+    _userSettings.use24H = use24H;
+    notifyListeners();
+  }
 
   void _writeSettingsFile() {
     FileManager.saveSettings(jsonEncode(toJson()));
@@ -77,6 +84,12 @@ class Settings with ChangeNotifier {
 
   void setLocale({required Locale? locale}) {
     _userSettings.setLocale(locale: locale);
+    _writeSettingsFile();
+    notifyListeners();
+  }
+
+  void setDateFormat({required Locale? localeFormat}) {
+    _userSettings.setDateFormat(localeFormat: localeFormat);
     _writeSettingsFile();
     notifyListeners();
   }

@@ -97,6 +97,7 @@ class _DataValueAdderState extends State<DataValueAdder> {
                       }
                     }
                     if (canSave) {
+                      dataStorage.updateLastChange();
                       Navigator.of(context).pop(dataStorage);
                     }
                     //print(jsonEncode(dataStorage));

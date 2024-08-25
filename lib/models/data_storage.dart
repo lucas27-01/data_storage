@@ -1,9 +1,10 @@
+import 'package:data_storage/extensions/date_extensions.dart';
 import 'package:data_storage/models/data.dart';
 
 class DataStorage {
   DataStorage.standard() {
-    id = (DateTime.now().millisecondsSinceEpoch / 1000)
-        .truncate(); // The seconds since the Unix Epoch
+    lastChange = id =
+        DateTime.now().secondsSinceEpoch; // The seconds since the Unix Epoch
     name = "";
     description = null;
     fromTemplate = false;
@@ -13,16 +14,19 @@ class DataStorage {
   DataStorage({
     required this.name,
     required this.data,
+    int? lastChange,
     this.description,
     this.fromTemplate = false,
   }) {
-    id = (DateTime.now().millisecondsSinceEpoch / 1000).truncate();
+    id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    this.lastChange = lastChange ?? DateTime.now().secondsSinceEpoch;
   }
 
   DataStorage.withId({
     required this.id,
     required this.name,
     required this.data,
+    required this.lastChange,
     this.description,
     this.fromTemplate = false,
   });
@@ -31,6 +35,7 @@ class DataStorage {
     return DataStorage.withId(
       id: json["id"],
       name: json["name"],
+      lastChange: json["lastChange"],
       description: json["description"],
       fromTemplate: json["fromTemplate"],
       data: [
@@ -42,6 +47,7 @@ class DataStorage {
   }
 
   late int id;
+  late int lastChange;
   late String name;
   late String? description;
   late bool fromTemplate;
@@ -51,6 +57,7 @@ class DataStorage {
     return {
       "id": id,
       "name": name,
+      "lastChange": lastChange,
       "description": description,
       "fromTemplate": fromTemplate,
       "data": data.map((el) => el.toJson()).toList()
@@ -58,6 +65,11 @@ class DataStorage {
   }
 
   DateTime creationDate() {
-    return DateTime.fromMillisecondsSinceEpoch(id * 1000);
+    return DateTimeExtensions.fromSecondsSinceEpoch(id * 1000);
   }
+
+  DateTime get getLastChange =>
+      DateTimeExtensions.fromSecondsSinceEpoch(lastChange * 1000);
+
+  void updateLastChange() => lastChange = DateTime.now().secondsSinceEpoch;
 }

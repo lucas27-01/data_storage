@@ -226,6 +226,7 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
                                   actions: [
                                     OutlinedButton.icon(
                                       onPressed: () {
+                                        newDataStorage.updateLastChange();
                                         Navigator.of(context).pop();
                                         Navigator.of(context)
                                             .pop(newDataStorage);

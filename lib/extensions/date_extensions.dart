@@ -1,17 +1,24 @@
+import 'package:data_storage/models/user_settings.dart';
+import 'package:data_storage/providers/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 extension DateTimeExtensions on DateTime {
-String formatDateTimeLocalized(BuildContext context) {
-  const locale = 'it'; //Localizations.localeOf(context).toString(); // TODO: add DateTime localization
+  int get secondsSinceEpoch => millisecondsSinceEpoch ~/ 1000;
 
-  // Crea un formatter per la data
-  final DateFormat dateFormatter = DateFormat.yMd(locale);
-  
-  // Crea un formatter per l'ora
-  final DateFormat timeFormatter = DateFormat.Hm(locale);
+  static DateTime fromSecondsSinceEpoch(int secondsSinceEpoch,
+      {bool isUtc = false}) {
+    return DateTime.fromMillisecondsSinceEpoch(secondsSinceEpoch * 1000,
+        isUtc: isUtc);
+  }
 
-  // Combina data e ora
-  return '${dateFormatter.format(this)} ${timeFormatter.format(this)}';
-}
+  String formatDateTimeLocalized(BuildContext context) {
+    // Create a formatter for DateTime
+    final DateFormat formatter = DateFormat(
+        "${UserSettings.dateFormatPerLocale[context.read<Settings>().dateFormat]} ${context.read<Settings>().use24H ? "HH:mm" : "hh:mm a"}");
+
+    // Combina data e ora
+    return formatter.format(this);
+  }
 }

@@ -16,6 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -395,39 +396,39 @@ class _MyHomePageState extends State<MyHomePage> {
             labelBackgroundColor: Theme.of(context).colorScheme.surface,
           ),
           if (kDebugMode)
-          SpeedDialChild(
-            child: Icon(
-              Icons.print_rounded,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            label: "Print Settings debug",
-            onTap: () {
-              // ignore: avoid_print
-              print(
-                  "Settings from provider: ${context.read<Settings>().toJson()}");
-              FileManager.getSettings()
-                  // ignore: avoid_print
-                  .then((value) => print("Settings from file: $value"));
-            },
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            labelBackgroundColor: Theme.of(context).colorScheme.surface,
-          ),
-          if (kDebugMode)
-          SpeedDialChild(
-            child: Icon(
-              Icons.print_rounded,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            label: "Print Data Storage debug",
-            onTap: () {
-              FileManager.getUserData().then((source) {
+            SpeedDialChild(
+              child: Icon(
+                Icons.print_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              label: "Print Settings debug",
+              onTap: () {
                 // ignore: avoid_print
-                print(source);
-              });
-            },
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            labelBackgroundColor: Theme.of(context).colorScheme.surface,
-          ),
+                print(
+                    "Settings from provider: ${context.read<Settings>().toJson()}");
+                FileManager.getSettings()
+                    // ignore: avoid_print
+                    .then((value) => print("Settings from file: $value"));
+              },
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+              labelBackgroundColor: Theme.of(context).colorScheme.surface,
+            ),
+          if (kDebugMode)
+            SpeedDialChild(
+              child: Icon(
+                Icons.print_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              label: "Print Data Storage debug",
+              onTap: () {
+                FileManager.getUserData().then((source) {
+                  // ignore: avoid_print
+                  print(source);
+                });
+              },
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+              labelBackgroundColor: Theme.of(context).colorScheme.surface,
+            ),
           SpeedDialChild(
             child: Icon(
               Icons.print_rounded,
