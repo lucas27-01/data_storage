@@ -517,8 +517,11 @@ class IntegerValueAdder extends StatelessWidget {
                     1.0,
             min: data.type!.constraints.minValue * 1.0,
             max: (data.type!.constraints.maxValue) * 1.0,
-            divisions: data.type!.constraints.maxValue -
-                data.type!.constraints.minValue,
+            divisions: (data.type!.constraints.maxValue -
+                    data.type!.constraints.minValue) ~/
+                (data.type?.constraints.multipleOf != null
+                    ? data.type!.constraints.multipleOf
+                    : 1),
             decoration: InputDecoration(
                 label: Text("${AppLocalizations.of(context)!.integerValue}*")),
             autovalidateMode: AutovalidateMode.always,
