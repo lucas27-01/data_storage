@@ -454,7 +454,7 @@ class IntegerHistoric extends StatelessWidget {
       ),
       content: Column(
         children: [
-          for (var entry in data.type!.values.entries)
+          for (var entry in data.type!.values.entries.toList().reversed)
             ListTile(
               title: Text(
                 entry.value.toString(),
