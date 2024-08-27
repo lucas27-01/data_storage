@@ -66,7 +66,7 @@
     "subtitleOnlyAphabetical": "No numbers, special chars, etc...",
     "questionDeleteAddingDecimalType": "Do you really want to delete the creation of a decimal data at your Data Storage?",
     "decimalDataAdding": "Decimal Data Adding",
-    "representableType": "{type, select, other{type {type}} integer{Integer} decimal{Decimal} string{String}}",
+    "representableType": "{type, select, other{type {type}} integer{Integer} decimal{Decimal} string{String} boolean{Boolean}}",
     "@representableType": {
         "description": "representableType",
         "placeholders": {
@@ -96,7 +96,8 @@
     "questionStatsToSee": "Stats to See?",
     "explainIntegerStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Mean\" is the mean (or average) of Data Storage values (when added);\n\t\tThe \"Median\" is the value that is in the value list center when the list is sorted;\n\t\tThe \"Mode\" is the number that most often appear;\n\t\tThe \"Min Value\" and the \"Max Value\" are the min and the max values in the list;\n\t\tThe \"Standard Deviation\" mean how far they are on average from the value mean;\n\t\tThe \"Range\" is the difference between the max and the min value.",
     "explainStringStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Mode\" is the most frequent string of Data Storage values (when added);\n\t\tThe \"Mean Lenght\" is the average of every string lenght;\n\t\tThe \"Shorter String\" and the \"Longer String\" are the shorter and the longer string.",
-    "statTerms": "{term, select, other{{term}} mean{Mean} median{Median} mode{Mode} maxValue{Max Value} minValue{Min Value} standardDeviation{Standard Deviation} range{Range} meanLenght{Mean Lenght} longerValue{Longer String} shorterValue{Shorter String}}",
+    "explainBooleanStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Total Values Number\" is the number of values;\n\t\tThe \"Mode\" is the most frequent value (true or false) of Data Storage values (when added);\n\t\tThe \"True Number\" is the number of occurency of the true value in the values;\n\t\tThe \"False Number\" is the number of occurency of the false value in the values.",
+    "statTerms": "{term, select, other{{term}} totalValuesNum{Total Values Number} mean{Mean} median{Median} mode{Mode} maxValue{Max Value} minValue{Min Value} standardDeviation{Standard Deviation} range{Range} meanLenght{Mean Lenght} longerValue{Longer String} shorterValue{Shorter String} trueNum{True Number} falseNum{False Number}}",
     "@statTerms": {
         "description": "statTerms",
         "placeholders": {
@@ -163,5 +164,9 @@
             }
         }
     },
-    "stringValue": "String Value"
+    "stringValue": "String Value",
+    "noDefaultValue": "No Default Value",
+    "true_": "True",
+    "false_": "False",
+    "booleanValue": "Boolean Value"
 }

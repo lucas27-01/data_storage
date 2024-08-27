@@ -1,4 +1,5 @@
 import 'package:data_storage/models/data.dart';
+import 'package:data_storage/models/representable_data_types/representable_boolean.dart';
 import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
 import 'package:data_storage/models/representable_data_types/representable_string.dart';
@@ -15,6 +16,8 @@ abstract class RepresentableDataType {
         return RepresentableString.fromJson(json);
       case "RepresentableDecimal":
         return RepresentableDecimal.fromJson(json);
+      case "RepresentableBoolean":
+        return RepresentableBoolean.fromJson(json);
       default:
         throw Exception(
             "Type Error: Unknown type ${json["_type"]} for factory RepresentableDataType.fromJson");
@@ -25,12 +28,14 @@ abstract class RepresentableDataType {
     RepresentableInteger.standard(): "integer",
     RepresentableString.standard(): "string",
     RepresentableDecimal.standard(): "decimal",
+    RepresentableBoolean.standard(): "boolean"
   };
 
   static final representableDataTypeAsIcon = {
     RepresentableInteger: Icons.numbers_rounded,
     RepresentableString: Icons.abc_rounded,
     RepresentableDecimal: Icons.calculate_rounded,
+    RepresentableBoolean: Icons.check_rounded,
   };
 
   get constraints =>

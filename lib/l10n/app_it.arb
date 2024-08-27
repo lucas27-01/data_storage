@@ -66,7 +66,7 @@
     "subtitleOnlyAphabetical": "Nessun numero, carattere speciale, ecc...",
     "questionDeleteAddingDecimalType": "Vuoi veramente cancellaree l'aggiunta di un Dato di tipo Decimale alla tua Raccolta Dati?",
     "decimalDataAdding": "Aggiunta Dato Decimale",
-    "representableType": "{type, select, other{tipo {type}} integer{Intero} decimal{Decimale} string{Stringa}}",
+    "representableType": "{type, select, other{tipo {type}} integer{Intero} decimal{Decimale} string{Stringa} boolean{Buleano}}",
     "@representableType": {
         "description": "representableType",
         "placeholders": {
@@ -96,7 +96,8 @@
     "questionStatsToSee": "Statistiche?",
     "explainIntegerStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tLa \"Media\" è la media di tutti i valori di questo dato (quando aggiunti);\n\t\tLa \"Mediana\" è il valore al centro quando la lista dei valori è ordinata;\n\t\tLa \"Moda\" è il numero che appare più frequentemente tra i valori;\n\t\tIl \"Valore Minimo\" e il \"Valore Massimo\" sono appunto il valore minimo e massimo tra i valori;\n\t\tLa \"Deviazione Standard\" indica quanto i valori si discostano mediamente dalla media dei valori;\n\t\tIl \"Range\" è la differenza tra il valore massimo e il valore minimo della lista di valori.",
     "explainStringStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tLa \"Moda\" è la Stringa che appare più frequentemente tra i valori;\n\t\tLa \"Lunghezza Media\" è la media delle lunghezze di ogni stringa;\"\n\t\tLa \"Stringa Più Corta\" e la \"Stringa Più Lunga\" sono appunto la più corta e la più lunga tra le stringhe.",
-    "statTerms": "{term, select, other{{term}} mean{Media} median{Mediana} mode{Moda} maxValue{Valore Massimo} minValue{Valore Minimo} standardDeviation{Deviazione Standard} range{Range} meanLenght{Lunghezza Media} longerValue{Stringa Più Lunga} shorterValue{Striga Più Corta}}",
+    "explainBooleanStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tIl \"Numero Totale di Valori\" è il numero di valori;\n\t\tLa \"Moda\" è il valore (vero o falso) che appare più frequentemente tra i valori\n\t\tIl \"Numero di Veri\" è il numero di occorrenze false che appare nei valori;\n\t\tIl \"Numero di Falsi\" è il numero di occorrenze false che appare nei valori.",
+    "statTerms": "{term, select, other{{term}} totalValuesNum{Numero di Valori Totali} mean{Media} median{Mediana} mode{Moda} maxValue{Valore Massimo} minValue{Valore Minimo} standardDeviation{Deviazione Standard} range{Range} meanLenght{Lunghezza Media} longerValue{Stringa Più Lunga} shorterValue{Striga Più Corta} trueNum{Numero di Veri} falseNum{Numero di Falsi}}",
     "@statTerms": {
         "description": "statTerms",
         "placeholders": {
@@ -163,5 +164,9 @@
             }
         }
     },
-    "stringValue": "Valore di tipo Stringa"
+    "stringValue": "Valore di tipo Stringa",
+    "noDefaultValue": "Nessun Valore Predefinito",
+    "true_": "Vero",
+    "false_": "Falso",
+    "booleanValue": "Valore Buleano"
 }

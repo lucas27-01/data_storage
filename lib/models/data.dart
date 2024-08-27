@@ -1,4 +1,5 @@
 import 'package:data_storage/extensions/num_extensions.dart';
+import 'package:data_storage/models/representable_data_types/representable_boolean.dart';
 import 'package:data_storage/models/representable_data_types/representable_data_type.dart';
 import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
@@ -33,8 +34,11 @@ class Data {
       return DecimalHistoric(data: this);
     } else if (type is RepresentableString) {
       return StringHistoric(data: this);
+    } else if (type is RepresentableBoolean) {
+      return BooleanHistoric(data: this);
     } else {
-      throw Exception("Type error: the type ${type.runtimeType} is not a valid type");
+      throw Exception(
+          "Type error: the type ${type.runtimeType} is not a valid type");
     }
   }
 
@@ -45,8 +49,11 @@ class Data {
       return DecimalValueAdder(data: this);
     } else if (type is RepresentableString) {
       return StringValueAdder(data: this);
+    } else if (type is RepresentableBoolean) {
+      return BooleanValueAdder(data: this);
     } else {
-      throw Exception("Type error: the type ${type.runtimeType} is not a valid type");
+      throw Exception(
+          "Type error: the type ${type.runtimeType} is not a valid type");
     }
   }
 
@@ -57,6 +64,8 @@ class Data {
       return DecimalViewer(data: this);
     } else if (type is RepresentableString) {
       return StringViewer(data: this);
+    } else if (type is RepresentableBoolean) {
+      return BooleanViewer(data: this);
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");
@@ -111,6 +120,23 @@ class Data {
       type?.values.addAll({time: value.toString()} as Map<String,
           String>); // The cast is need, else it does not work (idk)
       return true;
+    } else if (type is RepresentableBoolean) {
+      if (value is! bool) {
+        try {
+          // ignore: unnecessary_cast
+          type?.values.addAll({time: bool.parse(value, caseSensitive: false)}
+              as Map<String,
+                  bool>); // The cast is need, else it does not work (idk)
+          return true;
+        } catch (_) {
+          return false;
+        }
+      } else {
+        // ignore: unnecessary_cast
+        type?.values.addAll({time: value} as Map<String,
+            bool>); // The cast is need, else it does not work (idk)
+        return true;
+      }
     }
     return false;
   }
@@ -120,6 +146,7 @@ class Data {
         RepresentableInteger: "integer",
         RepresentableString: "string",
         RepresentableDecimal: "decimal",
+        RepresentableBoolean: "boolean",
       }[type.runtimeType] ??
       "unknwonType";
 
