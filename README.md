@@ -23,7 +23,7 @@ A Flutter project that collects data in several types and allow the user to see 
   - [x] Integer: non-decimal number,
   - [x] Decimal: number both integer or decimal (double)
   - [x] String: long (or short) list of characters (i.e. a word, a phrase, one character)
-  - [x] Boolean: true or false (yes or no)
+  - [x] Boolean: true or false (yes/no)
   - [ ] (_soon_) Date;
   - [ ] (_soon_) Time;
   - [ ] (_soon_) Date&Time: both date and time together;
