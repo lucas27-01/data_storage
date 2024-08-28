@@ -94,7 +94,7 @@ class _SettingsState extends State<SettingsPage> {
                 ),
               ),
               Text(
-                "Locale",
+                AppLocalizations.of(context)!.locale,
                 style:
                     const TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
@@ -122,7 +122,7 @@ class _SettingsState extends State<SettingsPage> {
                       ),
                     ),
                     ListTile(
-                      title: Text("Date Format"),
+                      title: Text(AppLocalizations.of(context)!.dateFormat),
                       leading: const Icon(Icons.date_range_rounded),
                       trailing: DropdownButton(
                         value: context.read<Settings>().dateFormat,
@@ -141,8 +141,8 @@ class _SettingsState extends State<SettingsPage> {
                     ),
                     ListTile(
                       leading: const Icon(Icons.access_time_rounded),
-                      subtitle: Text("24 Hour format or AM/PM"),
-                      title: Text("Use 24 Hour format"),
+                      title: Text(AppLocalizations.of(context)!.use24H),
+                      subtitle: Text(AppLocalizations.of(context)!.explaint24H),
                       trailing: Switch.adaptive(
                           value: context.watch<Settings>().use24H,
                           onChanged: (value) =>
@@ -152,14 +152,15 @@ class _SettingsState extends State<SettingsPage> {
                       padding: const EdgeInsets.only(
                           bottom: 8.0, top: 0, right: 8.0, left: 16.0),
                       child: Text(
-                        "How to display the date. With the current format today's date would be ${DateTime.now().formatDateTimeLocalized(context)}", // TODO: translate
+                        AppLocalizations.of(context)!.explainDateTimeFormats(
+                            DateTime.now().formatDateTimeLocalized(context)),
                       ),
                     ),
                   ],
                 ),
               ),
               Text(
-                "Your Data",
+                AppLocalizations.of(context)!.yourData,
                 style:
                     const TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
@@ -204,7 +205,8 @@ class _SettingsState extends State<SettingsPage> {
                                   if (context.mounted) {
                                     _showSnackBar(
                                       context,
-                                      Text("File created at ${file.path}"),
+                                      Text(AppLocalizations.of(context)!
+                                          .fileCreatedAt(file.path)),
                                       SnackBarAction(
                                         label: AppLocalizations.of(context)!.ok,
                                         onPressed: () {},
@@ -215,16 +217,19 @@ class _SettingsState extends State<SettingsPage> {
                                   if (context.mounted) {
                                     _showSnackBar(
                                       context,
-                                      Text("Couldn't create file"),
+                                      Text(AppLocalizations.of(context)!
+                                          .cannotCreateFile),
                                       SnackBarAction(
-                                        label: "See why",
+                                        label: AppLocalizations.of(context)!
+                                            .seeWhy,
                                         onPressed: () {
                                           showAdaptiveDialog(
                                             context: context,
                                             builder: (context) =>
                                                 AlertDialog.adaptive(
-                                              title:
-                                                  Text("File Creation Error"),
+                                              title: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .fileCreationError),
                                               content: SingleChildScrollView(
                                                 child: Text(e.toString()),
                                               ),
@@ -249,7 +254,8 @@ class _SettingsState extends State<SettingsPage> {
                                   }
                                 }
                               },
-                              label: Text("Export Collections"),
+                              label: Text(AppLocalizations.of(context)!
+                                  .exportCollections),
                               icon: const Icon(Icons.data_array_rounded),
                               //icon: const Icon(Icons.data_array_rounded),
                             ),
@@ -275,8 +281,15 @@ class _SettingsState extends State<SettingsPage> {
                                             .readAsString());
                                     if (fileContent is List<dynamic>) {
                                       if (fileContent.isEmpty) {
-                                        throw Exception(
-                                            "File Content Error (not fatal): the file seems to be empty and for this it cannot be imported.\n The content is $fileContent");
+                                        if (context.mounted) {
+                                          throw Exception(
+                                              AppLocalizations.of(context)!
+                                                  .fileErrImportEmpty(
+                                                      fileContent.toString()));
+                                        } else {
+                                          throw Exception(
+                                              "File Content Error (not fatal): the file seems to be empty and for this it cannot be imported.\n The content is $fileContent");
+                                        }
                                       } else if ((await FileManager
                                               .getDataStorage())
                                           .isEmpty) {
@@ -285,8 +298,8 @@ class _SettingsState extends State<SettingsPage> {
                                         if (context.mounted) {
                                           _showSnackBar(
                                               context,
-                                              Text(
-                                                  "Every Collection Imported"));
+                                              Text(AppLocalizations.of(context)!
+                                                  .allCollectionsImported));
                                         }
                                       } else {
                                         List<DataStorage> savedDataStorages =
@@ -317,21 +330,34 @@ class _SettingsState extends State<SettingsPage> {
                                             jsonEncode(newDataStorages));
                                       }
                                     } else {
-                                      throw Exception(
-                                          "Type Error: the type ${fileContent.runtimeType} is not a valid type.\nThe content of the imported file is: $fileContent");
+                                      if (context.mounted) {
+                                        throw Exception(
+                                            AppLocalizations.of(context)!
+                                                .typeErrFileContent(
+                                                    fileContent.runtimeType
+                                                        .toString(),
+                                                    fileContent.toString()));
+                                      } else {
+                                        throw Exception(
+                                            "Type Error: the type ${fileContent.runtimeType} is not a valid type.\nThe content of the imported file is: $fileContent");
+                                      }
                                     }
                                   } catch (e) {
                                     if (context.mounted) {
                                       _showSnackBar(
                                         context,
-                                        Text("Cannot load file content"),
+                                        Text(AppLocalizations.of(context)!
+                                            .cannotLoadFileContent),
                                         SnackBarAction(
-                                          label: "See why",
+                                          label: AppLocalizations.of(context)!
+                                              .seeWhy,
                                           onPressed: () => showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 AlertDialog.adaptive(
-                                              title: Text("File Load Error"),
+                                              title: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .fileLoadError),
                                               content: SingleChildScrollView(
                                                 child: Text(e.toString()),
                                               ),
@@ -356,7 +382,8 @@ class _SettingsState extends State<SettingsPage> {
                                   }
                                 }
                               },
-                              label: Text("Import Collections"),
+                              label: Text(AppLocalizations.of(context)!
+                                  .importCollections),
                               icon: const Icon(Icons.import_export_rounded),
                             ),
                           ),

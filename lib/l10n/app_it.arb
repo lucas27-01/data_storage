@@ -168,5 +168,57 @@
     "noDefaultValue": "Nessun Valore Predefinito",
     "true_": "Vero",
     "false_": "Falso",
-    "booleanValue": "Valore Buleano"
+    "booleanValue": "Valore Buleano",
+    "locale": "Localizzazione",
+    "dateFormat": "Formato Data",
+    "use24H": "Usare formato 24 Ore",
+    "explaint24H": "Formato 24 ore o AM/PM",
+    "yourData": "I tuoi Dati",
+    "explainDateTimeFormats": "Come mostrare la data. on il formato corrente la data odierna sarebbe {dateTimeLocalized}",
+    "@explainDateTimeFormats": {
+        "description": "Display an explain for the date&time format with an example (today's date)",
+        "placeholders": {
+            "dateTimeLocalized": {
+                "type": "String"
+            }
+        }
+    },
+    "cannotCreateFile": "Impossibile creare il file",
+    "fileCreationError": "Errore nella Creazione del File",
+    "exportCollections": "Esporta Collezioni",
+    "allCollectionsImported": "Tutte le Collezioni Importate",
+    "cannotLoadFileContent": "Impossibile caricare il contenuto del file",
+    "fileLoadError": "Errore nel Caricamente del File",
+    "importCollections": "Importa Collezioni",
+    "typeErrFileContent": "Errore di Tipo: il tipo {runtimeType} non è un tipo valido.\nIl contenuto del file importato è: {fileContent}",
+    "@typeErrFileContent": {
+        "description": "typeErrFileContent",
+        "placeholders": {
+            "runtimeType": {
+                "type": "String"
+            },
+            "fileContent": {
+                "type": "String"
+            }
+        }
+    },
+    "fileErrImportEmpty": "Errore nel Contenuto del File (non fatale): il file sembrerebbe essere vuoto e pre questo non può essere importato.\n Il contenuto del file è {fileContent}",
+    "@fileErrImportEmpty": {
+        "description": "Tryed to import an empty file (not fatal)",
+        "placeholders": {
+            "fileContent": {
+                "type": "String"
+            }
+        }
+    },
+    "seeWhy": "Vedi perché",
+    "fileCreatedAt": "File creato in {filePath}",
+    "@fileCreatedAt": {
+        "description": "Return where a file is created",
+        "placeholders": {
+            "filePath": {
+                "type": "String"
+            }
+        }
+    }
 }

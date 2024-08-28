@@ -168,5 +168,57 @@
     "noDefaultValue": "No Default Value",
     "true_": "True",
     "false_": "False",
-    "booleanValue": "Boolean Value"
+    "booleanValue": "Boolean Value",
+    "locale": "Locale",
+    "dateFormat": "Date Format",
+    "use24H": "Use 24 Hour format",
+    "explaint24H": "24 Hour format or AM/PM",
+    "yourData": "Your Data",
+    "explainDateTimeFormats": "How to display the date. With the current format today's date would be {dateTimeLocalized}",
+    "@explainDateTimeFormats": {
+        "description": "Display an explain for the date&time format with an example (today's date)",
+        "placeholders": {
+            "dateTimeLocalized": {
+                "type": "String"
+            }
+        }
+    },
+    "cannotCreateFile": "Couldn't create file",
+    "fileCreationError": "File Creation Error",
+    "exportCollections": "Export Collections",
+    "allCollectionsImported": "Every Collection Imported",
+    "cannotLoadFileContent": "Cannot load file content",
+    "fileLoadError": "File Load Error",
+    "importCollections": "Import Collections",
+    "typeErrFileContent": "Type Error: the type {runtimeType} is not a valid type.\nThe content of the imported file is: {fileContent}",
+    "@typeErrFileContent": {
+        "description": "typeErrFileContent",
+        "placeholders": {
+            "runtimeType": {
+                "type": "String"
+            },
+            "fileContent": {
+                "type": "String"
+            }
+        }
+    },
+    "fileErrImportEmpty": "File Content Error (not fatal): the file seems to be empty and for this it cannot be imported.\n The content is {fileContent}",
+    "@fileErrImportEmpty": {
+        "description": "Tryed to import an empty file (not fatal)",
+        "placeholders": {
+            "fileContent": {
+                "type": "String"
+            }
+        }
+    },
+    "seeWhy": "See why",
+    "fileCreatedAt": "File created at {filePath}",
+    "@fileCreatedAt": {
+        "description": "Return where a file is created",
+        "placeholders": {
+            "filePath": {
+                "type": "String"
+            }
+        }
+    }
 }
