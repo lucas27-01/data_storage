@@ -25,7 +25,7 @@ A Flutter project that collects data in several types and allow the user to see 
   - [x] String: long (or short) list of characters (i.e. a word, a phrase, one character)
   - [x] Boolean: true or false (yes/no)
   - [ ] (_soon_) Date;
-  - [ ] (_soon_) Time;
+  - [x] (_soon_) Time;
   - [ ] (_soon_) Date&Time: both date and time together;
   - [ ] (_soon_) Picker: preselected values (only one at a time);
   - [ ] (_soon_) Multipicker: preselected values with one or more possibility.
