@@ -22,3 +22,58 @@ extension DateTimeExtensions on DateTime {
     return formatter.format(this);
   }
 }
+
+extension TimeOfDayExtension on TimeOfDay {
+  Map<String, dynamic> toJson() {
+    return {'minute': minute, 'hour': hour};
+  }
+
+  static TimeOfDay fromJson(Map<String, dynamic> json) {
+    return TimeOfDay(hour: json['hour'], minute: json['minute']);
+  }
+
+  static TimeOfDay? fromNullableJson(Map<String, dynamic>? json) {
+    try {
+      return TimeOfDay(hour: json?['hour'], minute: json?['minute']);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static TimeOfDay calulateMean(List<TimeOfDay> times) {
+    if (times.isEmpty) return const TimeOfDay(hour: 0, minute: 0);
+
+    int totalMinutes = times
+        .map((time) => time.minute + time.hour * 60)
+        .toList()
+        .reduce((a, b) => a + b);
+
+    int averageMinutes = totalMinutes ~/ times.length;
+
+    return TimeOfDay(hour: averageMinutes ~/ 60, minute: averageMinutes % 60);
+  }
+
+  int toMinute() {
+    return minute + hour * 60;
+  }
+
+  bool operator <(TimeOfDay other) {
+    if (hour < other.hour) return true;
+    if (hour > other.hour) return false;
+    return minute < other.minute;
+  }
+
+  bool operator >(TimeOfDay other) {
+    if (hour > other.hour) return true;
+    if (hour < other.hour) return false;
+    return minute > other.minute;
+  }
+
+  bool operator <=(TimeOfDay other) {
+    return this < other || this == other;
+  }
+
+  bool operator >=(TimeOfDay other) {
+    return this > other || this == other;
+  }
+}

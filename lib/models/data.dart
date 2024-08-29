@@ -4,6 +4,7 @@ import 'package:data_storage/models/representable_data_types/representable_data_
 import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
 import 'package:data_storage/models/representable_data_types/representable_string.dart';
+import 'package:data_storage/models/representable_data_types/representable_time.dart';
 import 'package:flutter/material.dart';
 
 class Data {
@@ -36,6 +37,8 @@ class Data {
       return StringHistoric(data: this);
     } else if (type is RepresentableBoolean) {
       return BooleanHistoric(data: this);
+    } else if (type is RepresentableTime) {
+      return TimeHistoric(data: this);
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");
@@ -51,6 +54,8 @@ class Data {
       return StringValueAdder(data: this);
     } else if (type is RepresentableBoolean) {
       return BooleanValueAdder(data: this);
+    } else if (type is RepresentableTime) {
+      return TimeValueAdder(data: this);
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");
@@ -66,6 +71,8 @@ class Data {
       return StringViewer(data: this);
     } else if (type is RepresentableBoolean) {
       return BooleanViewer(data: this);
+    } else if (type is RepresentableTime) {
+      return TimeViewer(data: this);
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");
@@ -137,6 +144,14 @@ class Data {
             bool>); // The cast is need, else it does not work (idk)
         return true;
       }
+    } else if (type is RepresentableTime) {
+      if (value is TimeOfDay) {
+        // ignore: unnecessary_cast
+        type?.values.addAll({time: value} as Map<String,
+            TimeOfDay>); // The cast is need, else it does not work (idk)
+        return true;
+      }
+      return false;
     }
     return false;
   }
@@ -147,6 +162,7 @@ class Data {
         RepresentableString: "string",
         RepresentableDecimal: "decimal",
         RepresentableBoolean: "boolean",
+        RepresentableTime: "time",
       }[type.runtimeType] ??
       "unknwonType";
 

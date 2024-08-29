@@ -42,7 +42,11 @@
     "generic": "Generali",
     "data": "Dati",
     "questionDeleteAddingIntegerType": "Vuoi veramente cancellare l'aggiunta di un dato di tipo Intero alla tua raccolta dati?",
+    "questionDeleteAddingBooleanType": "Vuoi veramente cancellare l'aggiunta di un dato di tipo Buleano alla tua raccolta dati?",
+    "questionDeleteAddingTimeType": "Vuoi veramente cancellare l'aggiunta di un dato di tipo Orario alla tua raccolta dati?",
     "integerDataAdding": "Aggiunta Dato Intero",
+    "booleanDataAdding": "Aggiunta Dato Booleano",
+    "timeDataAdding": "Aggiunta Dato di tipo Orario",
     "dataSettings": "Impostazioni Dato",
     "dataName": "Nome del Dato",
     "dataDescription": "Descrizione del Dato",
@@ -66,7 +70,7 @@
     "subtitleOnlyAphabetical": "Nessun numero, carattere speciale, ecc...",
     "questionDeleteAddingDecimalType": "Vuoi veramente cancellaree l'aggiunta di un Dato di tipo Decimale alla tua Raccolta Dati?",
     "decimalDataAdding": "Aggiunta Dato Decimale",
-    "representableType": "{type, select, other{tipo {type}} integer{Intero} decimal{Decimale} string{Stringa} boolean{Buleano}}",
+    "representableType": "{type, select, other{tipo {type}} integer{Intero} decimal{Decimale} string{Stringa} boolean{Booleano} time_{Orario}}",
     "@representableType": {
         "description": "representableType",
         "placeholders": {
@@ -97,7 +101,8 @@
     "explainIntegerStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tLa \"Media\" è la media di tutti i valori di questo dato (quando aggiunti);\n\t\tLa \"Mediana\" è il valore al centro quando la lista dei valori è ordinata;\n\t\tLa \"Moda\" è il numero che appare più frequentemente tra i valori;\n\t\tIl \"Valore Minimo\" e il \"Valore Massimo\" sono appunto il valore minimo e massimo tra i valori;\n\t\tLa \"Deviazione Standard\" indica quanto i valori si discostano mediamente dalla media dei valori;\n\t\tIl \"Range\" è la differenza tra il valore massimo e il valore minimo della lista di valori.",
     "explainStringStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tLa \"Moda\" è la Stringa che appare più frequentemente tra i valori;\n\t\tLa \"Lunghezza Media\" è la media delle lunghezze di ogni stringa;\"\n\t\tLa \"Stringa Più Corta\" e la \"Stringa Più Lunga\" sono appunto la più corta e la più lunga tra le stringhe.",
     "explainBooleanStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tIl \"Numero Totale di Valori\" è il numero di valori;\n\t\tLa \"Moda\" è il valore (vero o falso) che appare più frequentemente tra i valori\n\t\tIl \"Numero di Veri\" è il numero di occorrenze false che appare nei valori;\n\t\tIl \"Numero di Falsi\" è il numero di occorrenze false che appare nei valori.",
-    "statTerms": "{term, select, other{{term}} totalValuesNum{Numero di Valori Totali} mean{Media} median{Mediana} mode{Moda} maxValue{Valore Massimo} minValue{Valore Minimo} standardDeviation{Deviazione Standard} range{Range} meanLenght{Lunghezza Media} longerValue{Stringa Più Lunga} shorterValue{Striga Più Corta} trueNum{Numero di Veri} falseNum{Numero di Falsi}}",
+    "explainTimeStatsToSee": "Queste sono le statistiche che verramo mostrate nella pagina Storico della Raccolta Dati (dopo averla creata e aggiunta).\nSeleziona qulle che ti interessano (anche nessuna o tutte):\n\t\tIl \"Numero Totale di Valori\" è il numero di valori;\n\t\tLa \"Media\" è la media di tutti i valori di questo dato (quando aggiunti);\n\t\tLa \"Media dei Minuti\" è la media dei soli minuti\n\t\tLa \"Media delle Ore\" è la media delle sole ore\n\t\tLa \"Mediana\" è il valore al centro quando la lista dei valori è ordinata;\n\t\tLa \"Moda\" è il numero che appare più frequentemente tra i valori;\n\t\tIl \"Valore Minimo\" e il \"Valore Massimo\" sono appunto il valore minimo e massimo tra i valori;\n\t\tLa \"Deviazione Standard\" indica quanto i valori si discostano mediamente dalla media dei valori;\n\t\tIl \"Range\" è la differenza tra il valore massimo e il valore minimo della lista di valori.",
+    "statTerms": "{term, select, other{{term}} totalValuesNum{Numero di Valori Totali} mean{Media} median{Mediana} mode{Moda} maxValue{Valore Massimo} minValue{Valore Minimo} standardDeviation{Deviazione Standard} range{Range} meanLenght{Lunghezza Media} longerValue{Stringa Più Lunga} shorterValue{Striga Più Corta} trueNum{Numero di Veri} falseNum{Numero di Falsi} hourMean{Hour Mean} minuteMean{Minute Mean} }",
     "@statTerms": {
         "description": "statTerms",
         "placeholders": {
@@ -218,6 +223,51 @@
         "placeholders": {
             "filePath": {
                 "type": "String"
+            }
+        }
+    },
+    "timeSmallerEqual": "L'orario deve essere uguale o più piccolo di {maxValue}",
+    "@timeSmallerEqual": {
+      "description": "Return that a time has to be smaller or equal to another time",
+      "placeholders": {
+        "maxValue":{"type": "String"}
+      }
+    },
+    "timeGreaterEqual": "L'orario deve essere uguale o più grande di {minValue}",
+    "@timeGreaterEqual": {
+      "description": "Return that a time has to be greater or equal to another time",
+      "placeholders": {
+        "minValue":{"type": "String"}
+      }
+    },
+    "timeOfValueAdding": "Orario di aggiunta del valore (dinamico)",
+    "selectedTime": "{customDefaultValue, select, other{Orario a scelta (statico): {customDefaultValue}} void{Orario a scelta (statico)}}",
+    "@selectedTime": {
+        "description": "selectedTime",
+        "placeholders": {
+            "customDefaultValue": {
+              "type":"String",
+              "example":"void" 
+            }
+        }
+    },
+    "noMinTime": "Nessun Orario Minimo",
+    "noMaxTime": "Nessun Orario Massimo",
+    "noTimeConstraints": "Nessun Limite Temporale",
+    "hasToBeFuture": "Deve essere nel Futuro",
+    "timeHasToBeFuture": "L'orario deve essere nel Futuro",
+    "hasToBePast": "Deve essere nel Passato",
+    "timeHasToBePast": "L'orario deve essere nel Passato",
+    "explainTimeConstraints": "Limiti Temporali (del tempo quando salvato)",
+    "time": "Orario",
+    "notSelected": "Non selezionato",
+    "addingSelectedTime": "{selTime, select, other{Orario : {selTime}} void{Orario: Non selezionato}}",
+    "@addingSelectedTime": {
+        "description": "addingSelectedTime",
+        "placeholders": {
+            "selTime": {
+              "type":"String",
+              "example":"void" 
             }
         }
     }

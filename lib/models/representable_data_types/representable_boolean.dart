@@ -139,7 +139,6 @@ class RepresentableBooleanAdder extends StatefulWidget {
 class _RepresentableBooleanAdderState extends State<RepresentableBooleanAdder> {
   final _formKey = GlobalKey<FormBuilderState>();
   late final Data _newData;
-  int? defaultValue, maxValue, minValue, multipleOf;
   Set<VisibleBooleanInfo> statsToSee = {};
 
   @override
@@ -175,14 +174,14 @@ class _RepresentableBooleanAdderState extends State<RepresentableBooleanAdder> {
                   ],
                   content: SingleChildScrollView(
                     child: Text(AppLocalizations.of(context)!
-                        .questionDeleteAddingIntegerType),
+                        .questionDeleteAddingBooleanType),
                   ),
                 );
               },
             ),
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(AppLocalizations.of(context)!.integerDataAdding),
+          title: Text(AppLocalizations.of(context)!.booleanDataAdding),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),

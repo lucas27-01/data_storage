@@ -3,6 +3,7 @@ import 'package:data_storage/models/representable_data_types/representable_boole
 import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
 import 'package:data_storage/models/representable_data_types/representable_string.dart';
+import 'package:data_storage/models/representable_data_types/representable_time.dart';
 import 'package:flutter/material.dart';
 
 abstract class RepresentableDataType {
@@ -18,6 +19,8 @@ abstract class RepresentableDataType {
         return RepresentableDecimal.fromJson(json);
       case "RepresentableBoolean":
         return RepresentableBoolean.fromJson(json);
+      case "RepresentableTime":
+        return RepresentableTime.fromJson(json);
       default:
         throw Exception(
             "Type Error: Unknown type ${json["_type"]} for factory RepresentableDataType.fromJson");
@@ -28,7 +31,8 @@ abstract class RepresentableDataType {
     RepresentableInteger.standard(): "integer",
     RepresentableString.standard(): "string",
     RepresentableDecimal.standard(): "decimal",
-    RepresentableBoolean.standard(): "boolean"
+    RepresentableBoolean.standard(): "boolean",
+    RepresentableTime.standard(): "time_",
   };
 
   static final representableDataTypeAsIcon = {
@@ -36,12 +40,16 @@ abstract class RepresentableDataType {
     RepresentableString: Icons.abc_rounded,
     RepresentableDecimal: Icons.calculate_rounded,
     RepresentableBoolean: Icons.check_rounded,
+    RepresentableTime: Icons.access_time_rounded,
   };
 
   get constraints =>
       throw Exception("RepresentableDataType called an invalid getter");
 
   get defaultValue =>
+      throw Exception("RepresentableDataType called an invalid getter");
+
+  get customDefaultValue =>
       throw Exception("RepresentableDataType called an invalid getter");
 
   get statsToSee =>
