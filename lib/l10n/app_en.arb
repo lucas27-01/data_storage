@@ -1,7 +1,9 @@
 {
+    "@@locale": "en",
     "appName": "Data Storage",
     "settingsPageName": "Settings",
-    "aboutPageName": "About",
+    "about": "About",
+    "aboutDataStorage": "About Data Storage",
     "funNotImplemented": "Function not implemented, yet",
     "ok": "OK",
     "theme": "Theme",
@@ -273,5 +275,10 @@
               "example":"void" 
             }
         }
-    }
+    },
+    "appAuthor": "App Author",
+    "myEmail": "My Email",
+    "cannotOpenEmail": "Cannot open Email app",
+    "myGitHub": "My GitHub",
+    "cannotOpenWebSite": "Cannot open website"
 }

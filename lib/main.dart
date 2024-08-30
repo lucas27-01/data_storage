@@ -11,9 +11,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,6 +119,76 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
+  void showCustomAboutDialog({
+    required BuildContext context,
+    Widget? applicationIcon,
+    String? applicationLegalese,
+    bool barrierDismissible = true,
+    Color? barrierColor,
+    String? barrierLabel,
+    bool useRootNavigator = true,
+    RouteSettings? routeSettings,
+    Offset? anchorPoint,
+  }) async {
+    var info = await PackageInfo.fromPlatform();
+    if (context.mounted) {
+      showAboutDialog(
+        context: context,
+        applicationName: "Data Storage",
+        applicationVersion: "${info.version}+${info.buildNumber}",
+        applicationIcon: applicationIcon,
+        applicationLegalese: applicationLegalese,
+        barrierDismissible: barrierDismissible,
+        barrierColor: barrierColor,
+        barrierLabel: barrierLabel,
+        useRootNavigator: useRootNavigator,
+        routeSettings: routeSettings,
+        anchorPoint: anchorPoint,
+        children: [
+          ListTile(
+            title: const Text("Cappellazzo Luigi"),
+            subtitle: Text(AppLocalizations.of(context)!.appAuthor),
+            leading: const Icon(Icons.account_circle_rounded),
+          ),
+          ListTile(
+            leading: const Icon(Icons.email_rounded),
+            title: const Text("luigicapp08@etik.com",
+                style: TextStyle(fontSize: 13)),
+            subtitle: Text(AppLocalizations.of(context)!.myEmail),
+            onTap: () async {
+              var emailUri =
+                  Uri(scheme: "mailto", path: "luigicapp08@etik.com");
+              if (await canLaunchUrl(emailUri)) {
+                await launchUrl(emailUri);
+              } else {
+                if (context.mounted) {
+                  _showSnackBar(context,
+                      Text(AppLocalizations.of(context)!.cannotOpenEmail));
+                }
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.code_rounded),
+            title: Text(AppLocalizations.of(context)!.myGitHub),
+            subtitle: const Text("https://github.com/lucas27-01"),
+            onTap: () async {
+              var uri = Uri(scheme: "https", path: "github.com/lucas27-01");
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri);
+              } else {
+                if (context.mounted) {
+                  _showSnackBar(context,
+                      Text(AppLocalizations.of(context)!.cannotOpenWebSite));
+                }
+              }
+            },
+          )
+        ],
+      );
+    }
+  }
+
   @override
   void initState() {
     _dataStorageStream = FileManager.getDataStorageStream();
@@ -154,8 +227,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     )),
             ListTile(
               leading: const Icon(Icons.info_outline_rounded),
-              title: Text(AppLocalizations.of(context)!.aboutPageName),
-              onTap: () {},
+              title: Text(AppLocalizations.of(context)!.aboutDataStorage),
+              onTap: () => showCustomAboutDialog(context: context),
             ),
           ],
         ),
@@ -181,15 +254,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const Icon(Icons.info_outline_rounded),
-                          Text(AppLocalizations.of(context)!.aboutPageName),
+                          Text(AppLocalizations.of(context)!.about),
                         ],
                       ),
-                      onTap: () => _showSnackBar(
-                          context,
-                          Text(AppLocalizations.of(context)!.funNotImplemented),
-                          SnackBarAction(
-                              label: AppLocalizations.of(context)!.ok,
-                              onPressed: () {})),
+                      onTap: () => showCustomAboutDialog(context: context),
                     )
                   ])
         ],

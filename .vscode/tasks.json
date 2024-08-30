@@ -7,6 +7,6 @@
 			"command": "clean",
 			"problemMatcher": [],
 			"detail": "CMake template clean task"
-		}
+		},
 	]
 }
