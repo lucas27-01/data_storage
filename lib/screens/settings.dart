@@ -176,29 +176,11 @@ class _SettingsState extends State<SettingsPage> {
                             child: FilledButton.icon(
                               onPressed: () async {
                                 try {
-                                  Directory? directory;
-                                  if (Platform.isAndroid) {
-                                    directory = Directory(join(
-                                      (await getExternalStorageDirectory())!
-                                          .parent
-                                          .parent
-                                          .parent
-                                          .parent
-                                          .path,
-                                      'Android',
-                                      'media',
-                                      'eu.luigicapp.data_storage',
-                                    )); // To acces at /storage/emulated/0/Android/media/eu.luigicapp.data_storage
-
-                                    directory
-                                        .create(); // Only if dir doesn't exist
-                                  } else {
-                                    directory =
-                                        await getApplicationDocumentsDirectory();
-                                  }
+                                  var directory = await FilePicker.platform
+                                      .getDirectoryPath();
 
                                   final file = File(
-                                      '${directory.path}/exported_collections_data_storage.json');
+                                      '$directory/exported_collections_data_storage.json');
 
                                   await file.writeAsString(
                                       await FileManager.getUserData());
