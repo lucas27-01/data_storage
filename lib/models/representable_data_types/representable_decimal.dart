@@ -76,6 +76,12 @@ class RepresentableDecimal extends RepresentableDataType {
           } else {
             return AppLocalizations.of(context)!.noData;
           }
+        case VisibleDecimalInfo.totalSum:
+          if (values.isNotEmpty) {
+            return values.values.reduce((a, b) => a + b).toString();
+          } else {
+            return AppLocalizations.of(context)!.noData;
+          }
         case VisibleDecimalInfo.median:
           if (values.isNotEmpty) {
             List<num> sortedValues = List.from(values.values.toList());
@@ -162,6 +168,7 @@ class RepresentableDecimal extends RepresentableDataType {
 
 enum VisibleDecimalInfo {
   totalValuesNum, // The number of valus
+  totalSum, // Sum of each value
   mean, // Mean value
   median, // The center value of the ordered list
   mode, // The most commonly number in the list
@@ -424,7 +431,8 @@ class _RepresentableDecimalAdderState extends State<RepresentableDecimalAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableDecimal(
-                          values: _newData.type?.values as Map<String, num>? ?? {},
+                          values:
+                              _newData.type?.values as Map<String, num>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: DecimalConstraints(

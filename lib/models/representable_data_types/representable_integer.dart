@@ -75,6 +75,12 @@ class RepresentableInteger extends RepresentableDataType {
           } else {
             return AppLocalizations.of(context)!.noData;
           }
+        case VisibleIntegerInfo.totalSum:
+          if (values.isNotEmpty) {
+            return values.values.reduce((a, b) => a + b).toString();
+          } else {
+            return AppLocalizations.of(context)!.noData;
+          }
         case VisibleIntegerInfo.median:
           if (values.isNotEmpty) {
             List<int> sortedValues = List.from(values.values.toList());
@@ -161,6 +167,7 @@ class RepresentableInteger extends RepresentableDataType {
 
 enum VisibleIntegerInfo {
   totalValuesNum,
+  totalSum, // Iterative sum of all values
   mean, // Mean value
   median, // The center value of the ordered list
   mode, // The most commonly number in the list
@@ -419,7 +426,8 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableInteger(
-                          values: _newData.type?.values as Map<String, int>? ?? {},
+                          values:
+                              _newData.type?.values as Map<String, int>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: IntegerConstraints(
