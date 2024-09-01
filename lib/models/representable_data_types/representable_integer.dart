@@ -66,6 +66,8 @@ class RepresentableInteger extends RepresentableDataType {
   String getStat({required BuildContext context, required dynamic stat}) {
     if (stat is VisibleIntegerInfo) {
       switch (stat) {
+        case VisibleIntegerInfo.totalValuesNum:
+          return values.length.toString();
         case VisibleIntegerInfo.mean:
           if (values.isNotEmpty) {
             return (values.values.reduce((a, b) => a + b) / values.length)
@@ -158,6 +160,7 @@ class RepresentableInteger extends RepresentableDataType {
 }
 
 enum VisibleIntegerInfo {
+  totalValuesNum,
   mean, // Mean value
   median, // The center value of the ordered list
   mode, // The most commonly number in the list
@@ -416,7 +419,7 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableInteger(
-                          values: {},
+                          values: _newData.type?.values as Map<String, int>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: IntegerConstraints(

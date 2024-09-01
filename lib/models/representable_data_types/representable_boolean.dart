@@ -293,7 +293,7 @@ class _RepresentableBooleanAdderState extends State<RepresentableBooleanAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableBoolean(
-                          values: {},
+                          values: _newData.type?.values as Map<String, bool>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue:
                               _formKey.currentState?.value['defaultValue'],

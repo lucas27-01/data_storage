@@ -67,6 +67,8 @@ class RepresentableDecimal extends RepresentableDataType {
   String getStat({required BuildContext context, required dynamic stat}) {
     if (stat is VisibleDecimalInfo) {
       switch (stat) {
+        case VisibleDecimalInfo.totalValuesNum:
+          return values.length.toString();
         case VisibleDecimalInfo.mean:
           if (values.isNotEmpty) {
             return (values.values.reduce((a, b) => a + b) / values.length)
@@ -159,6 +161,7 @@ class RepresentableDecimal extends RepresentableDataType {
 }
 
 enum VisibleDecimalInfo {
+  totalValuesNum, // The number of valus
   mean, // Mean value
   median, // The center value of the ordered list
   mode, // The most commonly number in the list
@@ -421,7 +424,7 @@ class _RepresentableDecimalAdderState extends State<RepresentableDecimalAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableDecimal(
-                          values: {},
+                          values: _newData.type?.values as Map<String, num>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: DecimalConstraints(

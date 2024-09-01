@@ -569,7 +569,7 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableTime(
-                          values: {},
+                          values: _newData.type?.values as Map<String, TimeOfDay>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           customDefaultValue: customDefaultValue,

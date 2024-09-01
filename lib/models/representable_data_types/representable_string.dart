@@ -66,6 +66,8 @@ class RepresentableString extends RepresentableDataType {
   String getStat({required BuildContext context, required dynamic stat}) {
     if (stat is VisibleStringInfo) {
       switch (stat) {
+        case VisibleStringInfo.totalValuesNum:
+          return values.length.toString();
         case VisibleStringInfo.mode:
           if (values.isNotEmpty) {
             Map<String, int> counter = {};
@@ -129,6 +131,7 @@ class RepresentableString extends RepresentableDataType {
 }
 
 enum VisibleStringInfo {
+  totalValuesNum,
   mode, // The most commonly string in the list
   meanLenght, // The mean of every value lenght
   longerValue, // The longer value (string)
@@ -378,7 +381,7 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableString(
-                          values: {},
+                          values: _newData.type?.values as Map<String, String>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: StringConstraints(
