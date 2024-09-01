@@ -1,5 +1,6 @@
 import 'package:data_storage/models/data.dart';
 import 'package:data_storage/models/representable_data_types/representable_boolean.dart';
+import 'package:data_storage/models/representable_data_types/representable_date.dart';
 import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
 import 'package:data_storage/models/representable_data_types/representable_string.dart';
@@ -21,6 +22,8 @@ abstract class RepresentableDataType {
         return RepresentableBoolean.fromJson(json);
       case "RepresentableTime":
         return RepresentableTime.fromJson(json);
+      case "RepresentableDate":
+        return RepresentableDate.fromJson(json);
       default:
         throw Exception(
             "Type Error: Unknown type ${json["_type"]} for factory RepresentableDataType.fromJson");
@@ -29,10 +32,11 @@ abstract class RepresentableDataType {
 
   static final representableDataTypes = {
     RepresentableInteger.standard(): "integer",
-    RepresentableString.standard(): "string",
     RepresentableDecimal.standard(): "decimal",
+    RepresentableString.standard(): "string",
     RepresentableBoolean.standard(): "boolean",
     RepresentableTime.standard(): "time_",
+    RepresentableDate.standard(): "date_",
   };
 
   static final representableDataTypeAsIcon = {
@@ -41,6 +45,7 @@ abstract class RepresentableDataType {
     RepresentableDecimal: Icons.calculate_rounded,
     RepresentableBoolean: Icons.check_rounded,
     RepresentableTime: Icons.access_time_rounded,
+    RepresentableDate: Icons.calendar_month_rounded
   };
 
   get constraints =>

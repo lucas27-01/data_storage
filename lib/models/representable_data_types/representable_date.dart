@@ -1,135 +1,141 @@
 import 'dart:math';
 
-import 'package:data_storage/models/data_constraints/time_constraints.dart';
-import 'package:data_storage/widgets/expandable_section.dart';
-import 'package:data_storage/widgets/form_builder_time_of_day.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:data_storage/extensions/date_extensions.dart';
 import 'package:data_storage/models/data.dart';
+import 'package:data_storage/models/data_constraints/date_constraints.dart';
 import 'package:data_storage/models/representable_data_types/representable_data_type.dart';
+import 'package:data_storage/widgets/expandable_section.dart';
+import 'package:data_storage/widgets/form_builder_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:data_storage/extensions/date_extensions.dart';
 
-class RepresentableTime extends RepresentableDataType {
-  RepresentableTime.standard() : super.standard() {
+class RepresentableDate extends RepresentableDataType {
+  RepresentableDate.standard() : super.standard() {
     values = {};
-    defaultValue = RepresentableTimeDefaultValue.none;
+    statsToSee = VisibleDateInfo.values.toSet();
+    constraints = DateConstraints.standard();
     customDefaultValue = null;
-    constraints = TimeConstraints.standard();
-    statsToSee.addAll(VisibleTimeInfo.values);
   }
 
-  RepresentableTime({
+  RepresentableDate({
     required this.values,
     required this.statsToSee,
-    this.defaultValue = RepresentableTimeDefaultValue.none,
+    DateConstraints? constraints,
+    this.defaultValue = RepresentableDateDefaultValue.none,
     this.customDefaultValue,
-    TimeConstraints? constraints,
   }) : super.standard() {
-    this.constraints = constraints ?? TimeConstraints.standard();
+    this.constraints = constraints ?? DateConstraints.standard();
   }
 
-  factory RepresentableTime.fromJson(Map<String, dynamic> json) {
-    return RepresentableTime(
+  factory RepresentableDate.fromJson(Map<String, dynamic> json) {
+    return RepresentableDate(
       values: {
-        for (var entry in json["values"].entries)
-          entry.key: TimeOfDayExtension.fromJson(entry.value)
+        for (var entry in json['values'].entries)
+          entry.key: DateTimeExtensions.onlyDatefromJson(entry.value)
       },
       statsToSee: {
         for (var stat in json["statsToSee"]
             .map((name) =>
-                VisibleTimeInfo.values.firstWhere((el) => el.name == name))
+                VisibleDateInfo.values.firstWhere((el) => el.name == name))
             .toSet())
           stat
       },
-      defaultValue: RepresentableTimeDefaultValue.values
-          .firstWhere((el) => el.name == json['defaultValue']),
-      customDefaultValue:
-          TimeOfDayExtension.fromNullableJson(json['customDefaultValue']),
-      constraints: TimeConstraints.fromJson(json["constraints"]),
+      constraints: DateConstraints.fromJson(json),
+      defaultValue: RepresentableDateDefaultValue.values
+          .firstWhere((test) => test.name == json['defaultValue']),
+      customDefaultValue: DateTimeExtensions.onlyDatefromNullableJson(
+          json["customDefaultValue"]),
     );
   }
 
   @override
-  late Map<String, TimeOfDay> values;
+  late Map<String, DateTime> values;
   @override
-  late RepresentableTimeDefaultValue defaultValue;
+  RepresentableDateDefaultValue defaultValue =
+      RepresentableDateDefaultValue.none;
   @override
-  late TimeOfDay? customDefaultValue;
+  late DateTime? customDefaultValue;
   @override
-  late TimeConstraints constraints;
+  late DateConstraints constraints;
   @override
-  late Set<VisibleTimeInfo> statsToSee = {};
+  late Set<VisibleDateInfo> statsToSee = {};
 
   @override
   Widget builderWidget({Data? dataToEdit}) {
-    return RepresentableTimeAdder(
-      dataToEdit: dataToEdit,
-    );
+    return RepresentableDateAdder(dataToEdit: dataToEdit);
   }
 
   @override
-  Type get wantedType => TimeOfDay;
+  Type get wantedType => DateTime;
 
   @override
   String getStat({required BuildContext context, required dynamic stat}) {
-    if (stat is VisibleTimeInfo) {
+    if (stat is VisibleDateInfo) {
       switch (stat) {
-        case VisibleTimeInfo.totalValuesNum:
+        case VisibleDateInfo.totalValuesNum:
           if (values.isNotEmpty) {
             return values.length.toString();
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.hourMean:
+        case VisibleDateInfo.dayMean:
           if (values.isNotEmpty) {
-            List<int> hours = values.values.map((el) => el.hour).toList();
-            int totalHours = hours.reduce((a, b) => a + b);
-            return (totalHours / hours.length).toString();
+            List<int> days = values.values.map((el) => el.day).toList();
+            int totalDays = days.reduce((a, b) => a + b);
+            return (totalDays / days.length).toString();
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.minuteMean:
+        case VisibleDateInfo.monthMean:
           if (values.isNotEmpty) {
-            List<int> minutes = values.values.map((el) => el.minute).toList();
-            int totalMinutes = minutes.reduce((a, b) => a + b);
-            return (totalMinutes / minutes.length).toString();
+            List<int> months = values.values.map((el) => el.minute).toList();
+            int totalMonths = months.reduce((a, b) => a + b);
+            return (totalMonths / months.length).toString();
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.mean:
+        case VisibleDateInfo.yearMean:
           if (values.isNotEmpty) {
-            return TimeOfDayExtension.calulateMean(values.values.toList())
-                .format(context);
+            List<int> years = values.values.map((el) => el.minute).toList();
+            int totalYears = years.reduce((a, b) => a + b);
+            return (totalYears / years.length).toString();
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.median:
+        case VisibleDateInfo.mean:
           if (values.isNotEmpty) {
-            List<TimeOfDay> sortedValues = List.from(values.values.toList());
+            return DateTimeExtensions.calculateMean(values.values.toList())
+                .formatOnlyDate(context);
+          } else {
+            return AppLocalizations.of(context)!.noData;
+          }
+        case VisibleDateInfo.median:
+          if (values.isNotEmpty) {
+            List<DateTime> sortedValues = List.from(values.values.toList());
             sortedValues.sort((a, b) {
-              int aMinutes = a.hour * 60 + a.minute;
-              int bMinutes = b.hour * 60 + b.minute;
-              return aMinutes.compareTo(bMinutes);
+              return a.secondsSinceEpoch.compareTo(b.secondsSinceEpoch);
             });
             if (sortedValues.length.isOdd) {
-              return (sortedValues[sortedValues.length ~/ 2]).toString();
+              return (sortedValues[sortedValues.length ~/ 2])
+                  .formatOnlyDate(context);
             } else {
-              int minute = ((sortedValues[sortedValues.length ~/ 2 - 1]
-                              .toMinute() +
-                          sortedValues[sortedValues.length ~/ 2].toMinute()) /
+              int seconds = ((sortedValues[sortedValues.length ~/ 2 - 1]
+                              .secondsSinceEpoch +
+                          sortedValues[sortedValues.length ~/ 2]
+                              .secondsSinceEpoch) /
                       2)
                   .round();
-              return TimeOfDay(hour: minute ~/ 60, minute: minute % 60)
-                  .format(context);
+              return DateTimeExtensions.fromSecondsSinceEpoch(seconds)
+                  .formatOnlyDate(context);
             }
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.mode:
+        case VisibleDateInfo.mode:
           if (values.isNotEmpty) {
-            Map<TimeOfDay, int> counter = {};
+            Map<DateTime, int> counter = {};
             for (var time in values.values) {
               counter[time] = (counter[time] ?? 0) + 1;
             }
@@ -138,7 +144,7 @@ class RepresentableTime extends RepresentableDataType {
             String mode = "";
             counter.forEach((time, occurrences) {
               if (occurrences == maxOccurrences) {
-                mode += "${time.format(context)}, ";
+                mode += "${time.formatOnlyDate(context)}, ";
               }
             });
             return AppLocalizations.of(context)!.modeWithOccurrences(
@@ -146,47 +152,47 @@ class RepresentableTime extends RepresentableDataType {
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.minValue:
+        case VisibleDateInfo.minValue:
           if (values.isNotEmpty) {
             return values.values
-                .reduce((a, b) => a < b ? a : b)
-                .format(context);
+                .reduce((a, b) => a.isDateSmaller(b) ? a : b)
+                .formatOnlyDate(context);
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.maxValue:
+        case VisibleDateInfo.maxValue:
           if (values.isNotEmpty) {
             return values.values
-                .reduce((a, b) => a > b ? a : b)
-                .format(context);
+                .reduce((a, b) => a.isDateGreater(b) ? a : b)
+                .formatOnlyDate(context);
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.standardDeviation:
+        case VisibleDateInfo.standardDeviation:
           if (values.isNotEmpty) {
-            num mean = TimeOfDayExtension.calulateMean(values.values.toList())
-                .toMinute();
+            num mean = DateTimeExtensions.calculateMean(values.values.toList())
+                .secondsSinceEpoch;
 
             num variance = values.values
-                    .map((time) => pow(time.toMinute() - mean, 2))
+                    .map((time) => pow(time.secondsSinceEpoch - mean, 2))
                     .reduce((a, b) => a + b) /
                 values.length;
             int standardDeviation = sqrt(variance).round();
-            return TimeOfDay(
-                    hour: standardDeviation ~/ 60,
-                    minute: standardDeviation % 60)
-                .format(context);
+            return DateTimeExtensions.fromSecondsSinceEpoch(standardDeviation)
+                .formatOnlyDate(context);
           } else {
             return AppLocalizations.of(context)!.noData;
           }
-        case VisibleTimeInfo.range:
+        case VisibleDateInfo.range:
           if (values.isNotEmpty) {
-            int rangeInMinute =
-                (values.values.reduce((a, b) => a > b ? a : b).toMinute() -
-                    values.values.reduce((a, b) => a < b ? a : b).toMinute());
-            return TimeOfDay(
-                    hour: rangeInMinute ~/ 60, minute: rangeInMinute % 60)
-                .format(context);
+            int rangeInSeconds = (values.values
+                    .reduce((a, b) => a.isDateGreater(b) ? a : b)
+                    .secondsSinceEpoch -
+                values.values
+                    .reduce((a, b) => a.isDateSmaller(b) ? a : b)
+                    .secondsSinceEpoch);
+            return DateTimeExtensions.fromSecondsSinceEpoch(rangeInSeconds)
+                .formatOnlyDate(context);
           } else {
             return AppLocalizations.of(context)!.noData;
           }
@@ -199,25 +205,27 @@ class RepresentableTime extends RepresentableDataType {
   @override
   Map<String, dynamic> toJson() {
     return {
-      "_type": "RepresentableTime",
+      "_type": "RepresentableDate",
       "values": {
-        for (var value in values.entries) value.key: value.value.toJson()
+        for (var entry in values.entries)
+          entry.key: entry.value.onlyDateToJson()
       },
       "statsToSee": statsToSee.map((el) => el.name).toList(),
       "defaultValue": defaultValue.name,
-      "customDefaultValue": customDefaultValue?.toJson(),
+      "customDefaultValue": customDefaultValue?.onlyDateToJson(),
       "constraints": constraints.toJson(),
     };
   }
 }
 
-enum RepresentableTimeDefaultValue { none, custom, now }
+enum RepresentableDateDefaultValue { none, custom, now }
 
-enum VisibleTimeInfo {
+enum VisibleDateInfo {
   totalValuesNum, // The length of values
   mean, // Mean value
-  hourMean, // Only hours mean
-  minuteMean, // Only minute mean
+  yearMean, // Only year mean
+  monthMean, // Only month mean
+  dayMean, // Only day mean
   median, // The center value of the ordered list
   mode, // The most commonly number in the list
   maxValue, // The max Value in the list
@@ -226,26 +234,26 @@ enum VisibleTimeInfo {
   range, // Max value - Min value
 }
 
-class RepresentableTimeAdder extends StatefulWidget {
-  const RepresentableTimeAdder({super.key, this.dataToEdit});
+class RepresentableDateAdder extends StatefulWidget {
+  const RepresentableDateAdder({super.key, this.dataToEdit});
   final Data? dataToEdit;
 
   @override
-  State<RepresentableTimeAdder> createState() => _RepresentableTimeAdderState();
+  State<RepresentableDateAdder> createState() => _RepresentableDateAdderState();
 }
 
-class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
+class _RepresentableDateAdderState extends State<RepresentableDateAdder> {
   final _formKey = GlobalKey<FormBuilderState>();
   late final Data _newData;
-  TimeOfDay? customDefaultValue, maxValue, minValue;
-  RepresentableTimeDefaultValue defaultValue =
-      RepresentableTimeDefaultValue.none;
-  Set<VisibleTimeInfo> statsToSee = {};
+  DateTime? customDefaultValue, maxValue, minValue;
+  RepresentableDateDefaultValue defaultValue =
+      RepresentableDateDefaultValue.none;
+  Set<VisibleDateInfo> statsToSee = {};
 
   @override
   void initState() {
     _newData =
-        widget.dataToEdit ?? Data(name: "", type: RepresentableTime.standard());
+        widget.dataToEdit ?? Data(name: "", type: RepresentableDate.standard());
     super.initState();
   }
 
@@ -275,14 +283,14 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                   ],
                   content: SingleChildScrollView(
                     child: Text(AppLocalizations.of(context)!
-                        .questionDeleteAddingTimeType),
+                        .questionDeleteAddingDateType),
                   ),
                 );
               },
             ),
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(AppLocalizations.of(context)!.timeDataAdding),
+          title: Text(AppLocalizations.of(context)!.dateDataAdding),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -324,26 +332,26 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       checkNullOrEmpty: false,
                     ),
                   ),
-                  FormBuilderChoiceChip<RepresentableTimeDefaultValue>(
+                  FormBuilderChoiceChip<RepresentableDateDefaultValue>(
                     spacing: 8,
                     initialValue: _newData.type?.defaultValue ??
-                        RepresentableTimeDefaultValue.none,
+                        RepresentableDateDefaultValue.none,
                     validator: FormBuilderValidators.aggregate([
                       FormBuilderValidators.required(),
                       (value) {
                         if (maxValue != null && customDefaultValue != null) {
-                          return customDefaultValue! > maxValue!
-                              ? AppLocalizations.of(context)!
-                                  .timeSmallerEqual(maxValue!.format(context))
+                          return customDefaultValue!.isDateGreater(maxValue!)
+                              ? AppLocalizations.of(context)!.dateSmallerEqual(
+                                  maxValue!.formatOnlyDate(context))
                               : null;
                         }
                         return null;
                       },
                       (value) {
                         if (minValue != null && customDefaultValue != null) {
-                          return customDefaultValue! < minValue!
-                              ? AppLocalizations.of(context)!
-                                  .timeGreaterEqual(minValue!.format(context))
+                          return customDefaultValue!.isDateSmaller(minValue!)
+                              ? AppLocalizations.of(context)!.dateGreaterEqual(
+                                  minValue!.formatOnlyDate(context))
                               : null;
                         }
                         return null;
@@ -352,28 +360,32 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                     name: 'defaultValue',
                     onChanged: (newValue) async {
                       switch (newValue) {
-                        case RepresentableTimeDefaultValue.none:
-                        case RepresentableTimeDefaultValue.now:
+                        case RepresentableDateDefaultValue.none:
+                        case RepresentableDateDefaultValue.now:
                           defaultValue = newValue!;
                           customDefaultValue = null;
                           break;
-                        case RepresentableTimeDefaultValue.custom:
-                          defaultValue = RepresentableTimeDefaultValue.custom;
-                          customDefaultValue = await showTimePicker(
-                            context: context,
-                            initialTime: customDefaultValue ?? TimeOfDay.now(),
-                          );
+                        case RepresentableDateDefaultValue.custom:
+                          defaultValue = RepresentableDateDefaultValue.custom;
+                          customDefaultValue = await showDatePicker(
+                              context: context,
+                              initialDate: customDefaultValue ??
+                                  minValue ??
+                                  maxValue ??
+                                  DateTime.now().onlyDate(),
+                              firstDate: minValue ?? DateTime(0),
+                              lastDate: maxValue ?? DateTime(7000, 12, 31));
 
                           if (customDefaultValue == null) {
                             _formKey.currentState?.fields['defaultValue']
-                                ?.didChange(RepresentableTimeDefaultValue.none);
+                                ?.didChange(RepresentableDateDefaultValue.none);
                           }
                           break;
                         default:
-                          defaultValue = RepresentableTimeDefaultValue.none;
+                          defaultValue = RepresentableDateDefaultValue.none;
                           setState(() {
                             _formKey.currentState?.fields['defaultValue']
-                                ?.didChange(RepresentableTimeDefaultValue.none);
+                                ?.didChange(RepresentableDateDefaultValue.none);
                           });
                           break;
                       }
@@ -381,20 +393,20 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                     },
                     options: [
                       FormBuilderChipOption(
-                        value: RepresentableTimeDefaultValue.none,
+                        value: RepresentableDateDefaultValue.none,
                         child:
                             Text(AppLocalizations.of(context)!.noDefaultValue),
                       ),
                       FormBuilderChipOption(
-                        value: RepresentableTimeDefaultValue.now,
+                        value: RepresentableDateDefaultValue.now,
                         child: Text(
-                            AppLocalizations.of(context)!.timeOfValueAdding),
+                            AppLocalizations.of(context)!.dateOfValueAdding),
                       ),
                       FormBuilderChipOption(
-                          value: RepresentableTimeDefaultValue.custom,
+                          value: RepresentableDateDefaultValue.custom,
                           child: Text(AppLocalizations.of(context)!
-                              .selectedTime(
-                                  customDefaultValue?.format(context) ??
+                              .selectedDate(
+                                  customDefaultValue?.formatOnlyDate(context) ??
                                       'void')))
                     ],
                     decoration: InputDecoration(
@@ -404,7 +416,7 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                   FormBuilderCheckboxGroup(
                     name: "statsToSee",
                     options: [
-                      for (var info in VisibleTimeInfo.values)
+                      for (var info in VisibleDateInfo.values)
                         FormBuilderFieldOption(
                             value: info,
                             child: Text(AppLocalizations.of(context)!
@@ -423,7 +435,7 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                                     content: SingleChildScrollView(
                                         child: Text(
                                             AppLocalizations.of(context)!
-                                                .explainTimeStatsToSee)),
+                                                .explainDateStatsToSee)),
                                   ),
                                 ),
                             icon: const Icon(Icons.help_outline_rounded))),
@@ -439,11 +451,13 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       onChanged: (hasMinValue) async {
                         switch (hasMinValue) {
                           case true:
-                            minValue = await showTimePicker(
-                              context: context,
-                              initialTime:
-                                  minValue ?? maxValue ?? TimeOfDay.now(),
-                            );
+                            minValue = await showDatePicker(
+                                context: context,
+                                initialDate: minValue ??
+                                    maxValue ??
+                                    DateTime.now().onlyDate(),
+                                firstDate: DateTime(0),
+                                lastDate: maxValue ?? DateTime(7000, 12, 31));
 
                             if (minValue == null) {
                               _formKey.currentState?.fields['minValue']
@@ -458,13 +472,13 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       options: [
                         FormBuilderChipOption(
                           value: false,
-                          child: Text(AppLocalizations.of(context)!.noMinTime),
+                          child: Text(AppLocalizations.of(context)!.noMinDate),
                         ),
                         FormBuilderChipOption(
                           value: true,
                           child: Text(AppLocalizations.of(context)!
-                              .selectedTime(
-                                  minValue?.format(context) ?? "void")),
+                              .selectedDate(
+                                  minValue?.formatOnlyDate(context) ?? "void")),
                         )
                       ],
                       decoration: InputDecoration(
@@ -472,9 +486,9 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       ),
                       validator: (value) {
                         if (maxValue != null && minValue != null) {
-                          return minValue! > maxValue!
-                              ? AppLocalizations.of(context)!
-                                  .timeSmallerEqual(maxValue!.format(context))
+                          return minValue!.isDateGreater(maxValue!)
+                              ? AppLocalizations.of(context)!.dateSmallerEqual(
+                                  maxValue!.formatOnlyDate(context))
                               : null;
                         }
                         return null;
@@ -486,11 +500,13 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                     onChanged: (hasMaxValue) async {
                       switch (hasMaxValue) {
                         case true:
-                          maxValue = await showTimePicker(
-                            context: context,
-                            initialTime:
-                                maxValue ?? minValue ?? TimeOfDay.now(),
-                          );
+                          maxValue = await showDatePicker(
+                              context: context,
+                              initialDate: maxValue ??
+                                  minValue ??
+                                  DateTime.now().onlyDate(),
+                              firstDate: minValue ?? DateTime(0),
+                              lastDate: DateTime(7000, 12, 31));
                           if (maxValue == null) {
                             _formKey.currentState?.fields['maxValue']
                                 ?.didChange(false);
@@ -505,12 +521,12 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                     options: [
                       FormBuilderChipOption(
                         value: false,
-                        child: Text(AppLocalizations.of(context)!.noMaxTime),
+                        child: Text(AppLocalizations.of(context)!.noMaxDate),
                       ),
                       FormBuilderChipOption(
                         value: true,
-                        child: Text(AppLocalizations.of(context)!
-                            .selectedTime(maxValue?.format(context) ?? "void")),
+                        child: Text(AppLocalizations.of(context)!.selectedDate(
+                            maxValue?.formatOnlyDate(context) ?? "void")),
                       )
                     ],
                     decoration: InputDecoration(
@@ -518,9 +534,9 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                     ),
                     validator: (value) {
                       if (minValue != null && maxValue != null) {
-                        return maxValue! < minValue!
-                            ? AppLocalizations.of(context)!
-                                .timeGreaterEqual(maxValue!.format(context))
+                        return maxValue!.isDateSmaller(minValue!)
+                            ? AppLocalizations.of(context)!.dateGreaterEqual(
+                                maxValue!.formatOnlyDate(context))
                             : null;
                       }
                       return null;
@@ -533,7 +549,7 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       FormBuilderChipOption(
                         value: null,
                         child: Text(
-                            AppLocalizations.of(context)!.noTimeConstraints),
+                            AppLocalizations.of(context)!.noDateConstraints),
                       ),
                       FormBuilderChipOption(
                         value: true,
@@ -547,7 +563,7 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                     ],
                     decoration: InputDecoration(
                         label: Text(AppLocalizations.of(context)!
-                            .explainTimeConstraints)),
+                            .explainDateConstraints)),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
@@ -568,12 +584,14 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
 
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
-                        _newData.type = RepresentableTime(
-                          values: _newData.type?.values as Map<String, TimeOfDay>? ?? {},
+                        _newData.type = RepresentableDate(
+                          values:
+                              _newData.type?.values as Map<String, DateTime>? ??
+                                  {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           customDefaultValue: customDefaultValue,
-                          constraints: TimeConstraints(
+                          constraints: DateConstraints(
                             maxValue: maxValue,
                             minValue: minValue,
                             hasToBeFuture:
@@ -596,8 +614,8 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
   }
 }
 
-class TimeHistoric extends StatelessWidget {
-  const TimeHistoric({super.key, required this.data});
+class DateHistoric extends StatelessWidget {
+  const DateHistoric({super.key, required this.data});
   final Data data;
 
   @override
@@ -612,7 +630,7 @@ class TimeHistoric extends StatelessWidget {
           for (var entry in data.type!.values.entries.toList().reversed)
             ListTile(
               title: Text(
-                entry.value.format(context),
+                (entry.value as DateTime).formatOnlyDate(context),
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -627,28 +645,31 @@ class TimeHistoric extends StatelessWidget {
   }
 }
 
-class TimeValueAdder extends StatelessWidget {
-  const TimeValueAdder({super.key, required this.data});
+class DateValueAdder extends StatelessWidget {
+  const DateValueAdder({super.key, required this.data});
   final Data data;
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilderTimeOfDay(
+    return FormBuilderDate(
       name: data.name,
+      firstDate: data.type?.constraints.minValue ?? DateTime(0),
+      lastDate: data.type?.constraints.maxValue ?? DateTime(7000, 12, 31),
       initialValue: {
-        RepresentableTimeDefaultValue.none: null,
+        RepresentableDateDefaultValue.none: null,
         null: null,
-        RepresentableTimeDefaultValue.now: TimeOfDay.now(),
-        RepresentableTimeDefaultValue.custom: data.type?.customDefaultValue
+        RepresentableDateDefaultValue.now: DateTime.now(),
+        RepresentableDateDefaultValue.custom: data.type?.customDefaultValue
       }[data.type?.defaultValue],
-      decoration: InputDecoration(label: Text("${AppLocalizations.of(context)!.time}*")),
+      decoration: InputDecoration(
+          label: Text("${AppLocalizations.of(context)!.date}*")),
       validator: FormBuilderValidators.aggregate(
         [
           FormBuilderValidators.required(),
           (newValue) {
             if (data.type?.constraints.minValue != null && newValue != null) {
-              return newValue < data.type!.constraints.minValue
-                  ? AppLocalizations.of(context)!.timeGreaterEqual(
+              return newValue.isDateSmaller(data.type!.constraints.minValue)
+                  ? AppLocalizations.of(context)!.dateGreaterEqual(
                       data.type!.constraints.minValue!.format(context))
                   : null;
             }
@@ -656,8 +677,8 @@ class TimeValueAdder extends StatelessWidget {
           },
           (newValue) {
             if (data.type?.constraints.maxValue != null && newValue != null) {
-              return newValue > data.type!.constraints.maxValue
-                  ? AppLocalizations.of(context)!.timeSmallerEqual(
+              return newValue.isDateGreater(data.type!.constraints.maxValue)
+                  ? AppLocalizations.of(context)!.dateSmallerEqual(
                       data.type!.constraints.maxValue!.format(context))
                   : null;
             }
@@ -667,12 +688,12 @@ class TimeValueAdder extends StatelessWidget {
             if (newValue != null) {
               switch (data.type?.constraints.hasToBeFuture) {
                 case true:
-                  return newValue < TimeOfDay.now()
-                      ? AppLocalizations.of(context)!.timeHasToBeFuture
+                  return newValue.isDateSmaller(DateTime.now().onlyDate())
+                      ? AppLocalizations.of(context)!.dateHasToBeFuture
                       : null;
                 case false:
-                  return newValue > TimeOfDay.now()
-                      ? AppLocalizations.of(context)!.timeHasToBePast
+                  return newValue.isDateGreater(DateTime.now().onlyDate())
+                      ? AppLocalizations.of(context)!.dateHasToBePast
                       : null;
               }
             }
@@ -684,8 +705,8 @@ class TimeValueAdder extends StatelessWidget {
   }
 }
 
-class TimeViewer extends StatelessWidget {
-  const TimeViewer({super.key, required this.data});
+class DateViewer extends StatelessWidget {
+  const DateViewer({super.key, required this.data});
   final Data data;
 
   @override
@@ -697,7 +718,7 @@ class TimeViewer extends StatelessWidget {
           Text(
               "${AppLocalizations.of(context)!.description}: ${data.description!}"),
         if (data.description != null) const Divider(),
-        for (VisibleTimeInfo stat in data.type?.statsToSee)
+        for (VisibleDateInfo stat in data.type?.statsToSee)
           Text(
             "${AppLocalizations.of(context)!.statTerms(stat.name)}: ${data.type?.getStat(context: context, stat: stat)}",
           ),

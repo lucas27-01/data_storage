@@ -1,6 +1,7 @@
 import 'package:data_storage/extensions/num_extensions.dart';
 import 'package:data_storage/models/representable_data_types/representable_boolean.dart';
 import 'package:data_storage/models/representable_data_types/representable_data_type.dart';
+import 'package:data_storage/models/representable_data_types/representable_date.dart';
 import 'package:data_storage/models/representable_data_types/representable_decimal.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
 import 'package:data_storage/models/representable_data_types/representable_string.dart';
@@ -39,6 +40,8 @@ class Data {
       return BooleanHistoric(data: this);
     } else if (type is RepresentableTime) {
       return TimeHistoric(data: this);
+    } else if (type is RepresentableDate) {
+      return DateHistoric(data: this);
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");
@@ -56,6 +59,8 @@ class Data {
       return BooleanValueAdder(data: this);
     } else if (type is RepresentableTime) {
       return TimeValueAdder(data: this);
+    } else if (type is RepresentableDate) {
+      return DateValueAdder(data: this);
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");
@@ -73,6 +78,8 @@ class Data {
       return BooleanViewer(data: this);
     } else if (type is RepresentableTime) {
       return TimeViewer(data: this);
+    } else if (type is RepresentableDate) {
+      return DateViewer(data: this);
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");
@@ -144,14 +151,16 @@ class Data {
             bool>); // The cast is need, else it does not work (idk)
         return true;
       }
-    } else if (type is RepresentableTime) {
-      if (value is TimeOfDay) {
-        // ignore: unnecessary_cast
-        type?.values.addAll({time: value} as Map<String,
-            TimeOfDay>); // The cast is need, else it does not work (idk)
-        return true;
-      }
-      return false;
+    } else if (type is RepresentableTime && value is TimeOfDay) {
+      // ignore: unnecessary_cast
+      type?.values.addAll({time: value} as Map<String,
+          TimeOfDay>); // The cast is need, else it does not work (idk)
+      return true;
+    } else if (type is RepresentableDate && value is DateTime) {
+      // ignore: unnecessary_cast
+      type?.values.addAll({time: value} as Map<String,
+          DateTime>); // The cast is need, else it does not work (idk)
+      return true;
     }
     return false;
   }
@@ -163,6 +172,7 @@ class Data {
         RepresentableDecimal: "decimal",
         RepresentableBoolean: "boolean",
         RepresentableTime: "time",
+        RepresentableDate: "date"
       }[type.runtimeType] ??
       "unknwonType";
 

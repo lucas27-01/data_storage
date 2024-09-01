@@ -7,6 +7,22 @@ import 'package:provider/provider.dart';
 extension DateTimeExtensions on DateTime {
   int get secondsSinceEpoch => millisecondsSinceEpoch ~/ 1000;
 
+  DateTime onlyDate() {
+    return DateTime(year, month, day);
+  }
+
+  static DateTime calculateMean(List<DateTime> dates) {
+    if (dates.isEmpty) return DateTime(0);
+
+    int totalMinutes = dates
+        .map((date) => date.secondsSinceEpoch)
+        .toList()
+        .reduce((a, b) => a + b);
+
+    return DateTimeExtensions.fromSecondsSinceEpoch(
+        totalMinutes ~/ dates.length);
+  }
+
   static DateTime fromSecondsSinceEpoch(int secondsSinceEpoch,
       {bool isUtc = false}) {
     return DateTime.fromMillisecondsSinceEpoch(secondsSinceEpoch * 1000,
@@ -20,6 +36,57 @@ extension DateTimeExtensions on DateTime {
 
     // Combina data e ora
     return formatter.format(this);
+  }
+
+  String formatOnlyDate(BuildContext context) {
+    return DateFormat(UserSettings
+            .dateFormatPerLocale[context.read<Settings>().dateFormat])
+        .format(this);
+  }
+
+// I don't used operator because the compartion is only between date
+  bool isDateGreater(DateTime other) {
+    if (year > other.year) return true;
+    if (year < other.year) return false;
+    if (month > other.month) return true;
+    if (month < other.month) return false;
+    return day > other.day;
+  }
+
+  bool isDateSmaller(DateTime other) {
+    if (year < other.year) return true;
+    if (year > other.year) return false;
+    if (month < other.month) return true;
+    if (month > other.month) return false;
+    return day < other.day;
+  }
+
+  Map<String, dynamic> onlyDateToJson() {
+    return {
+      "day": day,
+      "month": month,
+      "year": year,
+    };
+  }
+
+  static DateTime onlyDatefromJson(Map<String, dynamic> json) {
+    return DateTime(
+      json['year'],
+      json['month'],
+      json['day'],
+    );
+  }
+
+  static DateTime? onlyDatefromNullableJson(Map<String, dynamic>? json) {
+    try {
+      return DateTime(
+        json!['year'],
+        json['month'],
+        json['day'],
+      );
+    } catch (_) {
+      return null;
+    }
   }
 }
 

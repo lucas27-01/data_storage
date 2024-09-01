@@ -101,6 +101,7 @@ class FileManager {
       controller.add(await getDataStorage());
     } catch (e) {
       controller.addError("Initial Reading Error $e");
+      rethrow;
     }
 
     yield* controller.stream;

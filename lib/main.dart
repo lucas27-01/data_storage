@@ -29,6 +29,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // FileManager.getUserData().then((el) {
+    //   getExternalStorageDirectory().then((dir) {
+    //     dir?.createSync();
+    //     var directory = join(dir!.parent.parent.parent.parent.path, 'Android',
+    //         'media', 'eu.luigicapp.data_storage.debug');
+    //     Directory(directory).createSync();
+    //     File f = File("$directory/exp.json");
+    //     f.writeAsStringSync(el);
+    //   });
+    // });
     return FutureBuilder(
         future: FileManager.getSettings(),
         builder: (context, snapshot) {

@@ -46,9 +46,11 @@
     "questionDeleteAddingIntegerType": "Do you really want to delete the creation of an integer data at your Data Storage?",
     "questionDeleteAddingBooleanType": "Do you really want to delete the creation of an boolean data at your Data Storage?",
     "questionDeleteAddingTimeType": "Do you really want to delete the creation of a time data at your Data Storage?",
+    "questionDeleteAddingDateType": "Do you really want to delete the creation of a date data at your Data Storage?",
     "integerDataAdding": "Integer Data Adding",
     "booleanDataAdding": "Boolean Data Adding",
     "timeDataAdding": "Time Data Adding",
+    "dateDataAdding": "Date Data Adding",
     "dataSettings": "Data Settings",
     "dataName": "Data Name",
     "dataDescription": "Data Description",
@@ -72,7 +74,7 @@
     "subtitleOnlyAphabetical": "No numbers, special chars, etc...",
     "questionDeleteAddingDecimalType": "Do you really want to delete the creation of a decimal data at your Data Storage?",
     "decimalDataAdding": "Decimal Data Adding",
-    "representableType": "{type, select, other{type {type}} integer{Integer} decimal{Decimal} string{String} boolean{Boolean} time_{Time}}",
+    "representableType": "{type, select, other{type {type}} integer{Integer} decimal{Decimal} string{String} boolean{Boolean} time_{Time} date_{Date} }",
     "@representableType": {
         "description": "representableType",
         "placeholders": {
@@ -104,7 +106,8 @@
     "explainStringStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Total Values Number\" is the number of values;\n\t\tThe \"Mode\" is the most frequent string of Data Storage values (when added);\n\t\tThe \"Mean Lenght\" is the average of every string lenght;\n\t\tThe \"Shorter String\" and the \"Longer String\" are the shorter and the longer string.",
     "explainBooleanStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Total Values Number\" is the number of values;\n\t\tThe \"Mode\" is the most frequent value (true or false) of Data Storage values (when added);\n\t\tThe \"True Number\" is the number of occurency of the true value in the values;\n\t\tThe \"False Number\" is the number of occurency of the false value in the values.",
     "explainTimeStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Total Values Number\" is the number of values;\n\t\tThe \"Mean\" is the mean (or average) of Data Storage values (when added);\n\t\tThe \"Minute Mean\" is the mean of only minute;\n\t\tThe \"Hour Mean\" is the mean of only hour;\n\t\tThe \"Median\" is the value that is in the value list center when the list is sorted;\n\t\tThe \"Mode\" is the number that most often appear;\n\t\tThe \"Min Value\" and the \"Max Value\" are the min and the max values in the list;\n\t\tThe \"Standard Deviation\" mean how far they are on average from the value mean;\n\t\tThe \"Range\" is the difference between the max and the min value.",
-    "statTerms": "{term, select, other{{term}} totalValuesNum{Total Values Number} mean{Mean} median{Median} mode{Mode} maxValue{Max Value} minValue{Min Value} standardDeviation{Standard Deviation} range{Range} meanLenght{Mean Lenght} longerValue{Longer String} shorterValue{Shorter String} trueNum{True Number} falseNum{False Number} hourMean{Hour Mean} minuteMean{Minute Mean} totalSum{Total Sum} }",
+    "explainDateStatsToSee": "These are the stats that will be shown in the Data Storage Historic Page (after creating and adding the Data Storage).\nYou select those interest you (also none or all):\n\t\tThe \"Total Values Number\" is the number of values;\n\t\tThe \"Mean\" is the mean (or average) of Data Storage values (when added);\n\t\tThe \"Day Mean\" is the mean of only days;\n\t\tThe \"Month Mean\" is the mean of only months;\n\t\tThe \"Year Mean\" is the mean of only years;\n\t\tThe \"Median\" is the value that is in the value list center when the list is sorted;\n\t\tThe \"Mode\" is the number that most often appear;\n\t\tThe \"Min Value\" and the \"Max Value\" are the min and the max values in the list;\n\t\tThe \"Standard Deviation\" mean how far they are on average from the value mean;\n\t\tThe \"Range\" is the difference between the max and the min value.",
+    "statTerms": "{term, select, other{{term}} totalValuesNum{Total Values Number} mean{Mean} median{Median} mode{Mode} maxValue{Max Value} minValue{Min Value} standardDeviation{Standard Deviation} range{Range} meanLenght{Mean Lenght} longerValue{Longer String} shorterValue{Shorter String} trueNum{True Number} falseNum{False Number} hourMean{Hour Mean} minuteMean{Minute Mean} totalSum{Total Sum} yearMean{Year Mean} monthMean{Month Mean} dayMean{Day Mean} }",
     "@statTerms": {
         "description": "statTerms",
         "placeholders": {
@@ -228,16 +231,25 @@
             }
         }
     },
-    "timeSmallerEqual": "The time has to be smaller or equal to {maxValue}",
+    "timeSmallerEqual": "The time has to be smaller than or equal to {maxValue}",
     "@timeSmallerEqual": {
-        "description": "Return that a time has to be smaller or equal to another time",
+        "description": "Return that a time has to be smaller than or equal to another time",
         "placeholders": {
             "maxValue": {
                 "type": "String"
             }
         }
     },
-    "timeGreaterEqual": "The time has to be smaller or equal to {minValue}",
+    "dateSmallerEqual": "The date has to be smaller than or equal to {maxValue}",
+    "@dateSmallerEqual": {
+        "description": "Return that a time has to be smaller than or equal to another time",
+        "placeholders": {
+            "maxValue": {
+                "type": "String"
+            }
+        }
+    },
+    "timeGreaterEqual": "The time has to be greater than or equal to {minValue}",
     "@timeGreaterEqual": {
         "description": "Return that a time has to be greater or equal to another time",
         "placeholders": {
@@ -246,7 +258,17 @@
             }
         }
     },
+    "dateGreaterEqual": "The date has to be greater than or equal to {minValue}",
+    "@dateGreaterEqual": {
+        "description": "Return that a time has to be greater than or equal to another time",
+        "placeholders": {
+            "minValue": {
+                "type": "String"
+            }
+        }
+    },
     "timeOfValueAdding": "Value adding time (dynamic)",
+    "dateOfValueAdding": "Value adding date (dynamic)",
     "selectedTime": "{customDefaultValue, select, other{Time to choose (static): {customDefaultValue}} void{Time to choose (static)}}",
     "@selectedTime": {
         "description": "selectedTime",
@@ -257,15 +279,32 @@
             }
         }
     },
+    "selectedDate": "{customDefaultValue, select, other{Date to choose (static): {customDefaultValue}} void{Date to choose (static)}}",
+    "@selectedDate": {
+        "description": "selectedDate",
+        "placeholders": {
+            "customDefaultValue": {
+                "type": "String",
+                "example": "void"
+            }
+        }
+    },
     "noMinTime": "No Min Time",
     "noMaxTime": "No Max Time",
     "noTimeConstraints": "No Time Constraints",
+    "noMinDate": "No Min Date",
+    "noMaxDate": "No Max Date",
+    "noDateConstraints": "No Date Constraints",
     "hasToBeFuture": "Has to be in the Future",
     "timeHasToBeFuture": "Time has to be in the Future",
+    "dateHasToBeFuture": "Date has to be in the Future",
     "hasToBePast": "Has to be in the Past",
     "timeHasToBePast": "Time has to be in the Past",
+    "dateHasToBePast": "Date has to be in the Past",
     "explainTimeConstraints": "Time Constraints (of time when it will be saved)",
+    "explainDateConstraints": "Date Constraints (of date when it will be saved)",
     "time": "Time",
+    "date": "Date",
     "addingSelectedTime": "{selTime, select, other{Time : {selTime}} void{Time: Not selected}}",
     "@addingSelectedTime": {
         "description": "addingSelectedTime",

@@ -22,9 +22,9 @@ class TimeConstraints {
 
   late TimeOfDay? minValue;
   late TimeOfDay? maxValue;
-  late bool? hasToBeFuture;
 
   /// When true the value has to be in the future, if false it has to be in the past, if null no constraint
+  late bool? hasToBeFuture;
 
   Map<String, dynamic> toJson() {
     return {
