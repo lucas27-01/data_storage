@@ -9,8 +9,6 @@ import 'package:data_storage/providers/settings.dart';
 import 'package:data_storage/utils/file_manager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -178,6 +176,10 @@ class _SettingsState extends State<SettingsPage> {
                                 try {
                                   var directory = await FilePicker.platform
                                       .getDirectoryPath();
+
+                                  if (directory == null){
+                                    throw Exception("File Creation Aborted!");
+                                  }
 
                                   final file = File(
                                       '$directory/exported_collections_data_storage.json');
