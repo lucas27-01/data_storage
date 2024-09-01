@@ -277,5 +277,6 @@
     "myEmail": "La mia Email",
     "cannotOpenEmail": "Impossibile aprire l'email",
     "myGitHub": "Il mio GitHub",
-    "cannotOpenWebSite": "Impossibile aprire il sito web"
+    "cannotOpenWebSite": "Impossibile aprire il sito web",
+    "fileCreationAborted": "Creazione del File Annullata!"
 }

@@ -271,8 +271,8 @@
         "description": "addingSelectedTime",
         "placeholders": {
             "selTime": {
-              "type":"String",
-              "example":"void" 
+                "type": "String",
+                "example": "void"
             }
         }
     },
@@ -280,5 +280,6 @@
     "myEmail": "My Email",
     "cannotOpenEmail": "Cannot open Email app",
     "myGitHub": "My GitHub",
-    "cannotOpenWebSite": "Cannot open website"
+    "cannotOpenWebSite": "Cannot open website",
+    "fileCreationAborted": "File Creation Aborted!"
 }

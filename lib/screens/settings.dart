@@ -177,8 +177,11 @@ class _SettingsState extends State<SettingsPage> {
                                   var directory = await FilePicker.platform
                                       .getDirectoryPath();
 
-                                  if (directory == null){
-                                    throw Exception("File Creation Aborted!");
+                                  if (directory == null) {
+                                    throw Exception(
+                                        // ignore: use_build_context_synchronously
+                                        AppLocalizations.of(context)!
+                                            .fileCreationAborted);
                                   }
 
                                   final file = File(
