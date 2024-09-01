@@ -268,7 +268,7 @@
         }
     },
     "timeOfValueAdding": "Orario di aggiunta del valore (dinamico)",
-    "dataOfValueAdding": "data di aggiunta del valore (dinamico)",
+    "dateOfValueAdding": "data di aggiunta del valore (dinamico)",
     "selectedTime": "{customDefaultValue, select, other{Orario a scelta (statico): {customDefaultValue}} void{Orario a scelta (statico)}}",
     "@selectedTime": {
         "description": "selectedTime",
