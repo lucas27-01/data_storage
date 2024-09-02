@@ -28,6 +28,24 @@ class _SettingsState extends State<SettingsPage> {
     ));
   }
 
+  void importAndUpdateCollections({
+    required List<DataStorage> savedData,
+    required List<DataStorage> importedData,
+  }) {
+    for (var imported in importedData) {
+      final index = savedData.indexWhere((saved) => saved.id == imported.id);
+
+      if (index == -1) {
+        savedData.add(imported);
+      } else {
+        if (imported.lastChange > savedData[index].lastChange) {
+          savedData[index] = imported;
+        }
+      }
+    }
+    FileManager.saveUserData(jsonEncode(savedData));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -289,32 +307,10 @@ class _SettingsState extends State<SettingsPage> {
                                                   .allCollectionsImported));
                                         }
                                       } else {
-                                        List<DataStorage> savedDataStorages =
-                                            await FileManager.getDataStorage();
-                                        List<DataStorage>
-                                            dataStoragesFromImport = fileContent
-                                                .map((el) =>
-                                                    DataStorage.fromJson(el))
-                                                .toList();
-                                        List<DataStorage> newDataStorages = [];
-
-                                        for (DataStorage singleDS
-                                            in savedDataStorages) {
-                                          DataStorage? importedDataStorage =
-                                              dataStoragesFromImport.firstWhere(
-                                                  (imported) =>
-                                                      imported.id ==
-                                                      singleDS.id);
-
-                                          newDataStorages.add(singleDS
-                                                      .lastChange >
-                                                  importedDataStorage.lastChange
-                                              ? singleDS
-                                              : importedDataStorage);
-                                        }
-
-                                        FileManager.saveUserData(
-                                            jsonEncode(newDataStorages));
+                                        importAndUpdateCollections(
+                                            savedData: await FileManager
+                                                .getDataStorage(),
+                                            importedData: fileContent as List<DataStorage>);
                                       }
                                     } else {
                                       if (context.mounted) {
