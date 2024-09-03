@@ -79,7 +79,7 @@ class _DataValueAdderState extends State<DataValueAdder> {
                   ),
                 ),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
+              FilledButton.icon(
                 onPressed: () async {
                   if (_formKey.currentState?.saveAndValidate() ?? false) {
                     bool canSave = true;
@@ -106,6 +106,32 @@ class _DataValueAdderState extends State<DataValueAdder> {
                 label: Text(AppLocalizations.of(context)!.saveAndAdd),
                 icon: const Icon(Icons.save_rounded),
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      label: Text("Sospendi Salvataggio"),
+                      icon: const Icon(Icons.pending_actions_rounded),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        showAdaptiveDialog(
+                          context: context,
+                          builder: (context) => AlertDialog.adaptive(
+                            title: Text("Sospendi Salvataggio?"),
+                            content: SingleChildScrollView(
+                              child: Text("""
+La funzione "Sospendi Salvataggio" è utile quando si hanno solo una parte dei dati da salvare ma si ha paura di scordarseli.
+Il suo funzionamento è molto semplice: si inseriscono i dati che si conoscono, si preme sul pulsante "Sospendi Salvaggio" e alla prossima riapertura dell'applicazione verrà mostrata una finestra di dialogo che avvisa di dover completare l'aggiunta dei dati """),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.help))
+                ],
+              ),
             ],
           ),
         ),
@@ -113,3 +139,5 @@ class _DataValueAdderState extends State<DataValueAdder> {
     );
   }
 }
+
+void suck() {}
