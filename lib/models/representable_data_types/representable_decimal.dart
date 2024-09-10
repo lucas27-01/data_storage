@@ -489,8 +489,9 @@ class DecimalHistoric extends StatelessWidget {
 }
 
 class DecimalValueAdder extends StatelessWidget {
-  const DecimalValueAdder({super.key, required this.data});
+  const DecimalValueAdder({super.key, required this.data, this.initialValue});
   final Data data;
+  final num? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -498,7 +499,8 @@ class DecimalValueAdder extends StatelessWidget {
             data.type?.constraints.minValue == null
         ? FormBuilderTextField(
             name: data.name,
-            initialValue: (data.type?.defaultValue ?? "").toString(),
+            initialValue: initialValue?.toString() ??
+                (data.type?.defaultValue ?? "").toString(),
             autovalidateMode: AutovalidateMode.onUnfocus,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -527,8 +529,9 @@ class DecimalValueAdder extends StatelessWidget {
           )
         : FormBuilderSlider(
             name: data.name,
-            initialValue:
-                data.type?.defaultValue ?? data.type!.constraints.minValue,
+            initialValue: initialValue ??
+                data.type?.defaultValue ??
+                data.type!.constraints.minValue,
             min: data.type!.constraints.minValue.toDouble(),
             max: data.type!.constraints.maxValue.toDouble(),
             divisions: data.type?.constraints.multipleOf != null

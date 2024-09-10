@@ -320,5 +320,38 @@
     "cannotOpenEmail": "Cannot open Email app",
     "myGitHub": "My GitHub",
     "cannotOpenWebSite": "Cannot open website",
-    "fileCreationAborted": "File Creation Aborted!"
+    "fileCreationAborted": "File Creation Aborted!",
+    "haveHangingCollections": "You Have Hanging Collections",
+    "suspendSaving": "Suspend Saving",
+    "questionSuspendSaving": "Suspend Saving?",
+    "explainSuspendSaving": "The \"Suspend Save\" function is useful when you have only part of the data to save, but you're afraid of forgetting it. Its operation is very simple: you enter the data you know, press the \"Suspend Save\" button, and the next time you reopen the application, a dialog box will appear reminding you to complete the data entry.",
+    "error": "Error",
+    "dataNameAlreadyUsed": "Name {name} already used\nYou have to select another one:",
+    "@dataNameAlreadyUsed": {
+        "description": "dataNameAlreadyUsed",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "newDataNameExample": "E.g.: {name} (1)",
+    "@newDataNameExample": {
+        "description": "newDataNameExample",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "nameAlreadyUsedError": "Use a different name ({name} is already used)",
+    "@nameAlreadyUsedError": {
+        "description": "nameAlreadyUsedError",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "done": "Done"
 }

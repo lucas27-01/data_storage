@@ -646,8 +646,9 @@ class DateHistoric extends StatelessWidget {
 }
 
 class DateValueAdder extends StatelessWidget {
-  const DateValueAdder({super.key, required this.data});
+  const DateValueAdder({super.key, required this.data, this.initialValue});
   final Data data;
+  final DateTime? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -655,12 +656,13 @@ class DateValueAdder extends StatelessWidget {
       name: data.name,
       firstDate: data.type?.constraints.minValue ?? DateTime(0),
       lastDate: data.type?.constraints.maxValue ?? DateTime(7000, 12, 31),
-      initialValue: {
-        RepresentableDateDefaultValue.none: null,
-        null: null,
-        RepresentableDateDefaultValue.now: DateTime.now(),
-        RepresentableDateDefaultValue.custom: data.type?.customDefaultValue
-      }[data.type?.defaultValue],
+      initialValue: initialValue ??
+          {
+            RepresentableDateDefaultValue.none: null,
+            null: null,
+            RepresentableDateDefaultValue.now: DateTime.now(),
+            RepresentableDateDefaultValue.custom: data.type?.customDefaultValue
+          }[data.type?.defaultValue],
       decoration: InputDecoration(
           label: Text("${AppLocalizations.of(context)!.date}*")),
       validator: FormBuilderValidators.aggregate(

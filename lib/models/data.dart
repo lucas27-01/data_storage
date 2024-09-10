@@ -48,19 +48,37 @@ class Data {
     }
   }
 
-  Widget getValueAdder() {
+  Widget getValueAdder([dynamic initialValue]) {
     if (type is RepresentableInteger) {
-      return IntegerValueAdder(data: this);
+      return IntegerValueAdder(
+        data: this,
+        initialValue: initialValue is int ? initialValue : null,
+      );
     } else if (type is RepresentableDecimal) {
-      return DecimalValueAdder(data: this);
+      return DecimalValueAdder(
+        data: this,
+        initialValue: initialValue is num ? initialValue : null,
+      );
     } else if (type is RepresentableString) {
-      return StringValueAdder(data: this);
+      return StringValueAdder(
+        data: this,
+        initialValue: initialValue is String ? initialValue : null,
+      );
     } else if (type is RepresentableBoolean) {
-      return BooleanValueAdder(data: this);
+      return BooleanValueAdder(
+        data: this,
+        initialValue: initialValue is bool ? initialValue : null,
+      );
     } else if (type is RepresentableTime) {
-      return TimeValueAdder(data: this);
+      return TimeValueAdder(
+        data: this,
+        initialValue: initialValue is TimeOfDay ? initialValue : null,
+      );
     } else if (type is RepresentableDate) {
-      return DateValueAdder(data: this);
+      return DateValueAdder(
+        data: this,
+        initialValue: initialValue is DateTime ? initialValue : null,
+      );
     } else {
       throw Exception(
           "Type error: the type ${type.runtimeType} is not a valid type");

@@ -569,7 +569,9 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableTime(
-                          values: _newData.type?.values as Map<String, TimeOfDay>? ?? {},
+                          values: _newData.type?.values
+                                  as Map<String, TimeOfDay>? ??
+                              {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           customDefaultValue: customDefaultValue,
@@ -628,20 +630,23 @@ class TimeHistoric extends StatelessWidget {
 }
 
 class TimeValueAdder extends StatelessWidget {
-  const TimeValueAdder({super.key, required this.data});
+  const TimeValueAdder({super.key, required this.data, this.initialValue});
   final Data data;
+  final TimeOfDay? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderTimeOfDay(
       name: data.name,
-      initialValue: {
-        RepresentableTimeDefaultValue.none: null,
-        null: null,
-        RepresentableTimeDefaultValue.now: TimeOfDay.now(),
-        RepresentableTimeDefaultValue.custom: data.type?.customDefaultValue
-      }[data.type?.defaultValue],
-      decoration: InputDecoration(label: Text("${AppLocalizations.of(context)!.time}*")),
+      initialValue: initialValue ??
+          {
+            RepresentableTimeDefaultValue.none: null,
+            null: null,
+            RepresentableTimeDefaultValue.now: TimeOfDay.now(),
+            RepresentableTimeDefaultValue.custom: data.type?.customDefaultValue
+          }[data.type?.defaultValue],
+      decoration: InputDecoration(
+          label: Text("${AppLocalizations.of(context)!.time}*")),
       validator: FormBuilderValidators.aggregate(
         [
           FormBuilderValidators.required(),

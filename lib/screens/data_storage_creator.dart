@@ -18,6 +18,7 @@ class DataStorageCreator extends StatefulWidget {
 class _DataStorageCreatorState extends State<DataStorageCreator> {
   int _selectedTabIndex = 0;
   final _genericFormKey = GlobalKey<FormBuilderState>();
+
   late DataStorage newDataStorage;
   bool _isGenericDataStorageInfoValid = false;
 
@@ -202,6 +203,31 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
                         );
 
                         if (newData != null) {
+                          List<String> givenNames =
+                              newDataStorage.data.map((el) => el.name).toList();
+                          if (givenNames.contains(newData.name)) {
+                            String? newName;
+                            if (context.mounted) {
+                              newName = await showAdaptiveDialog<String>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => NameChanger(
+                                  newData: newData,
+                                  givenNames: givenNames,
+                                ),
+                              );
+                            }
+                            if (newName != null) {
+                              newData.name = newName;
+                            } else {
+                              int i = 1;
+                              do {
+                                i++;
+                              } while (
+                                  givenNames.contains("${newData.name} ($i)"));
+                              newData.name = "${newData.name} ($i)";
+                            }
+                          }
                           setState(
                             () => newDataStorage.data.add(newData),
                           );
@@ -350,6 +376,69 @@ class _DataStorageCreatorState extends State<DataStorageCreator> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class NameChanger extends StatelessWidget {
+  NameChanger({
+    super.key,
+    required this.newData,
+    required this.givenNames,
+  });
+
+  final Data newData;
+  final GlobalKey<FormBuilderState> _nameChangerFormKey =
+      GlobalKey<FormBuilderState>();
+  final List<String> givenNames;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog.adaptive(
+      title: Text(AppLocalizations.of(context)!.error),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(AppLocalizations.of(context)!
+                .dataNameAlreadyUsed(newData.name)),
+            FormBuilder(
+              key: _nameChangerFormKey,
+              child: FormBuilderTextField(
+                initialValue: newData.name,
+                name: 'newName',
+                decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context)!.name),
+                  hintText: AppLocalizations.of(context)!
+                      .newDataNameExample(newData.name),
+                ),
+                validator: FormBuilderValidators.aggregate([
+                  FormBuilderValidators.required(),
+                  (value) {
+                    return givenNames.contains(value)
+                        ? AppLocalizations.of(context)!
+                            .nameAlreadyUsedError(value ?? "")
+                        : null;
+                  }
+                ]),
+              ),
+            )
+          ],
+        ),
+      ),
+      actions: [
+        FilledButton.icon(
+          onPressed: () {
+            if ((_nameChangerFormKey.currentState?.saveAndValidate() ??
+                    false) &&
+                _nameChangerFormKey.currentState?.value['newName'] != null) {
+              Navigator.of(context)
+                  .pop(_nameChangerFormKey.currentState!.value['newName']!);
+            }
+          },
+          label: Text(AppLocalizations.of(context)!.done),
+          icon: const Icon(Icons.check_rounded),
+        )
+      ],
     );
   }
 }

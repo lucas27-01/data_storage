@@ -15,8 +15,12 @@ class FileManager {
   }
 
   static Future<File> get _settingsFile async {
-    final path = await _localPath;
-    return File(join(path, "app_settings.json"));
+    var settingsFile = File(join(await _localPath, "app_settings.json"));
+    if (!await settingsFile.exists()) {
+      await settingsFile
+          .writeAsString(jsonEncode(Settings.standard().toJson()));
+    }
+    return settingsFile;
   }
 
   static Future<File> get _userDataFile async {
@@ -28,6 +32,15 @@ class FileManager {
     return dataStorageFile;
   }
 
+  static Future<File> get _hangingCollectionsFile async {
+    File hangingCollectionsFile =
+        File(join(await _localPath, "hanging_collections.json"));
+    if (!await hangingCollectionsFile.exists()) {
+      await hangingCollectionsFile.writeAsString("[]");
+    }
+    return hangingCollectionsFile;
+  }
+
   static Future<void> saveSettings(String data) async {
     final file = await _settingsFile;
     file.writeAsString(data);
@@ -36,6 +49,10 @@ class FileManager {
   static Future<void> saveUserData(String data) async {
     final file = await _userDataFile;
     file.writeAsString(data);
+  }
+
+  static Future<void> saveHangingCollections(String data) async {
+    await (await _hangingCollectionsFile).writeAsString(data);
   }
 
   static Future<String> getSettings() async {
@@ -56,6 +73,10 @@ class FileManager {
       await saveUserData("[]");
       return "[]";
     }
+  }
+
+  static Future<String> getHangingCollections() async {
+    return await (await _hangingCollectionsFile).readAsString();
   }
 
   static Future<List<DataStorage>> getDataStorage() async {

@@ -381,7 +381,9 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableString(
-                          values: _newData.type?.values as Map<String, String>? ?? {},
+                          values:
+                              _newData.type?.values as Map<String, String>? ??
+                                  {},
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: StringConstraints(
@@ -438,14 +440,15 @@ class StringHistoric extends StatelessWidget {
 }
 
 class StringValueAdder extends StatelessWidget {
-  const StringValueAdder({super.key, required this.data});
+  const StringValueAdder({super.key, required this.data, this.initialValue});
   final Data data;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
       name: data.name,
-      initialValue: data.type?.defaultValue,
+      initialValue: initialValue ?? data.type?.defaultValue,
       autovalidateMode: AutovalidateMode.onUnfocus,
       decoration: InputDecoration(
         label: Text("${AppLocalizations.of(context)!.stringValue}*"),

@@ -34,13 +34,29 @@ class RouteGenerator {
           throw Exception("Error occurred");
         }
       case "/dataValueAdder":
-        if (args is DataStorage){
-          return MaterialPageRoute<DataStorage?>(builder: (context) => DataValueAdder(dataStorage: args));
+        if (args is (DataStorage, Map<String, dynamic>?, VoidCallback)) {
+          return MaterialPageRoute<DataStorage?>(
+            builder: (context) => DataValueAdder(
+              dataStorage: args.$1,
+              hangingCollections: args.$2,
+              onUpdateCollections: args.$3,
+            ),
+          );
+          // } else if (args is DataStorage) {
+          //   return MaterialPageRoute<DataStorage?>(
+          //     builder: (context) => DataValueAdder(dataStorage: args),
+          //   );
         } else {
-          throw Exception("Error occurred");
+          throw Exception("Type Error: ${args.runtimeType}");
         }
       default:
         throw Exception("Error occurred");
     }
   }
+
+  static dataValueAdderArguments({
+    required DataStorage dataStorage,
+    Map<String, dynamic>? hangingCollections,
+  }) =>
+      (dataStorage, hangingCollections);
 }

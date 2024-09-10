@@ -484,8 +484,9 @@ class IntegerHistoric extends StatelessWidget {
 }
 
 class IntegerValueAdder extends StatelessWidget {
-  const IntegerValueAdder({super.key, required this.data});
+  const IntegerValueAdder({super.key, required this.data, this.initialValue});
   final Data data;
+  final int? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -493,7 +494,8 @@ class IntegerValueAdder extends StatelessWidget {
             data.type?.constraints.minValue == null
         ? FormBuilderTextField(
             name: data.name,
-            initialValue: (data.type?.defaultValue ?? "").toString(),
+            initialValue: initialValue?.toString() ??
+                (data.type?.defaultValue ?? "").toString(),
             autovalidateMode: AutovalidateMode.onUnfocus,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -523,7 +525,7 @@ class IntegerValueAdder extends StatelessWidget {
           )
         : FormBuilderSlider(
             name: data.name,
-            initialValue:
+            initialValue: initialValue ??
                 (data.type?.defaultValue ?? data.type!.constraints.minValue) *
                     1.0,
             min: data.type!.constraints.minValue * 1.0,

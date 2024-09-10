@@ -77,6 +77,32 @@ extension DateTimeExtensions on DateTime {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "microsecond": microsecond,
+      "millisecond": millisecond,
+      "second": second,
+      "minute": minute,
+      "hour": hour,
+      "day": day,
+      "month": month,
+      "year": year,
+    };
+  }
+
+  static fromJson(Map<String, dynamic> json) {
+    return DateTime(
+      json["year"],
+      json["month"] ?? 1,
+      json["day"] ?? 1,
+      json["hour"] ?? 0,
+      json["minute"] ?? 0,
+      json["second"] ?? 0,
+      json["millisecond"] ?? 0,
+      json["microsecond"] ?? 0,
+    );
+  }
+
   static DateTime? onlyDatefromNullableJson(Map<String, dynamic>? json) {
     try {
       return DateTime(

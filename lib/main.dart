@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:data_storage/extensions/date_extensions.dart';
 import 'package:data_storage/models/data.dart';
 import 'package:data_storage/models/data_storage.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
@@ -98,13 +99,14 @@ class MyHomePage extends StatefulWidget {
   });
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState();
+class MyHomePageState extends State<MyHomePage> {
+  MyHomePageState();
 
   late Stream<List<DataStorage>> _dataStorageStream;
+  late List<dynamic>? hangingCollections = [];
 
   //final _futureBuilderKey = GlobalKey<State<FutureBuilder>>();
 
@@ -199,10 +201,28 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void getHangingAdvice() async {
+    var rawHangingCollections =
+        jsonDecode(await FileManager.getHangingCollections());
+
+    // print(rawHangingCollections);
+    hangingCollections = [];
+    if (rawHangingCollections?.isNotEmpty ?? false) {
+      hangingCollections = List.from(
+        rawHangingCollections.map((el) => decodeHangingCollections(el)),
+      );
+
+      // ignore: use_build_context_synchronously
+      _showSnackBar(context, Text(AppLocalizations.of(context)!.haveHangingCollections));
+    }
+    // print("decoded");
+    // print(hangingCollections);
+  }
+
   @override
   void initState() {
     _dataStorageStream = FileManager.getDataStorageStream();
-
+    getHangingAdvice();
     super.initState();
   }
 
@@ -279,6 +299,7 @@ class _MyHomePageState extends State<MyHomePage> {
             throw snapshotUserData.error!;
           } else if (snapshotUserData.hasData) {
             var userData = snapshotUserData.data!;
+            getHangingAdvice();
             return ListView.builder(
                 itemCount: userData.length,
                 itemBuilder: (context, index) {
@@ -290,6 +311,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       tag: userData[index].id,
                       child: Card(
                         child: ListTile(
+                          leading: hangingCollections?.any(
+                                      (el) => el["id"] == userData[index].id) ??
+                                  false
+                              ? const Icon(Icons.warning_amber_rounded)
+                              : null,
                           title: Text(userData[index].name),
                           subtitle: userData[index].description != null
                               ? Text(userData[index].description!)
@@ -303,8 +329,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                       await Navigator.of(context)
                                           .pushNamed<DataStorage?>(
                                     '/dataValueAdder',
-                                    arguments: (await FileManager
-                                        .getDataStorage())[index],
+                                    arguments: (
+                                      userData[index],
+                                      hangingCollections?.firstWhere(
+                                          (test) =>
+                                              test["id"] == userData[index].id,
+                                          orElse: () => {"": null as dynamic}),
+                                      getHangingAdvice
+                                    ),
                                   );
                                   if (newDataStorage != null) {
                                     var oldDSs =
@@ -537,4 +569,54 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+Map<String, dynamic>? decodeHangingCollections(Map<String, dynamic>? raw) {
+  if (raw == null) return null;
+  Map<String, dynamic> hangingCollections = {"id": raw["id"]};
+  raw.remove("id");
+
+  for (var rawData in raw.entries) {
+    switch (rawData.value["_type"]) {
+      case "boolean":
+        if (rawData.value["value"] is bool) {
+          hangingCollections[rawData.key] = rawData.value["value"];
+        } else {
+          hangingCollections[rawData.key] =
+              bool.tryParse(rawData.value["value"].toString());
+        }
+        break;
+      case "integer":
+        if (rawData.value["value"] is int) {
+          hangingCollections[rawData.key] = rawData.value["value"];
+        } else {
+          hangingCollections[rawData.key] =
+              int.tryParse(rawData.value["value"].toString());
+        }
+        break;
+      case "decimal":
+        if (rawData.value["value"] is num) {
+          hangingCollections[rawData.key] = rawData.value["value"];
+        } else {
+          hangingCollections[rawData.key] =
+              num.tryParse(rawData.value["value"].toString());
+        }
+        break;
+      case "string":
+        hangingCollections[rawData.key] = rawData.value["value"];
+        break;
+      case "time":
+        hangingCollections[rawData.key] =
+            TimeOfDayExtension.fromNullableJson(rawData.value["value"]);
+        break;
+      case "date":
+        hangingCollections[rawData.key] =
+            DateTimeExtensions.onlyDatefromNullableJson(rawData.value["value"]);
+        break;
+      default:
+        hangingCollections[rawData.key] = null;
+    }
+  }
+
+  return hangingCollections;
 }

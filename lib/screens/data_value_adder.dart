@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:data_storage/extensions/date_extensions.dart';
+import 'package:data_storage/utils/file_manager.dart';
 import 'package:data_storage/widgets/expandable_section.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -5,8 +9,15 @@ import 'package:data_storage/models/data_storage.dart';
 import 'package:flutter/material.dart';
 
 class DataValueAdder extends StatefulWidget {
-  const DataValueAdder({super.key, required this.dataStorage});
+  const DataValueAdder({
+    super.key,
+    required this.dataStorage,
+    required this.onUpdateCollections,
+    this.hangingCollections,
+  });
   final DataStorage dataStorage;
+  final Map<String, dynamic>? hangingCollections;
+  final VoidCallback onUpdateCollections;
 
   @override
   State<DataValueAdder> createState() => _DataValueAdderState();
@@ -73,7 +84,14 @@ class _DataValueAdderState extends State<DataValueAdder> {
                         "${AppLocalizations.of(context)!.type}: ${AppLocalizations.of(context)!.representableType(singleData.typeId)}",
                       ),
                       singleData.getHistoric(),
-                      singleData.getValueAdder(),
+                      singleData.getValueAdder(
+                        widget.hangingCollections?.entries
+                            .firstWhere(
+                              (test) => test.key == singleData.name,
+                              orElse: () => const MapEntry("", null),
+                            )
+                            .value,
+                      ),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -97,6 +115,8 @@ class _DataValueAdderState extends State<DataValueAdder> {
                       }
                     }
                     if (canSave) {
+                      removeHangingCollectionsById(dataStorage.id)
+                          .then((_) => widget.onUpdateCollections);
                       dataStorage.updateLastChange();
                       Navigator.of(context).pop(dataStorage);
                     }
@@ -110,8 +130,11 @@ class _DataValueAdderState extends State<DataValueAdder> {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () {},
-                      label: Text("Sospendi Salvataggio"),
+                      onPressed:
+                          widget.hangingCollections?.containsKey("id") ?? false
+                              ? null
+                              : suspendValueAdding,
+                      label: Text(AppLocalizations.of(context)!.suspendSaving),
                       icon: const Icon(Icons.pending_actions_rounded),
                     ),
                   ),
@@ -120,11 +143,11 @@ class _DataValueAdderState extends State<DataValueAdder> {
                         showAdaptiveDialog(
                           context: context,
                           builder: (context) => AlertDialog.adaptive(
-                            title: Text("Sospendi Salvataggio?"),
+                            title: Text(AppLocalizations.of(context)!
+                                .questionSuspendSaving),
                             content: SingleChildScrollView(
-                              child: Text("""
-La funzione "Sospendi Salvataggio" è utile quando si hanno solo una parte dei dati da salvare ma si ha paura di scordarseli.
-Il suo funzionamento è molto semplice: si inseriscono i dati che si conoscono, si preme sul pulsante "Sospendi Salvaggio" e alla prossima riapertura dell'applicazione verrà mostrata una finestra di dialogo che avvisa di dover completare l'aggiunta dei dati """),
+                              child: Text(AppLocalizations.of(context)!
+                                  .explainSuspendSaving),
                             ),
                           ),
                         );
@@ -138,6 +161,81 @@ Il suo funzionamento è molto semplice: si inseriscono i dati che si conoscono, 
       ),
     );
   }
+
+  void suspendValueAdding() {
+    _formKey.currentState?.save();
+
+    Map<(String, String), dynamic> hangingCollections = {};
+    for (var entry in _formKey.currentState!.value.entries) {
+      hangingCollections.addAll({
+        (
+          entry.key,
+          dataStorage.data.firstWhere((test) => test.name == entry.key).typeId
+        ): entry.value
+      });
+    }
+    saveHangingCollections(
+      id: dataStorage.id,
+      datas: hangingCollections,
+    ).then((_) => widget.onUpdateCollections());
+    Navigator.of(context).pop();
+  }
+
+  Future<void> removeHangingCollectionsById(int id) async {
+    var rawHangingCollections =
+        jsonDecode(await FileManager.getHangingCollections());
+
+    if (rawHangingCollections?.isNotEmpty ?? false) {
+      rawHangingCollections.removeWhere((test) => test["id"] == id);
+      FileManager.saveHangingCollections(jsonEncode(rawHangingCollections));
+    }
+
+    // widget.onUpdateCollections();
+  }
 }
 
-void suck() {}
+Future<void> saveHangingCollections({
+  required int id,
+  required Map<(String, String), dynamic> datas,
+}) async {
+  Map<String, dynamic> hangingCollections = {"id": id};
+  for (var data in datas.entries) {
+    hangingCollections.addAll({
+      data.key.$1: <String, dynamic>{"_type": data.key.$2}
+    });
+    switch (data.value) {
+      case null:
+        hangingCollections[data.key.$1]["value"] = null;
+        break;
+      case bool _:
+      case num _:
+        hangingCollections[data.key.$1]["value"] ??= data.value;
+        break;
+      case String _:
+        hangingCollections[data.key.$1]["value"] ??= data.value;
+        break;
+      case TimeOfDay _:
+        hangingCollections[data.key.$1]["value"] =
+            (data.value as TimeOfDay).toJson();
+        break;
+      case DateTime _:
+        hangingCollections[data.key.$1]["value"] =
+            (data.value as DateTime).toJson();
+        break;
+      default:
+        throw Exception(
+            "Type error: ${data.value.runtimeType} is not a valid type");
+    }
+  }
+
+  // print(hangingCollections);
+
+  // FileManager.getHangingCollections().then((v) => print(v));
+  var savedHangingCollections =
+      jsonDecode(await FileManager.getHangingCollections()) as List<dynamic>;
+
+  savedHangingCollections.add(hangingCollections);
+  // print(jsonEncode(savedHangingCollections));
+
+  await FileManager.saveHangingCollections(jsonEncode(savedHangingCollections));
+}

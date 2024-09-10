@@ -293,7 +293,8 @@ class _RepresentableBooleanAdderState extends State<RepresentableBooleanAdder> {
                       setState(() {});
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableBoolean(
-                          values: _newData.type?.values as Map<String, bool>? ?? {},
+                          values:
+                              _newData.type?.values as Map<String, bool>? ?? {},
                           statsToSee: statsToSee,
                           defaultValue:
                               _formKey.currentState?.value['defaultValue'],
@@ -327,7 +328,7 @@ class BooleanHistoric extends StatelessWidget {
       ),
       content: Column(
         children: [
-          for (var entry in data.type!.values.entries.toList().reversed) 
+          for (var entry in data.type!.values.entries.toList().reversed)
             ListTile(
               title: Text(
                 entry.value
@@ -348,14 +349,15 @@ class BooleanHistoric extends StatelessWidget {
 }
 
 class BooleanValueAdder extends StatelessWidget {
-  const BooleanValueAdder({super.key, required this.data});
+  const BooleanValueAdder({super.key, required this.data, this.initialValue});
   final Data data;
+  final bool? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderSwitch(
       name: data.name,
-      initialValue: data.type?.defaultValue,
+      initialValue: initialValue ?? data.type?.defaultValue,
       title: Text(
         AppLocalizations.of(context)!.booleanValue,
         style: const TextStyle(fontSize: 16),

@@ -321,5 +321,38 @@
     "cannotOpenEmail": "Impossibile aprire l'email",
     "myGitHub": "Il mio GitHub",
     "cannotOpenWebSite": "Impossibile aprire il sito web",
-    "fileCreationAborted": "Creazione del File Annullata!"
+    "fileCreationAborted": "Creazione del File Annullata!",
+    "haveHangingCollections": "Hai Collezioni in Sospeso",
+    "suspendSaving": "Sospendi Salvataggio",
+    "questionSuspendSaving": "Sospendere il Salvataggio?",
+    "explainSuspendSaving": "La funzione \"Sospendi Salvataggio\" è utile quando si hanno solo una parte dei dati da salvare ma si ha paura di scordarseli.\nIl suo funzionamento è molto semplice: si inseriscono i dati che si conoscono, si preme sul pulsante \"Sospendi Salvaggio\" e alla prossima riapertura dell'applicazione verrà mostrata una finestra di dialogo che avvisa di dover completare l'aggiunta dei dati",
+    "error": "Errore",
+    "dataNameAlreadyUsed": "Il nome {name} è già in uso\nDevi selezionarne un'altro:",
+    "@dataNameAlreadyUsed": {
+        "description": "dataNameAlreadyUsed",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "newDataNameExample": "Esempio: {name} (1)",
+    "@newDataNameExample": {
+        "description": "newDataNameExample",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "nameAlreadyUsedError": "Usa un nome differente ({name} è già in uso)",
+    "@nameAlreadyUsedError": {
+        "description": "nameAlreadyUsedError",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "done": "Fatto"
 }
