@@ -10,7 +10,18 @@ import 'package:watcher/watcher.dart';
 
 class FileManager {
   static Future<String> get _localPath async {
-    var directory = await getApplicationDocumentsDirectory();
+    Directory directory;
+    if (Platform.isLinux) {
+      directory = Directory(
+        join(
+          (await getApplicationDocumentsDirectory()).path,
+          "data_storage",
+        ),
+      );
+    } else {
+      directory = await getApplicationDocumentsDirectory();
+    }
+    if (!await directory.exists()) await directory.create();
     return directory.path;
   }
 
