@@ -4,7 +4,7 @@
     <application
         android:label="Data Storage"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher_alpha">
+        android:icon="@mipmap/ic_launcher_beta">
         <activity
             android:name=".MainActivity"
             android:exported="true"
