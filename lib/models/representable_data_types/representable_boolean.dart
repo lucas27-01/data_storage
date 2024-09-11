@@ -216,9 +216,9 @@ class _RepresentableBooleanAdderState extends State<RepresentableBooleanAdder> {
                       label: Text(AppLocalizations.of(context)!.description),
                       hintText: AppLocalizations.of(context)!.dataDescription,
                     ),
-                    maxLength: 50,
+                    maxLength: 300,
                     validator: FormBuilderValidators.maxLength(
-                      50,
+                      300,
                       checkNullOrEmpty: false,
                     ),
                   ),

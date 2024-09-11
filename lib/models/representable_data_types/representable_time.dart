@@ -318,9 +318,9 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                       label: Text(AppLocalizations.of(context)!.description),
                       hintText: AppLocalizations.of(context)!.dataDescription,
                     ),
-                    maxLength: 50,
+                    maxLength: 300,
                     validator: FormBuilderValidators.maxLength(
-                      50,
+                      300,
                       checkNullOrEmpty: false,
                     ),
                   ),
