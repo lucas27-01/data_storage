@@ -130,10 +130,7 @@ class _DataValueAdderState extends State<DataValueAdder> {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed:
-                          widget.hangingCollections?.containsKey("id") ?? false
-                              ? null
-                              : suspendValueAdding,
+                      onPressed: suspendValueAdding,
                       label: Text(AppLocalizations.of(context)!.suspendSaving),
                       icon: const Icon(Icons.pending_actions_rounded),
                     ),
@@ -162,7 +159,7 @@ class _DataValueAdderState extends State<DataValueAdder> {
     );
   }
 
-  void suspendValueAdding() {
+  void suspendValueAdding() async {
     _formKey.currentState?.save();
 
     Map<(String, String), dynamic> hangingCollections = {};
@@ -174,6 +171,11 @@ class _DataValueAdderState extends State<DataValueAdder> {
         ): entry.value
       });
     }
+
+    if (widget.hangingCollections?["id"] != null){
+      await removeHangingCollectionsById(dataStorage.id);
+    }
+
     saveHangingCollections(
       id: dataStorage.id,
       datas: hangingCollections,

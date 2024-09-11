@@ -334,7 +334,7 @@ class MyHomePageState extends State<MyHomePage> {
                                       hangingCollections?.firstWhere(
                                           (test) =>
                                               test["id"] == userData[index].id,
-                                          orElse: () => {"": null as dynamic}),
+                                          orElse: () => {"id": null as dynamic}),
                                       getHangingAdvice
                                     ),
                                   );
