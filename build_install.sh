@@ -43,14 +43,11 @@ if [ "\$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo "Creating Application Directory"
-sudo mkdir /usr/local/bin/data-storage
-
 echo "Copying bin"
-sudo cp ./lib /usr/local/bin/data-storage/
-sudo cp ./data /usr/local/bin/data-storage/
-sudo cp ./data_storage /usr/local/bin/data-storage/data-storage
-sudo chmod +x /usr/local/bin/data-storage/data-storage
+sudo cp -r ./lib /usr/local/bin/
+sudo cp -r ./data /usr/local/bin/
+sudo cp ./data_storage /usr/local/bin/data-storage
+sudo chmod +x /usr/local/bin/data-storage
 
 echo "Copying icon"
 sudo cp ./ic_launcher_beta.png /usr/share/icons/data-storage.png
@@ -60,7 +57,7 @@ echo "[Desktop Entry]
 Version=$VERSION
 Name=Data Storage
 Comment=A program that collect data
-Exec=/usr/local/bin/data-storage/data-storage/data-storage
+Exec=/usr/local/bin/data-storage/data-storage
 Icon=/usr/share/icons/data-storage.png
 Terminal=false
 Type=Application
@@ -72,6 +69,11 @@ EOF
 chmod +x install.sh
 chmod +x ./build/linux/x64/release/bundle/data_storage
 echo "Building Installing .zip (Linux)"
-zip -j -r linux-installer-x64.zip ./install.sh ./android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_beta.png ./build/linux/x64/release/bundle/
+rm linux-installer-x64.zip
+zip -j linux-installer-x64.zip ./install.sh ./android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_beta.png ./build/linux/x64/release/bundle/data_storage
+
+cd ./build/linux/x64/release/bundle
+zip -r ./../../../../../linux-installer-x64.zip ./lib/ ./data/
+cd ./../../../../../
 
 rm ./install.sh
