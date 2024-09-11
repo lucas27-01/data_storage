@@ -114,7 +114,7 @@ class RepresentableTime extends RepresentableDataType {
               return aMinutes.compareTo(bMinutes);
             });
             if (sortedValues.length.isOdd) {
-              return (sortedValues[sortedValues.length ~/ 2]).toString();
+              return (sortedValues[sortedValues.length ~/ 2]).format(context);
             } else {
               int minute = ((sortedValues[sortedValues.length ~/ 2 - 1]
                               .toMinute() +
