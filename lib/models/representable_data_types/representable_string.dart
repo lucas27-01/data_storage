@@ -292,6 +292,15 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
                     AppLocalizations.of(context)!.constraintsSettings,
                     style: const TextStyle(fontSize: 24),
                   ),
+                  FormBuilderSwitch(
+                    name: 'isRequired',
+                    initialValue: _newData.type?.constraints.isRequired ?? true,
+                    title: Text(
+                      AppLocalizations.of(context)!.isRequired,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    validator: FormBuilderValidators.required(),
+                  ),
                   FormBuilderTextField(
                     initialValue:
                         (_newData.type?.constraints.minLength ?? "").toString(),
@@ -387,6 +396,9 @@ class _RepresentableStringAdderState extends State<RepresentableStringAdder> {
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: StringConstraints(
+                            isRequired:
+                                _formKey.currentState?.value["isRequired"] ??
+                                    true,
                             maxLength: maxLength,
                             minLength: minLength,
                             onlyAlphabetical: onlyAlphabetical,
@@ -440,9 +452,11 @@ class StringHistoric extends StatelessWidget {
 }
 
 class StringValueAdder extends StatelessWidget {
-  const StringValueAdder({super.key, required this.data, this.initialValue});
+  StringValueAdder({super.key, required this.data, this.initialValue})
+      : isRequired = data.type?.constraints.isRequired ?? true;
   final Data data;
   final String? initialValue;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
@@ -455,13 +469,19 @@ class StringValueAdder extends StatelessWidget {
         hintText: AppLocalizations.of(context)!.stringValue,
       ),
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
+        if (isRequired) FormBuilderValidators.required(),
         if (data.type?.constraints.minLength != null)
-          FormBuilderValidators.minLength(data.type!.constraints.minLength),
+          FormBuilderValidators.minLength(
+            data.type!.constraints.minLength,
+            checkNullOrEmpty: isRequired,
+          ),
         if (data.type?.constraints.maxLength != null)
-          FormBuilderValidators.maxLength(data.type!.constraints.maxLength),
+          FormBuilderValidators.maxLength(
+            data.type!.constraints.maxLength,
+            checkNullOrEmpty: isRequired,
+          ),
         if (data.type?.constraints.onlyAlphabetical ?? false)
-          FormBuilderValidators.alphabetical()
+          FormBuilderValidators.alphabetical(checkNullOrEmpty: isRequired)
       ]),
     );
   }

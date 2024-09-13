@@ -105,7 +105,7 @@ class _DataValueAdderState extends State<DataValueAdder> {
                       //print("${entry.key}: ${entry.value}");
                       if (!dataStorage.data
                           .firstWhere((el) => el.name == entry.key)
-                          .addValue(entry.value)) {
+                          .addValue(entry.value, )) {
                         _showSnackBar(
                           context,
                           Text(

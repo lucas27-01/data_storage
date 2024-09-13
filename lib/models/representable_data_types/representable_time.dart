@@ -432,6 +432,15 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                     AppLocalizations.of(context)!.constraintsSettings,
                     style: const TextStyle(fontSize: 24),
                   ),
+                  FormBuilderSwitch(
+                    name: 'isRequired',
+                    initialValue: _newData.type?.constraints.isRequired ?? true,
+                    title: Text(
+                      AppLocalizations.of(context)!.isRequired,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    validator: FormBuilderValidators.required(),
+                  ),
                   FormBuilderChoiceChip<bool>(
                       spacing: 8,
                       name: 'minValue',
@@ -576,6 +585,9 @@ class _RepresentableTimeAdderState extends State<RepresentableTimeAdder> {
                           defaultValue: defaultValue,
                           customDefaultValue: customDefaultValue,
                           constraints: TimeConstraints(
+                            isRequired:
+                                _formKey.currentState?.value["isRequired"] ??
+                                    true,
                             maxValue: maxValue,
                             minValue: minValue,
                             hasToBeFuture:
@@ -630,9 +642,11 @@ class TimeHistoric extends StatelessWidget {
 }
 
 class TimeValueAdder extends StatelessWidget {
-  const TimeValueAdder({super.key, required this.data, this.initialValue});
+  TimeValueAdder({super.key, required this.data, this.initialValue})
+      : isRequired = data.type?.constraints.isRequired ?? true;
   final Data data;
   final TimeOfDay? initialValue;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
@@ -649,7 +663,7 @@ class TimeValueAdder extends StatelessWidget {
           label: Text("${AppLocalizations.of(context)!.time}*")),
       validator: FormBuilderValidators.aggregate(
         [
-          FormBuilderValidators.required(),
+          if (isRequired) FormBuilderValidators.required(),
           (newValue) {
             if (data.type?.constraints.minValue != null && newValue != null) {
               return newValue < data.type!.constraints.minValue

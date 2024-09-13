@@ -325,6 +325,15 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                     AppLocalizations.of(context)!.constraintsSettings,
                     style: const TextStyle(fontSize: 24),
                   ),
+                  FormBuilderSwitch(
+                    name: 'isRequired',
+                    initialValue: _newData.type?.constraints.isRequired ?? true,
+                    title: Text(
+                      AppLocalizations.of(context)!.isRequired,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    validator: FormBuilderValidators.required(),
+                  ),
                   FormBuilderTextField(
                     initialValue:
                         (_newData.type?.constraints.minValue ?? "").toString(),
@@ -431,6 +440,9 @@ class _RepresentableIntegerAdderState extends State<RepresentableIntegerAdder> {
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: IntegerConstraints(
+                            isRequired:
+                                _formKey.currentState?.value["isRequired"] ??
+                                    true,
                             maxValue: maxValue,
                             minValue: minValue,
                             multipleOf: multipleOf,
@@ -484,9 +496,11 @@ class IntegerHistoric extends StatelessWidget {
 }
 
 class IntegerValueAdder extends StatelessWidget {
-  const IntegerValueAdder({super.key, required this.data, this.initialValue});
+  IntegerValueAdder({super.key, required this.data, this.initialValue})
+      : isRequired = data.type?.constraints.isRequired ?? true;
   final Data data;
   final int? initialValue;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
@@ -503,12 +517,19 @@ class IntegerValueAdder extends StatelessWidget {
               hintText: AppLocalizations.of(context)!.integerValue,
             ),
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.integer(),
-              FormBuilderValidators.required(),
+              if (isRequired)
+                FormBuilderValidators.required(checkNullOrEmpty: isRequired),
+              FormBuilderValidators.integer(checkNullOrEmpty: isRequired),
               if (data.type?.constraints.maxValue != null)
-                FormBuilderValidators.max(data.type!.constraints.maxValue),
+                FormBuilderValidators.max(
+                  data.type!.constraints.maxValue,
+                  checkNullOrEmpty: isRequired,
+                ),
               if (data.type?.constraints.minValue != null)
-                FormBuilderValidators.min(data.type!.constraints.minValue),
+                FormBuilderValidators.min(
+                  data.type!.constraints.minValue,
+                  checkNullOrEmpty: isRequired,
+                ),
               if (data.type?.constraints.multipleOf != null)
                 (value) {
                   final number = int.tryParse(value!);
@@ -539,7 +560,7 @@ class IntegerValueAdder extends StatelessWidget {
                 label: Text("${AppLocalizations.of(context)!.integerValue}*")),
             autovalidateMode: AutovalidateMode.always,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
+              if (isRequired) FormBuilderValidators.required(),
               if (data.type?.constraints.multipleOf != null)
                 (value) {
                   final number = value?.toInt();

@@ -327,6 +327,15 @@ class _RepresentableDecimalAdderState extends State<RepresentableDecimalAdder> {
                     AppLocalizations.of(context)!.constraintsSettings,
                     style: const TextStyle(fontSize: 24),
                   ),
+                  FormBuilderSwitch(
+                    name: 'isRequired',
+                    initialValue: _newData.type?.constraints.isRequired ?? true,
+                    title: Text(
+                      AppLocalizations.of(context)!.isRequired,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    validator: FormBuilderValidators.required(),
+                  ),
                   FormBuilderTextField(
                     initialValue:
                         (_newData.type?.constraints.minValue ?? "").toString(),
@@ -436,6 +445,9 @@ class _RepresentableDecimalAdderState extends State<RepresentableDecimalAdder> {
                           statsToSee: statsToSee,
                           defaultValue: defaultValue,
                           constraints: DecimalConstraints(
+                            isRequired:
+                                _formKey.currentState?.value["isRequired"] ??
+                                    true,
                             maxValue: maxValue,
                             minValue: minValue,
                             multipleOf: multipleOf,
@@ -489,9 +501,11 @@ class DecimalHistoric extends StatelessWidget {
 }
 
 class DecimalValueAdder extends StatelessWidget {
-  const DecimalValueAdder({super.key, required this.data, this.initialValue});
+  DecimalValueAdder({super.key, required this.data, this.initialValue})
+      : isRequired = data.type?.constraints.isRequired ?? true;
   final Data data;
   final num? initialValue;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
@@ -507,12 +521,18 @@ class DecimalValueAdder extends StatelessWidget {
                 label: Text("${AppLocalizations.of(context)!.decimalValue}*"),
                 hintText: AppLocalizations.of(context)!.decimalValue),
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.numeric(),
-              FormBuilderValidators.required(),
+              FormBuilderValidators.numeric(checkNullOrEmpty: isRequired),
+              if (isRequired) FormBuilderValidators.required(),
               if (data.type?.constraints.maxValue != null)
-                FormBuilderValidators.max(data.type!.constraints.maxValue),
+                FormBuilderValidators.max(
+                  data.type!.constraints.maxValue,
+                  checkNullOrEmpty: isRequired,
+                ),
               if (data.type?.constraints.minValue != null)
-                FormBuilderValidators.min(data.type!.constraints.minValue),
+                FormBuilderValidators.min(
+                  data.type!.constraints.minValue,
+                  checkNullOrEmpty: isRequired,
+                ),
               if (data.type?.constraints.multipleOf != null)
                 (value) {
                   final number = num.tryParse(value!);
@@ -529,9 +549,9 @@ class DecimalValueAdder extends StatelessWidget {
           )
         : FormBuilderSlider(
             name: data.name,
-            initialValue: initialValue ??
-                data.type?.defaultValue ??
-                data.type!.constraints.minValue,
+            initialValue: initialValue?.toDouble() ??
+                data.type?.defaultValue?.toDouble() ??
+                data.type!.constraints.minValue.toDouble(),
             min: data.type!.constraints.minValue.toDouble(),
             max: data.type!.constraints.maxValue.toDouble(),
             divisions: data.type?.constraints.multipleOf != null
@@ -544,11 +564,11 @@ class DecimalValueAdder extends StatelessWidget {
                 label: Text("${AppLocalizations.of(context)!.decimalValue}*")),
             autovalidateMode: AutovalidateMode.always,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
+              if (isRequired) FormBuilderValidators.required(),
               if (data.type?.constraints.multipleOf != null)
                 (value) {
-                  final number = value!;
-                  if (number % data.type!.constraints.multipleOf != 0) {
+                  if (value != null &&
+                      value % data.type!.constraints.multipleOf != 0) {
                     return AppLocalizations.of(context)!
                         .multipleOfNum(data.type?.constraints.multipleOf);
                   }

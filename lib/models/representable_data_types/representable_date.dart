@@ -42,7 +42,7 @@ class RepresentableDate extends RepresentableDataType {
             .toSet())
           stat
       },
-      constraints: DateConstraints.fromJson(json),
+      constraints: DateConstraints.fromJson(json["constraints"]),
       defaultValue: RepresentableDateDefaultValue.values
           .firstWhere((test) => test.name == json['defaultValue']),
       customDefaultValue: DateTimeExtensions.onlyDatefromNullableJson(
@@ -444,6 +444,15 @@ class _RepresentableDateAdderState extends State<RepresentableDateAdder> {
                     AppLocalizations.of(context)!.constraintsSettings,
                     style: const TextStyle(fontSize: 24),
                   ),
+                  FormBuilderSwitch(
+                    name: 'isRequired',
+                    initialValue: _newData.type?.constraints.isRequired ?? true,
+                    title: Text(
+                      AppLocalizations.of(context)!.isRequired,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    validator: FormBuilderValidators.required(),
+                  ),
                   FormBuilderChoiceChip<bool>(
                       spacing: 8,
                       name: 'minValue',
@@ -583,6 +592,7 @@ class _RepresentableDateAdderState extends State<RepresentableDateAdder> {
                       }
 
                       setState(() {});
+                      print(_formKey.currentState?.value["isRequired"]);
                       if (_formKey.currentState?.saveAndValidate() ?? false) {
                         _newData.type = RepresentableDate(
                           values:
@@ -592,6 +602,9 @@ class _RepresentableDateAdderState extends State<RepresentableDateAdder> {
                           defaultValue: defaultValue,
                           customDefaultValue: customDefaultValue,
                           constraints: DateConstraints(
+                            isRequired:
+                                _formKey.currentState?.value["isRequired"] ??
+                                    true,
                             maxValue: maxValue,
                             minValue: minValue,
                             hasToBeFuture:
@@ -646,12 +659,15 @@ class DateHistoric extends StatelessWidget {
 }
 
 class DateValueAdder extends StatelessWidget {
-  const DateValueAdder({super.key, required this.data, this.initialValue});
+  DateValueAdder({super.key, required this.data, this.initialValue})
+      : isRequired = data.type?.constraints.isRequired ?? true;
   final Data data;
   final DateTime? initialValue;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
+    print(data.type?.constraints.isRequired);
     return FormBuilderDate(
       name: data.name,
       firstDate: data.type?.constraints.minValue ?? DateTime(0),
@@ -667,7 +683,10 @@ class DateValueAdder extends StatelessWidget {
           label: Text("${AppLocalizations.of(context)!.date}*")),
       validator: FormBuilderValidators.aggregate(
         [
-          FormBuilderValidators.required(),
+          if (isRequired)
+            FormBuilderValidators.required(
+              checkNullOrEmpty: isRequired,
+            ),
           (newValue) {
             if (data.type?.constraints.minValue != null && newValue != null) {
               return newValue.isDateSmaller(data.type!.constraints.minValue)

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class FormBuilderDate extends FormBuilderField<DateTime> {
+class FormBuilderDate extends FormBuilderField<DateTime?> {
   FormBuilderDate({
     super.key,
     required super.name,
@@ -29,9 +29,9 @@ class FormBuilderDate extends FormBuilderField<DateTime> {
                   firstDate: firstDate,
                   lastDate: lastDate,
                 );
-                if (time != null) {
+                // if (time != null) {
                   field.didChange(time);
-                }
+                // }
               },
             ),
           ),

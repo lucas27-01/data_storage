@@ -353,5 +353,6 @@
             }
         }
     },
-    "done": "Done"
+    "done": "Done",
+    "isRequired": "Is Required"
 }

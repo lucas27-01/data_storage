@@ -105,7 +105,16 @@ class Data {
   }
 
   bool addValue(dynamic value) {
-    /// Return false if the value wasn't add, else true
+    /// Return false if the value wasn't add due to a problem, else true
+
+    bool isRequired = true;
+    if (type is! RepresentableBoolean) {
+      // Due to some problem boolean must be non-null (read REAMDEmd)
+      isRequired = type?.constraints.isRequired ?? true;
+    }
+
+    print(value);
+    if (!isRequired && value == null) return true;
     String time = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
     if (type is RepresentableInteger) {
       int tmp;
@@ -113,8 +122,9 @@ class Data {
         if (value is String) {
           try {
             tmp = int.parse(value);
-          } catch (_) {
-            return false;
+          } catch (e) {
+            print(e);
+            return !isRequired; // True if wasn't required, false else
           }
         } else if (value is num) {
           tmp = value.toInt();
@@ -135,7 +145,7 @@ class Data {
           try {
             tmp = num.parse(value);
           } catch (_) {
-            return false;
+            return !isRequired;
           }
         } else {
           return false;
@@ -148,6 +158,7 @@ class Data {
           as Map<String, num>); // The cast is need, else it does not work (idk)
       return true;
     } else if (type is RepresentableString) {
+      if (value.toString().isEmpty && !isRequired) return true;
       // ignore: unnecessary_cast
       type?.values.addAll({time: value.toString()} as Map<String,
           String>); // The cast is need, else it does not work (idk)
@@ -189,8 +200,8 @@ class Data {
         RepresentableString: "string",
         RepresentableDecimal: "decimal",
         RepresentableBoolean: "boolean",
-        RepresentableTime: "time",
-        RepresentableDate: "date"
+        RepresentableTime: "time_",
+        RepresentableDate: "date_"
       }[type.runtimeType] ??
       "unknwonType";
 

@@ -354,5 +354,6 @@
             }
         }
     },
-    "done": "Fatto"
+    "done": "Fatto",
+    "isRequired": "È Necessario"
 }
