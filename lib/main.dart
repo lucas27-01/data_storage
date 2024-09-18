@@ -213,7 +213,8 @@ class MyHomePageState extends State<MyHomePage> {
       );
 
       // ignore: use_build_context_synchronously
-      _showSnackBar(context, Text(AppLocalizations.of(context)!.haveHangingCollections));
+      _showSnackBar(
+          context, Text(AppLocalizations.of(context)!.haveHangingCollections));
     }
     // print("decoded");
     // print(hangingCollections);
@@ -334,7 +335,8 @@ class MyHomePageState extends State<MyHomePage> {
                                       hangingCollections?.firstWhere(
                                           (test) =>
                                               test["id"] == userData[index].id,
-                                          orElse: () => {"id": null as dynamic}),
+                                          orElse: () =>
+                                              {"id": null as dynamic}),
                                       getHangingAdvice
                                     ),
                                   );
@@ -606,10 +608,12 @@ Map<String, dynamic>? decodeHangingCollections(Map<String, dynamic>? raw) {
         hangingCollections[rawData.key] = rawData.value["value"];
         break;
       case "time":
+      case "time_":
         hangingCollections[rawData.key] =
             TimeOfDayExtension.fromNullableJson(rawData.value["value"]);
         break;
       case "date":
+      case "date_":
         hangingCollections[rawData.key] =
             DateTimeExtensions.onlyDatefromNullableJson(rawData.value["value"]);
         break;

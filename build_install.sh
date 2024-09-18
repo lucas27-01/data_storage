@@ -73,7 +73,7 @@ echo "[Desktop Entry]
 Version=$VERSION
 Name=Data Storage
 Comment=A program that collect data
-Exec=/usr/local/bin/data-storage/data-storage
+Exec=/usr/local/bin/data-storage
 Icon=datastorage
 Terminal=false
 Type=Application
