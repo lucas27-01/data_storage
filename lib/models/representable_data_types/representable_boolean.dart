@@ -89,7 +89,7 @@ class RepresentableBoolean extends RepresentableDataType {
         case VisibleBooleanInfo.trueNum:
           if (values.isNotEmpty) {
             return values.values
-                .skipWhile((el) => el == true)
+                .takeWhile((el) => el == true)
                 .length
                 .toString();
           } else {
@@ -98,7 +98,7 @@ class RepresentableBoolean extends RepresentableDataType {
         case VisibleBooleanInfo.falseNum:
           if (values.isNotEmpty) {
             return values.values
-                .skipWhile((el) => el == false)
+                .takeWhile((el) => el == false)
                 .length
                 .toString();
           } else {
