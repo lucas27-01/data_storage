@@ -4,6 +4,7 @@ import 'package:data_storage/extensions/date_extensions.dart';
 import 'package:data_storage/models/data.dart';
 import 'package:data_storage/models/data_constraints/date_constraints.dart';
 import 'package:data_storage/models/representable_data_types/representable_data_type.dart';
+import 'package:data_storage/widgets/data_preferencies.dart';
 import 'package:data_storage/widgets/expandable_section.dart';
 import 'package:data_storage/widgets/form_builder_date.dart';
 import 'package:flutter/material.dart';
@@ -300,38 +301,7 @@ class _RepresentableDateAdderState extends State<RepresentableDateAdder> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Text(
-                    AppLocalizations.of(context)!.dataSettings,
-                    style: const TextStyle(fontSize: 24),
-                  ),
-                  FormBuilderTextField(
-                    autovalidateMode: AutovalidateMode.onUnfocus,
-                    initialValue: _newData.name,
-                    name: 'name',
-                    decoration: InputDecoration(
-                      label: Text("${AppLocalizations.of(context)!.name}*"),
-                      hintText: AppLocalizations.of(context)!.dataName,
-                    ),
-                    maxLength: 15,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.maxLength(15),
-                      FormBuilderValidators.minLength(3),
-                    ]),
-                  ),
-                  FormBuilderTextField(
-                    initialValue: _newData.description,
-                    name: "description",
-                    decoration: InputDecoration(
-                      label: Text(AppLocalizations.of(context)!.description),
-                      hintText: AppLocalizations.of(context)!.dataDescription,
-                    ),
-                    maxLength: 300,
-                    validator: FormBuilderValidators.maxLength(
-                      300,
-                      checkNullOrEmpty: false,
-                    ),
-                  ),
+                  DataPreferencies(newData: _newData),
                   FormBuilderChoiceChip<RepresentableDateDefaultValue>(
                     spacing: 8,
                     initialValue: _newData.type?.defaultValue ??
