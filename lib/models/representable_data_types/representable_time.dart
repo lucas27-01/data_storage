@@ -621,6 +621,7 @@ class TimeValueAdder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormBuilderTimeOfDay(
+      context: context,
       name: data.name,
       initialValue: initialValue ??
           {

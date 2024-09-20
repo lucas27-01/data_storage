@@ -1,4 +1,5 @@
 import 'package:data_storage/extensions/date_extensions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,11 +18,14 @@ class FormBuilderDate extends FormBuilderField<DateTime?> {
           builder: (field) => InputDecorator(
             decoration: decoration.copyWith(errorText: field.errorText),
             child: ListTile(
+              leading: const Icon(Icons.calendar_month_rounded),
               title: Text(
                 AppLocalizations.of(field.context)!.addingSelectedTime(
                     field.value?.formatOnlyDate(field.context) ?? 'void'),
               ),
-              trailing: const Icon(Icons.access_time_rounded),
+              trailing: IconButton(
+                  onPressed: () => field.didChange(null),
+                  icon: const Icon(CupertinoIcons.trash_fill)),
               onTap: () async {
                 final time = await showDatePicker(
                   context: field.context,
@@ -30,7 +34,7 @@ class FormBuilderDate extends FormBuilderField<DateTime?> {
                   lastDate: lastDate,
                 );
                 // if (time != null) {
-                  field.didChange(time);
+                field.didChange(time);
                 // }
               },
             ),
