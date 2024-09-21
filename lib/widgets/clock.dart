@@ -61,8 +61,9 @@ class ClockPainter extends CustomPainter {
     canvas.drawCircle(center, radius, circlePaint);
 
     // Angle for clock hands
-    final hourAngle = (time.hour % 12 + time.minute / 60) * 30 * pi / 180;
-    final minuteAngle = (time.minute) * 6 * pi / 180;
+    // final hourAngle = (time.hour % 12 + time.minute / 60) * 30 * pi * 180;
+    final hourAngle = (time.hour % 12 * 30 - 90) * (pi / 180);
+    final minuteAngle = (time.minute * 6 - 90) * (pi / 180);
 
     // Draw the hour clock hands
     final hourHandLength = radius * (greater ? .7 : .3);

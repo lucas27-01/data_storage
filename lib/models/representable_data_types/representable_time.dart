@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:data_storage/models/data_constraints/time_constraints.dart';
+import 'package:data_storage/widgets/clock.dart';
 import 'package:data_storage/widgets/data_preferencies.dart';
 import 'package:data_storage/widgets/expandable_section.dart';
 import 'package:data_storage/widgets/form_builder_time_of_day.dart';
@@ -601,8 +602,18 @@ class TimeHistoric extends StatelessWidget {
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                  DateTimeExtensions.fromSecondsSinceEpoch(int.parse(entry.key))
-                      .formatDateTimeLocalized(context)),
+                DateTimeExtensions.fromSecondsSinceEpoch(int.parse(entry.key))
+                    .formatDateTimeLocalized(context),
+              ),
+              trailing: InkWell(
+                  onDoubleTap: () => showAdaptiveDialog(
+                        context: context,
+                        builder: (context) => AlertDialog.adaptive(
+                          content:
+                              ClockWidget(time: entry.value, greater: true),
+                        ),
+                      ),
+                  child: ClockWidget(time: entry.value)),
             ),
           const Divider()
         ],
