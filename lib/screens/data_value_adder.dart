@@ -54,14 +54,18 @@ class _DataValueAdderState extends State<DataValueAdder> {
           key: _formKey,
           child: ListView(
             children: [
-              ListTile(
-                title: Text(
-                    "${AppLocalizations.of(context)!.name}: ${dataStorage.name}"),
-                subtitle: dataStorage.description != null
-                    ? Text(
-                        "${AppLocalizations.of(context)!.description}: ${dataStorage.description}",
-                      )
-                    : null,
+              Hero(
+                tag: dataStorage.id,
+                child: Card(
+                  color: Theme.of(context).colorScheme.surface,
+                  elevation: 0,
+                  child: ListTile(
+                    title: Text(dataStorage.name),
+                    subtitle: dataStorage.description != null
+                        ? Text(dataStorage.description!)
+                        : null,
+                  ),
+                ),
               ),
               for (var singleData in dataStorage.data)
                 ExpandableSection(
@@ -105,7 +109,9 @@ class _DataValueAdderState extends State<DataValueAdder> {
                       //print("${entry.key}: ${entry.value}");
                       if (!dataStorage.data
                           .firstWhere((el) => el.name == entry.key)
-                          .addValue(entry.value, )) {
+                          .addValue(
+                            entry.value,
+                          )) {
                         _showSnackBar(
                           context,
                           Text(
@@ -172,7 +178,7 @@ class _DataValueAdderState extends State<DataValueAdder> {
       });
     }
 
-    if (widget.hangingCollections?["id"] != null){
+    if (widget.hangingCollections?["id"] != null) {
       await removeHangingCollectionsById(dataStorage.id);
     }
 
