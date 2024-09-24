@@ -212,9 +212,12 @@ class MyHomePageState extends State<MyHomePage> {
         rawHangingCollections.map((el) => decodeHangingCollections(el)),
       );
 
-      // ignore: use_build_context_synchronously
       _showSnackBar(
-          context, Text(AppLocalizations.of(context)!.haveHangingCollections));
+        // ignore: use_build_context_synchronously
+        context,
+        // ignore: use_build_context_synchronously
+        Text(AppLocalizations.of(context)!.haveHangingCollections),
+      );
     }
     // print("decoded");
     // print(hangingCollections);
@@ -302,6 +305,7 @@ class MyHomePageState extends State<MyHomePage> {
             var userData = snapshotUserData.data!;
             getHangingAdvice();
             return ListView.builder(
+                padding: const EdgeInsets.only(bottom: 80),
                 itemCount: userData.length,
                 itemBuilder: (context, index) {
                   return InkWell(
