@@ -217,6 +217,8 @@ class MyHomePageState extends State<MyHomePage> {
         context,
         // ignore: use_build_context_synchronously
         Text(AppLocalizations.of(context)!.haveHangingCollections),
+        // ignore: use_build_context_synchronously
+        SnackBarAction(label: AppLocalizations.of(context)!.ok, onPressed: (){})
       );
     }
     // print("decoded");
