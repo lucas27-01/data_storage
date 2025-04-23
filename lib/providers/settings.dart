@@ -60,6 +60,7 @@ class Settings with ChangeNotifier {
 
   set maxDescriptionLength(int maxDescLength) {
     _userSettings.maxDescriptionLength = maxDescLength;
+    _writeSettingsFile();
     notifyListeners();
   }
 
