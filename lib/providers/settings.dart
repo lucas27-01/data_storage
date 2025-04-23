@@ -6,13 +6,16 @@ import 'package:flutter/material.dart';
 import '../models/theme_settings.dart';
 
 class Settings with ChangeNotifier {
-  Settings(
-      {required Color colorTheme,
-      required Brightness brightnessTheme,
-      required Locale? locale}) {
+  Settings({
+    required Color colorTheme,
+    required Brightness brightnessTheme,
+    required Locale? locale,
+    required int maxDescriptionLength,
+  }) {
     _themeSettings =
         ThemeSettings(brightness: brightnessTheme, color: colorTheme);
-    _userSettings = UserSettings(locale: locale);
+    _userSettings = UserSettings(
+        locale: locale, maxDescriptionLength: maxDescriptionLength);
   }
 
   Settings.viaClass(
@@ -48,9 +51,15 @@ class Settings with ChangeNotifier {
   Locale? get locale => _userSettings.locale;
   Locale? get dateFormat => _userSettings.dateFormat;
   bool get use24H => _userSettings.use24H;
+  int get maxDescriptionLength => _userSettings.maxDescriptionLength;
 
   set use24H(bool use24H) {
     _userSettings.use24H = use24H;
+    notifyListeners();
+  }
+
+  set maxDescriptionLength(int maxDescLength) {
+    _userSettings.maxDescriptionLength = maxDescLength;
     notifyListeners();
   }
 

@@ -63,6 +63,7 @@ extension DateTimeExtensions on DateTime {
 
   Map<String, dynamic> onlyDateToJson() {
     return {
+      "_type": "Date",
       "day": day,
       "month": month,
       "year": year,
@@ -79,6 +80,7 @@ extension DateTimeExtensions on DateTime {
 
   Map<String, dynamic> toJson() {
     return {
+      "_type": "DateTime",
       "microsecond": microsecond,
       "millisecond": millisecond,
       "second": second,
@@ -118,7 +120,11 @@ extension DateTimeExtensions on DateTime {
 
 extension TimeOfDayExtension on TimeOfDay {
   Map<String, dynamic> toJson() {
-    return {'minute': minute, 'hour': hour};
+    return {
+      "_type": "TimeOfDay",
+      'minute': minute,
+      'hour': hour,
+    };
   }
 
   static TimeOfDay fromJson(Map<String, dynamic> json) {

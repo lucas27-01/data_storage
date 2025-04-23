@@ -9,6 +9,7 @@ import 'package:data_storage/providers/settings.dart';
 import 'package:data_storage/utils/file_manager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -176,6 +177,41 @@ class _SettingsState extends State<SettingsPage> {
                 ),
               ),
               Text(
+                AppLocalizations.of(context)!.view,
+                style:
+                    const TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.more_horiz_rounded),
+                        title: Text(
+                            AppLocalizations.of(context)!.maxDisplayedDesc),
+                        subtitle: Text(AppLocalizations.of(context)!
+                            .maxDisplayedDescExplained),
+                      ),
+                      FormBuilderSlider(
+                        name: 'maxDescLength',
+                        initialValue:
+                            context.watch<Settings>().maxDescriptionLength *
+                                1.0, // Cast int into double
+                        min: 0,
+                        max: 500,
+                        divisions: 50,
+                        onChanged: (maxDescLength) =>
+                            context.read<Settings>().maxDescriptionLength =
+                                maxDescLength?.toInt() ?? 500,
+                        decoration:
+                            const InputDecoration.collapsed(hintText: ""),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Text(
                 AppLocalizations.of(context)!.yourData,
                 style:
                     const TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
@@ -310,7 +346,8 @@ class _SettingsState extends State<SettingsPage> {
                                         importAndUpdateCollections(
                                             savedData: await FileManager
                                                 .getDataStorage(),
-                                            importedData: fileContent as List<DataStorage>);
+                                            importedData: fileContent
+                                                as List<DataStorage>);
                                       }
                                     } else {
                                       if (context.mounted) {

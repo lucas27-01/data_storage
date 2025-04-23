@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:data_storage/extensions/date_extensions.dart';
+import 'package:data_storage/extensions/string_extension.dart';
 import 'package:data_storage/models/data.dart';
 import 'package:data_storage/models/data_storage.dart';
 import 'package:data_storage/models/representable_data_types/representable_integer.dart';
@@ -213,13 +214,13 @@ class MyHomePageState extends State<MyHomePage> {
       );
 
       _showSnackBar(
-        // ignore: use_build_context_synchronously
-        context,
-        // ignore: use_build_context_synchronously
-        Text(AppLocalizations.of(context)!.haveHangingCollections),
-        // ignore: use_build_context_synchronously
-        SnackBarAction(label: AppLocalizations.of(context)!.ok, onPressed: (){})
-      );
+          // ignore: use_build_context_synchronously
+          context,
+          // ignore: use_build_context_synchronously
+          Text(AppLocalizations.of(context)!.haveHangingCollections),
+          // ignore: use_build_context_synchronously
+          SnackBarAction(
+              label: AppLocalizations.of(context)!.ok, onPressed: () {}));
     }
     // print("decoded");
     // print(hangingCollections);
@@ -324,8 +325,15 @@ class MyHomePageState extends State<MyHomePage> {
                               ? const Icon(Icons.warning_amber_rounded)
                               : null,
                           title: Text(userData[index].name),
-                          subtitle: userData[index].description != null
-                              ? Text(userData[index].description!)
+                          subtitle: userData[index].description != null &&
+                                  context
+                                          .watch<Settings>()
+                                          .maxDescriptionLength !=
+                                      0
+                              ? Text(userData[index].description!.substringLength(
+                                  context
+                                      .watch<Settings>()
+                                      .maxDescriptionLength))
                               : null,
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,

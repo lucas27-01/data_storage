@@ -354,5 +354,27 @@
         }
     },
     "done": "Done",
-    "isRequired": "Is Required"
+    "isRequired": "Is Required",
+    "dynamic_": "Dynamic",
+    "totValNumModeAlwaysVisible": "Total values num and Mode are always selectable.",
+    "dynamicPickerAdvice": "Using a dynamic type you'll able to insert the type you want BUT you'll cannot see a lot of statistics (only the total values number and mode will be visible).",
+    "datePickerAdvice": "Using date type you will be able to insert date and to see Mean, Median, Max Value, Min Value, Standard Deviation and Range.",
+    "integerPickerAdvice": "Using decimal type you will able to add decimal number and to see Total Sum, Mean, Median, Max Value, Min Value, Standard Deviation and Range.",
+    "decimalPickerAdvice": "Using integer type you will able to insert non-decimal number and to see Total Sum, Mean, Median, Max Value, Min Value, Standard Deviation and Range.",
+    "stringPickerAdvice": "Using a string type you will be able to add string (wow) and to see Mean Lenght, Mode, Min Length and Max Length.",
+    "timePickerAdvice": "Using a time type you will able to add time value and to see Mean, Median, Mode, Min Value, Max Value, Standard Deviationa and Range.",
+    "typeNotMatched": "{type} not matched",
+    "@typeNotMatched": {
+        "description": "display [type] not matched",
+        "placeholders": {
+            "type": {
+                "type": "String"
+            }
+        }
+    },
+    "explainPickerStats": "To edit what statistics to see or to see their meaning you have to go in the \"Settings\" page after choosing the type and after adding the wanted value in the \"Data\" page.",
+    "explainNoBoolPicker": "PS: there is not boolean type (true or false) because adding it has not any sense...",
+    "maxDisplayedDesc": "Max Displayed Description",
+    "maxDisplayedDescExplained": "Max description text length to show in Home Page (now the limit for the description is set to 500)",
+    "view": "View"
 }

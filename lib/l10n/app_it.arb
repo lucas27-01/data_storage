@@ -355,5 +355,27 @@
         }
     },
     "done": "Fatto",
-    "isRequired": "È Necessario"
+    "isRequired": "È Necessario",
+    "dynamic_": "Dinamico",
+    "totValNumModeAlwaysVisible": "Il numero totale di valori e la moda sono sempre visibili.",
+    "dynamicPickerAdvice": "Usando un tipo dinamic sarai capace di inserire qualunque tu voglia MA non potrai vedere la maggior parte delle statistiche (solo il numero totale di valori e la moda saranno visibili).",
+    "datePickerAdvice": "Usando un tipo data potrai inserire date e vedere come statistiche Media, Mediana, Valore Minimo, Valore Massimo, Deviazione Standard e il Range.",
+    "integerPickerAdvice": "Usando un tipo decimale potrai inserire numeri decimali e potrai vedere come statistiche Somma Totale, Media, Mediana, Valore Minimo, Valore Massimo, Deviazione Standard e Range.",
+    "decimalPickerAdvice": "Usando un tipo intero potrai inserire numero non decimali e potrai vedere come statistiche Somma Totale, Media, Mediana, Valore Minimo, Valore Massimo, Deviazione Standard e Range.",
+    "stringPickerAdvice": "Usando un tipo stringa potrai inserire stringhe (wow) e vedere come statistiche Lunghezza Media, Moda, Lunghezza Minima e Lunghezza Massima.",
+    "timePickerAdvice": "Usando un tipo orario potrai inserire orari e vedere come statistiche Media, Mediana, Valore Minimo, Valore Massimo, Deviazione Standard e il Range.",
+    "typeNotMatched": "{type} senza corrispondenza",
+    "@typeNotMatched": {
+        "description": "Display [type] senza corrispondenza",
+        "placeholders": {
+            "type": {
+                "type": "String"
+            }
+        }
+    },
+    "explainPickerStats": "Per modificare quale statsistiche vedere o per vedere il loro significato devi andare nella pagina \"Impostazioni\" dopo aver scelto il tipo e dopo aver aggiunto i valori voluti nella pagina \"Dati\".",
+    "explainNoBoolPicker": "PS: non c'è il tipo booleano (vero o falso) perchè metterlo non avrebbe avuto senso...",
+    "maxDisplayedDesc": "Lunghezza Massima Descrizione",
+    "maxDisplayedDescExplained": "La lunghezza massima della descrizione da mostrare nella Home Page (attualmente il limite è fissato 500)",
+    "view": "Vista"
 }
