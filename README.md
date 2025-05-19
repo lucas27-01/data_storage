@@ -24,10 +24,10 @@ A Flutter project that collects data in several types and allow the user to see 
   - [x] Decimal: number both integer or decimal (double)
   - [x] String: long (or short) list of characters (i.e. a word, a phrase, one character)
   - [x] Boolean: true or false (yes/no)
-  - [x] (_soon_) Date;
-  - [x] (_soon_) Time;
+  - [x] Date;
+  - [x] Time;
   - [ ] (_soon_) Date&Time: both date and time together;
-  - [ ] (_very soon_) Picker: preselected values (only one at a time);
+  - [x] Picker: preselected values (only one at a time);
   - [ ] (_very soon_) Map (or dictionaries in programming languages such Python): a data structure that pairs a **key** (_unique_) to **value** (_not unique_). One example could be phonebook that pairs phone numbers to people.
   - [ ] (_soon_) Multipicker: preselected values with one or more possibility.
   - [ ] (_soon_) List: long list of another type.
@@ -41,7 +41,7 @@ A Flutter project that collects data in several types and allow the user to see 
 
 ### Supported Platforms
 
-At the moment the only supported platforms are **Android** and **Linux** (maybe also **BSD based**, I don't try).
+At the moment the only supported platforms are **Android** and **Linux** (maybe also **BSD based**, I didn't try).
 
 The fact this project is built with Dart (and Flutter) makes the program crossplatform and this allow me to add simply other OS. For this in the future I want to add also _Windows 11_ (may also Windows 10) support. Support for the Apple environment (_macOS_,  _iOS_ and _ipadOS_) will pontentially never added because I don't use any of them. However I want to try to add more support, but this will not do soon.
 
@@ -53,7 +53,7 @@ In the future I want to add this application on **F-Droid** (and maybe also _Goo
 
 ### Install on Linux (from v0.5.0b)
 
-You have to download the zip file **`data_storage_x64_v0-5.0b.zip`** from the [latest release](https://github.com/lucas27-01/data_storage/releases) and then unzip that compressed directory. In this directory open a terminal and then execute the following line (useful to make executable the installer script `install.sh`):
+You have to download the zip file **`data_storage_x64_vx-x.x.zip`** from the [latest release](https://github.com/lucas27-01/data_storage/releases) and then unzip that compressed directory. In this directory open a terminal and then execute the following line (useful to make executable the installer script `install.sh`):
 ```bash
 chmod +x ./install.sh
 ```

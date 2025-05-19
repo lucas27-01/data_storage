@@ -201,9 +201,11 @@ class _SettingsState extends State<SettingsPage> {
                         min: 0,
                         max: 500,
                         divisions: 50,
-                        onChanged: (maxDescLength) =>
-                            context.read<Settings>().maxDescriptionLength =
-                                maxDescLength?.toInt() ?? 500,
+                        onChanged: (maxDescLength) {
+                          context.read<Settings>().maxDescriptionLength =
+                                maxDescLength?.toInt() ?? 500;
+                          FileManager.getSettings().then((value) => print(value));
+                        },
                         decoration:
                             const InputDecoration.collapsed(hintText: ""),
                       ),

@@ -201,7 +201,7 @@ class Data {
         RepresentableDecimal: "decimal",
         RepresentableBoolean: "boolean",
         RepresentableTime: "time_",
-        RepresentableDate: "date_"
+        RepresentableDate: "date_",
       }[type.runtimeType] ??
       "unknwonType";
 

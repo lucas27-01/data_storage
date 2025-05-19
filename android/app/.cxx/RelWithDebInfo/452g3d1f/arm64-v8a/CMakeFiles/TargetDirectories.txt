@@ -1,0 +1,2 @@
+/home/luigicapp/Programmi Git/Dart/data_storage/android/app/.cxx/RelWithDebInfo/452g3d1f/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/luigicapp/Programmi Git/Dart/data_storage/android/app/.cxx/RelWithDebInfo/452g3d1f/arm64-v8a/CMakeFiles/rebuild_cache.dir

@@ -45,7 +45,8 @@ abstract class RepresentableDataType {
     RepresentableDecimal: Icons.calculate_rounded,
     RepresentableBoolean: Icons.check_rounded,
     RepresentableTime: Icons.access_time_rounded,
-    RepresentableDate: Icons.calendar_month_rounded
+    RepresentableDate: Icons.calendar_month_rounded,
+    //RepresentablePicker: Icons.data_array_rounded,
   };
 
   get constraints =>
@@ -68,12 +69,24 @@ abstract class RepresentableDataType {
   }
 
   Widget builderWidget({Data? dataToEdit}) {
-    throw Exception("RepresentableDataType called an invalid method");
+    throw Exception(
+        "RepresentableDataType called an invalid method (builderWidget())");
   }
 
-  Type get wantedType =>
-      throw Exception("RepresentableDataType called an invalid getter");
+  Type get wantedType => throw Exception(
+      "RepresentableDataType called an invalid getter (wantedType)");
 
   String getStat({required BuildContext context, required dynamic stat}) =>
-      throw Exception("RepresentableDataType called an invalid method");
+      throw Exception(
+          "RepresentableDataType called an invalid method (getStat())");
+}
+
+enum RepresentableTypes {
+  boolean,
+  date_,
+  decimal,
+  integer,
+  picker,
+  string,
+  time_,
 }
